@@ -454,6 +454,18 @@
                 </div>
               </div>
               
+              <!-- 上链选项 -->
+              <div class="pt-2">
+                <label class="inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="enable-blockchain" class="sr-only peer" checked>
+                  <div class="relative w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/25 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  <span class="ml-3 text-sm font-medium text-neutral-700">
+                    尝试上链存储 
+                    <span class="text-xs text-neutral-500">(失败时仍会保存到数据库)</span>
+                  </span>
+                </label>
+              </div>
+
               <!-- 提交按钮 -->
               <div class="pt-4 flex flex-col sm:flex-row gap-4">
                 <button 
@@ -461,8 +473,8 @@
                   id="publish-btn"
                   class="flex-1 px-6 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all shadow-md font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <i class="fa fa-link mr-2"></i>
-                  <span id="publish-text">发布到区块链</span>
+                  <i class="fa fa-paper-plane mr-2"></i>
+                  <span id="publish-text">发布日记</span>
                   <div id="publish-spinner" class="hidden ml-2">
                     <i class="fa fa-spinner fa-spin"></i>
                   </div>
@@ -834,55 +846,74 @@
     let currentWallet = '';
     let allDiaries = [];
     
-    // 钱包连接功能
-    async function connectWallet() {
-      if (window.solana && window.solana.isPhantom) {
-        try {
-          const resp = await window.solana.connect();
-          currentWallet = resp.publicKey.toString();
-          updateWalletUI(true);
-          updatePrivatePageUI();
-          loadDiaries();
-          return true;
-        } catch (error) {
-          console.error('钱包连接失败:', error);
+          // 钱包连接功能
+      async function connectWallet() {
+        if (window.solana && window.solana.isPhantom) {
+          try {
+            const resp = await window.solana.connect();
+            currentWallet = resp.publicKey.toString();
+            
+            // 连接钱包后立即初始化Solana网络连接
+            console.log('正在初始化Solana网络连接...');
+            const networkConnected = await initializeConnection();
+            if (networkConnected) {
+              console.log('Solana网络连接成功');
+            } else {
+              console.warn('Solana网络连接失败，上链功能可能不可用');
+            }
+            
+            updateWalletUI(true);
+            updatePrivatePageUI();
+            loadDiaries();
+            return true;
+          } catch (error) {
+            console.error('钱包连接失败:', error);
+            return false;
+          }
+        } else {
+          alert('请安装 Phantom 钱包');
           return false;
         }
-      } else {
-        alert('请安装 Phantom 钱包');
-        return false;
       }
-    }
 
-    // 更新钱包UI
-    function updateWalletUI(connected) {
-      const walletBtn = document.getElementById('wallet-btn');
-      const walletText = document.getElementById('wallet-text');
-      const walletStatus = document.getElementById('wallet-status');
-      const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
-      const mobileWalletText = document.getElementById('mobile-wallet-text');
-      
-      if (connected && currentWallet) {
-        const shortAddr = currentWallet.slice(0, 4) + '...' + currentWallet.slice(-4);
-        walletBtn.className = walletBtn.className.replace('wallet-disconnected', 'wallet-connected');
-        mobileWalletBtn.className = mobileWalletBtn.className.replace('wallet-disconnected', 'wallet-connected');
-        walletText.textContent = shortAddr;
-        mobileWalletText.textContent = shortAddr;
-        walletStatus.style.display = 'block';
-        
-        // 隐藏钱包警告
-        const walletWarning = document.getElementById('wallet-warning');
-        if (walletWarning) {
-          walletWarning.classList.add('hidden');
+            // 更新钱包UI
+        function updateWalletUI(connected) {
+          const walletBtn = document.getElementById('wallet-btn');
+          const walletText = document.getElementById('wallet-text');
+          const walletStatus = document.getElementById('wallet-status');
+          const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
+          const mobileWalletText = document.getElementById('mobile-wallet-text');
+          
+          if (connected && currentWallet) {
+            const shortAddr = currentWallet.slice(0, 4) + '...' + currentWallet.slice(-4);
+            walletBtn.className = walletBtn.className.replace('wallet-disconnected', 'wallet-connected');
+            mobileWalletBtn.className = mobileWalletBtn.className.replace('wallet-disconnected', 'wallet-connected');
+            walletText.textContent = shortAddr;
+            mobileWalletText.textContent = shortAddr;
+            walletStatus.style.display = 'block';
+            
+            // 更新状态指示器颜色
+            if (connection) {
+              walletStatus.style.background = '#10b981'; // 绿色表示网络连接正常
+              walletStatus.title = 'Solana网络连接正常';
+            } else {
+              walletStatus.style.background = '#f59e0b'; // 黄色表示网络连接异常
+              walletStatus.title = 'Solana网络连接异常，上链功能可能不可用';
+            }
+            
+            // 隐藏钱包警告
+            const walletWarning = document.getElementById('wallet-warning');
+            if (walletWarning) {
+              walletWarning.classList.add('hidden');
+            }
+          } else {
+            walletBtn.className = walletBtn.className.replace('wallet-connected', 'wallet-disconnected');
+            mobileWalletBtn.className = mobileWalletBtn.className.replace('wallet-connected', 'wallet-disconnected');
+            walletText.textContent = '连接钱包';
+            mobileWalletText.textContent = '连接钱包';
+            walletStatus.style.display = 'none';
+          }
         }
-      } else {
-        walletBtn.className = walletBtn.className.replace('wallet-connected', 'wallet-disconnected');
-        mobileWalletBtn.className = mobileWalletBtn.className.replace('wallet-connected', 'wallet-disconnected');
-        walletText.textContent = '连接钱包';
-        mobileWalletText.textContent = '连接钱包';
-        walletStatus.style.display = 'none';
-      }
-    }
 
     // 更新私人页面UI
     function updatePrivatePageUI() {
@@ -931,6 +962,14 @@
           try {
             const resp = await window.solana.connect({ onlyIfTrusted: true });
             currentWallet = resp.publicKey.toString();
+            
+            // 自动连接时也初始化Solana网络
+            console.log('自动检测到钱包，初始化Solana网络连接...');
+            const networkConnected = await initializeConnection();
+            if (networkConnected) {
+              console.log('Solana网络连接成功');
+            }
+            
             updateWalletUI(true);
             updatePrivatePageUI();
             loadDiaries();
@@ -1250,19 +1289,84 @@
           charCount.textContent = '0 个字';
         });
       }
+
+      // 上链选项变化时更新按钮文本
+      const enableBlockchainToggle = document.getElementById('enable-blockchain');
+      const publishText = document.getElementById('publish-text');
       
-      // Solana 连接配置
-      const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed');
+      if (enableBlockchainToggle && publishText) {
+        function updatePublishButtonText() {
+          if (enableBlockchainToggle.checked) {
+            publishText.textContent = '发布并上链';
+          } else {
+            publishText.textContent = '发布日记';
+          }
+        }
+        
+        enableBlockchainToggle.addEventListener('change', updatePublishButtonText);
+        updatePublishButtonText(); // 初始化
+      }
+      
+      // Solana 连接配置 - 使用支持CORS的免费RPC端点
+      let connection;
+      const rpcEndpoints = [
+        'https://solana-api.projectserum.com',
+        'https://api.mainnet-beta.solana.com',
+        'https://rpc.ankr.com/solana',
+        'https://solana-mainnet.rpc.extrnode.com'
+      ];
+      
+      // 尝试连接到可用的RPC端点
+      async function initializeConnection() {
+        for (const endpoint of rpcEndpoints) {
+          try {
+            console.log(`尝试连接到: ${endpoint}`);
+            const testConnection = new solanaWeb3.Connection(endpoint, 'confirmed');
+            // 测试连接
+            await testConnection.getSlot();
+            connection = testConnection;
+            console.log(`成功连接到: ${endpoint}`);
+            return true;
+          } catch (error) {
+            console.log(`连接失败: ${endpoint}`, error.message);
+            continue;
+          }
+        }
+        console.error('所有RPC端点连接失败');
+        return false;
+      }
 
       // 检查钱包余额
       async function checkWalletBalance(walletPublicKey) {
         try {
+          // 确保连接已初始化
+          if (!connection) {
+            const connected = await initializeConnection();
+            if (!connected) {
+              throw new Error('无法连接到Solana网络');
+            }
+          }
+          
           const publicKey = new solanaWeb3.PublicKey(walletPublicKey);
           const balance = await connection.getBalance(publicKey);
           // 返回SOL余额（lamports转SOL）
           return balance / solanaWeb3.LAMPORTS_PER_SOL;
         } catch (error) {
           console.error('获取钱包余额失败:', error);
+          // 如果是网络错误，尝试重新连接
+          if (error.message.includes('403') || error.message.includes('fetch')) {
+            console.log('尝试重新连接...');
+            const reconnected = await initializeConnection();
+            if (reconnected) {
+              try {
+                const publicKey = new solanaWeb3.PublicKey(walletPublicKey);
+                const balance = await connection.getBalance(publicKey);
+                return balance / solanaWeb3.LAMPORTS_PER_SOL;
+              } catch (retryError) {
+                console.error('重试获取余额失败:', retryError);
+              }
+            }
+          }
           return 0;
         }
       }
@@ -1270,6 +1374,14 @@
       // 创建Solana上链交易
       async function createSolanaTransaction(diaryData, walletPublicKey) {
         try {
+          // 确保连接已初始化
+          if (!connection) {
+            const connected = await initializeConnection();
+            if (!connected) {
+              throw new Error('无法连接到Solana网络');
+            }
+          }
+
           // 创建日记内容的JSON字符串
           const diaryContent = JSON.stringify({
             title: diaryData.title,
@@ -1338,17 +1450,21 @@
         
         let txid = null;
         
-                  try {
-            // 第一步：创建Solana交易并上链
+                          // 检查是否要尝试上链
+        const enableBlockchain = document.getElementById('enable-blockchain').checked;
+        
+        try {
+          // 第一步：如果启用了上链，尝试创建Solana交易并上链
+          if (enableBlockchain && currentWallet) {
             try {
               publishText.textContent = '检查钱包余额...';
               
               // 检查余额
               const balance = await checkWalletBalance(currentWallet);
-              const minBalance = 0.005; // 至少需要0.005 SOL用于交易费用
+              const minBalance = 0.001; // 至少需要0.001 SOL用于交易费用
               
               if (balance < minBalance) {
-                throw new Error(`钱包余额不足。当前余额: ${balance.toFixed(4)} SOL，至少需要 ${minBalance} SOL`);
+                throw new Error(`钱包余额不足。当前余额: ${balance.toFixed(6)} SOL，至少需要 ${minBalance} SOL`);
               }
               
               publishText.textContent = '正在上链...';
@@ -1359,22 +1475,25 @@
               // 发送交易到Solana主网
               const { signature } = await window.solana.signAndSendTransaction(transaction);
               txid = signature;
-            
-            publishText.textContent = '确认交易中...';
-            
-            // 等待交易确认
-            const confirmation = await connection.confirmTransaction(signature, 'confirmed');
-            if (confirmation.value.err) {
-              throw new Error('交易确认失败');
+              
+              publishText.textContent = '确认交易中...';
+              
+              // 等待交易确认
+              const confirmation = await connection.confirmTransaction(signature, 'confirmed');
+              if (confirmation.value.err) {
+                throw new Error('交易确认失败');
+              }
+              
+              console.log('Solana交易成功:', signature);
+              publishText.textContent = '保存到数据库...';
+              
+            } catch (solanaError) {
+              console.error('Solana上链失败:', solanaError);
+              // 即使Solana上链失败，也继续保存到Firebase，但不包含txid
+              publishText.textContent = '上链失败，仅保存到数据库...';
             }
-            
-            console.log('Solana交易成功:', signature);
+          } else {
             publishText.textContent = '保存到数据库...';
-            
-          } catch (solanaError) {
-            console.error('Solana上链失败:', solanaError);
-            // 即使Solana上链失败，也继续保存到Firebase，但不包含txid
-            publishText.textContent = '上链失败，仅保存到数据库...';
           }
           
           // 第二步：保存到Firebase数据库
@@ -1412,7 +1531,8 @@
         } finally {
           // 恢复按钮状态
           publishBtn.disabled = false;
-          publishText.textContent = '发布到区块链';
+          const enableBlockchain = document.getElementById('enable-blockchain').checked;
+          publishText.textContent = enableBlockchain ? '发布并上链' : '发布日记';
           publishSpinner.classList.add('hidden');
         }
       }
