@@ -148,25 +148,790 @@
       background: #a1a1a1;
     }
 
-    /* 钱包连接状态 */
-    .wallet-connected {
-      background: linear-gradient(45deg, #10b981, #059669);
-    }
-    
-    .wallet-disconnected {
-      background: linear-gradient(45deg, #ef4444, #dc2626);
+    /* 精美钱包连接按钮 */
+    .wallet-btn {
+      position: relative;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 50px;
+      padding: 12px 24px;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 140px;
+      justify-content: center;
     }
 
-    /* 区块链状态指示器 */
-    .blockchain-badge {
+    .wallet-btn::before {
+      content: '';
       position: absolute;
-      top: -5px;
-      right: -5px;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .wallet-btn:hover::before {
+      left: 100%;
+    }
+
+    .wallet-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .wallet-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* 连接状态样式 */
+    .wallet-btn.connected {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .wallet-btn.connected:hover {
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+    }
+
+    .wallet-btn.disconnected {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    }
+
+    .wallet-btn.disconnected:hover {
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+    }
+
+    .wallet-btn.error {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    }
+
+    .wallet-btn.error:hover {
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.6);
+    }
+
+    /* 钱包图标动画 */
+    .wallet-btn .wallet-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .wallet-btn:hover .wallet-icon {
+      transform: scale(1.1);
+    }
+
+    .wallet-btn.connected .wallet-icon {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* 状态指示器 */
+    .wallet-status-indicator {
+      position: absolute;
+      top: -3px;
+      right: -3px;
       width: 12px;
       height: 12px;
-      background: #10b981;
       border-radius: 50%;
       border: 2px solid white;
+      transition: all 0.3s ease;
+    }
+
+    .wallet-status-indicator.connected {
+      background: #10b981;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+
+    .wallet-status-indicator.disconnected {
+      background: #f59e0b;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    .wallet-status-indicator.error {
+      background: #ef4444;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    }
+
+    /* 加载动画 */
+    .wallet-btn.loading {
+      pointer-events: none;
+    }
+
+    .wallet-btn.loading .wallet-icon {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+      .wallet-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+        min-width: 120px;
+      }
+    }
+
+    /* 精美标签选择样式 */
+    .tag-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .tag-item {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid transparent;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #64748b;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      min-width: 60px;
+      justify-content: center;
+    }
+
+    .tag-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .tag-item:hover::before {
+      left: 100%;
+    }
+
+    .tag-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .tag-item input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 标签选中状态 */
+    .tag-item.checked {
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      color: white;
+      border-color: #4f46e5;
+      box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .tag-item.checked::after {
+      content: '✓';
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      font-weight: bold;
+      opacity: 0;
+      animation: checkmark 0.3s ease forwards;
+    }
+
+    @keyframes checkmark {
+      0% {
+        opacity: 0;
+        transform: translateY(-50%) scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+      }
+    }
+
+    /* 不同标签的颜色主题 */
+    .tag-item[data-tag="生活"] {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+      border-color: #fbbf24;
+    }
+
+    .tag-item[data-tag="生活"].checked {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      border-color: #f59e0b;
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+    }
+
+    .tag-item[data-tag="旅行"] {
+      background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+      color: #1e40af;
+      border-color: #3b82f6;
+    }
+
+    .tag-item[data-tag="旅行"].checked {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      border-color: #3b82f6;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    }
+
+    .tag-item[data-tag="感悟"] {
+      background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 100%);
+      color: #7c3aed;
+      border-color: #a855f7;
+    }
+
+    .tag-item[data-tag="感悟"].checked {
+      background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+      color: white;
+      border-color: #a855f7;
+      box-shadow: 0 4px 16px rgba(168, 85, 247, 0.3);
+    }
+
+    .tag-item[data-tag="读书"] {
+      background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%);
+      color: #166534;
+      border-color: #22c55e;
+    }
+
+    .tag-item[data-tag="读书"].checked {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      border-color: #22c55e;
+      box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+    }
+
+    .tag-item[data-tag="工作"] {
+      background: linear-gradient(135deg, #f3e8ff 0%, #c4b5fd 100%);
+      color: #6b21a8;
+      border-color: #8b5cf6;
+    }
+
+    .tag-item[data-tag="工作"].checked {
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      color: white;
+      border-color: #8b5cf6;
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+    }
+
+    .tag-item[data-tag="美食"] {
+      background: linear-gradient(135deg, #fed7d7 0%, #fca5a5 100%);
+      color: #991b1b;
+      border-color: #ef4444;
+    }
+
+    .tag-item[data-tag="美食"].checked {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+      border-color: #ef4444;
+      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+    }
+
+    /* 标签选择器容器 */
+    .tag-selector-container {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .tag-selector-container label {
+      color: #475569;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 640px) {
+      .tag-selector {
+        gap: 8px;
+      }
+      
+      .tag-item {
+        padding: 6px 12px;
+        font-size: 13px;
+        min-width: 50px;
+      }
+    }
+
+    /* 精美日记详情弹窗样式 */
+    .diary-modal {
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    .diary-modal-content {
+      animation: modalSlideIn 0.3s ease-out;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes modalSlideIn {
+      from { 
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes modalFadeOut {
+      from { 
+        opacity: 1;
+      }
+      to { 
+        opacity: 0;
+      }
+    }
+
+    /* 日记卡片悬停效果 */
+    .diary-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .diary-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+      border-color: #4f46e5;
+    }
+
+    /* 阅读全文按钮样式 */
+    .read-more-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .read-more-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .read-more-btn:hover::before {
+      left: 100%;
+    }
+
+    .read-more-btn:hover {
+      transform: translateX(4px);
+    }
+
+    /* 弹窗内容样式 */
+    .diary-content {
+      line-height: 1.8;
+      font-size: 16px;
+      color: #374151;
+    }
+
+    .diary-title {
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* 区块链信息样式 */
+    .blockchain-info {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 1px solid #0ea5e9;
+      border-radius: 12px;
+    }
+
+    .blockchain-info.error {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-color: #ef4444;
+    }
+
+    /* 聊天留言样式 */
+    .chat-section {
+      border-top: 1px solid #e5e7eb;
+      padding-top: 24px;
+    }
+
+    .comments-container {
+      scrollbar-width: thin;
+      scrollbar-color: #d1d5db #f3f4f6;
+    }
+
+    .comments-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .comments-container::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-radius: 3px;
+    }
+
+    .comments-container::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 3px;
+    }
+
+    .comments-container::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .comment-item {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid #e5e7eb;
+      transition: all 0.2s ease;
+    }
+
+    .comment-item:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      border-color: #d1d5db;
+    }
+
+    .comment-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .comment-author {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .comment-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .comment-author-name {
+      font-weight: 600;
+      color: #374151;
+      font-size: 14px;
+    }
+
+    .comment-time {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .comment-content {
+      color: #374151;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .comment-input-section textarea {
+      transition: all 0.2s ease;
+    }
+
+    .comment-input-section textarea:focus {
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .send-comment-btn {
+      transition: all 0.2s ease;
+    }
+
+    .send-comment-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .send-comment-btn:not(:disabled):hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    /* 留言加载动画 */
+    .comment-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #6b7280;
+    }
+
+    .comment-loading i {
+      animation: spin 1s linear infinite;
+    }
+
+    /* 点赞按钮样式 */
+    .like-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .like-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(239, 68, 68, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+    }
+
+    .like-btn:active::before {
+      width: 40px;
+      height: 40px;
+    }
+
+    .like-btn.liked {
+      color: #ef4444;
+    }
+
+    .like-btn.liked i {
+      animation: heartBeat 0.6s ease;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .modal-like-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-like-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(239, 68, 68, 0.1);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+    }
+
+    .modal-like-btn:active::before {
+      width: 60px;
+      height: 60px;
+    }
+
+    .modal-like-btn.liked {
+      border-color: #ef4444;
+      background-color: #fef2f2;
+    }
+
+    .modal-like-btn.liked i {
+      animation: heartBeat 0.6s ease;
+    }
+
+    /* 精选日记样式 */
+    .featured-diary-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-diary-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+    }
+
+    .featured-diary-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      border-color: #f59e0b;
+    }
+
+    .featured-diary-card.rank-1::before {
+      background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
+    }
+
+    .featured-diary-card.rank-2::before {
+      background: linear-gradient(90deg, #9ca3af 0%, #6b7280 100%);
+    }
+
+    .featured-diary-card.rank-3::before {
+      background: linear-gradient(90deg, #d97706 0%, #b45309 100%);
+    }
+
+    .featured-rank-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      color: white;
+    }
+
+    .featured-rank-badge.rank-1 {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    .featured-rank-badge.rank-2 {
+      background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+      box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+    }
+
+    .featured-rank-badge.rank-3 {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+    }
+
+    .featured-diary-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #1f2937;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .featured-diary-content {
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .featured-diary-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: #9ca3af;
+    }
+
+    .featured-diary-stats {
+      display: flex;
+      gap: 16px;
+    }
+
+    .featured-diary-stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .featured-diary-stat.likes {
+      color: #ef4444;
+    }
+
+    .featured-diary-stat.comments {
+      color: #3b82f6;
+    }
+
+    /* 自定义单选按钮样式 */
+    .custom-radio {
+      position: relative;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #d1d5db;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .custom-radio.checked {
+      border-color: #4f46e5;
+      background-color: #4f46e5;
+    }
+
+    .custom-radio.checked::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background-color: white;
+      border-radius: 50%;
+    }
+
+    .custom-radio:hover {
+      border-color: #4f46e5;
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -193,10 +958,10 @@
         
         <!-- 用户区域 -->
         <div class="flex items-center space-x-4">
-          <button id="wallet-btn" class="hidden md:flex items-center px-4 py-2 rounded-full wallet-disconnected text-white hover:opacity-90 transition-all relative">
-            <i class="fa fa-wallet mr-2"></i>
+          <button id="wallet-btn" class="wallet-btn disconnected hidden md:flex">
+            <i class="fa fa-wallet wallet-icon"></i>
             <span id="wallet-text">连接钱包</span>
-            <div id="wallet-status" class="blockchain-badge" style="display: none;"></div>
+            <div id="wallet-status" class="wallet-status-indicator disconnected"></div>
           </button>
           
           <!-- 移动端菜单按钮 -->
@@ -226,9 +991,10 @@
           <a href="#" class="mobile-nav-link py-2 px-3 rounded-lg" data-page="stats">
             <i class="fa fa-bar-chart mr-2"></i>数据统计
           </a>
-          <button id="mobile-wallet-btn" class="flex items-center justify-center px-4 py-2 rounded-full wallet-disconnected text-white hover:opacity-90 transition-all mt-2">
-            <i class="fa fa-wallet mr-2"></i>
+          <button id="mobile-wallet-btn" class="wallet-btn disconnected flex items-center justify-center mt-2">
+            <i class="fa fa-wallet wallet-icon"></i>
             <span id="mobile-wallet-text">连接钱包</span>
+            <div id="mobile-wallet-status" class="wallet-status-indicator disconnected"></div>
           </button>
         </div>
       </div>
@@ -316,12 +1082,12 @@
             </a>
           </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <!-- 暂无内容提示 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto" id="featured-diaries-grid">
+            <!-- 精选日记卡片将通过JavaScript动态生成 -->
             <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
-              <i class="fa fa-book-o text-neutral-300 text-6xl mb-4"></i>
-              <h3 class="text-xl font-medium text-neutral-600 mb-2">暂无精选日记</h3>
-              <p class="text-neutral-500">等待社区成员分享精彩内容</p>
+              <i class="fa fa-spinner fa-spin text-neutral-300 text-6xl mb-4"></i>
+              <h3 class="text-xl font-medium text-neutral-600 mb-2">加载精选日记中...</h3>
+              <p class="text-neutral-500">正在获取最受欢迎的日记</p>
             </div>
           </div>
           
@@ -373,32 +1139,32 @@
               </div>
               
               <!-- 标签选择 -->
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 mb-2">选择标签（可多选）</label>
-                <div class="flex flex-wrap gap-2">
-                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
-                    <input type="checkbox" name="tags" value="生活" class="sr-only peer">
-                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">生活</span>
+              <div class="tag-selector-container">
+                <label>选择标签（可多选）</label>
+                <div class="tag-selector">
+                  <label class="tag-item" data-tag="生活">
+                    <input type="checkbox" name="tags" value="生活">
+                    <span>生活</span>
                   </label>
-                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
-                    <input type="checkbox" name="tags" value="旅行" class="sr-only peer">
-                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">旅行</span>
+                  <label class="tag-item" data-tag="旅行">
+                    <input type="checkbox" name="tags" value="旅行">
+                    <span>旅行</span>
                   </label>
-                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
-                    <input type="checkbox" name="tags" value="感悟" class="sr-only peer">
-                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">感悟</span>
+                  <label class="tag-item" data-tag="感悟">
+                    <input type="checkbox" name="tags" value="感悟">
+                    <span>感悟</span>
                   </label>
-                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
-                    <input type="checkbox" name="tags" value="读书" class="sr-only peer">
-                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">读书</span>
+                  <label class="tag-item" data-tag="读书">
+                    <input type="checkbox" name="tags" value="读书">
+                    <span>读书</span>
                   </label>
-                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
-                    <input type="checkbox" name="tags" value="工作" class="sr-only peer">
-                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">工作</span>
+                  <label class="tag-item" data-tag="工作">
+                    <input type="checkbox" name="tags" value="工作">
+                    <span>工作</span>
                   </label>
-                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
-                    <input type="checkbox" name="tags" value="美食" class="sr-only peer">
-                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">美食</span>
+                  <label class="tag-item" data-tag="美食">
+                    <input type="checkbox" name="tags" value="美食">
+                    <span>美食</span>
                   </label>
                 </div>
               </div>
@@ -426,17 +1192,13 @@
                 <label class="block text-sm font-medium text-neutral-700 mb-2">隐私设置</label>
                 <div class="flex items-center space-x-6">
                   <label class="inline-flex items-center cursor-pointer">
-                    <input type="radio" name="privacy" value="public" class="sr-only peer" checked>
-                    <div class="w-5 h-5 border-2 border-neutral-300 rounded-full flex items-center justify-center peer-checked:border-primary mr-2">
-                      <div class="w-3 h-3 bg-primary rounded-full scale-0 peer-checked:scale-100 transition-transform"></div>
-                    </div>
-                    <span>公开 - 所有人可见，上链存储</span>
+                    <input type="radio" name="privacy" value="public" class="sr-only" checked>
+                    <div class="custom-radio checked mr-2"></div>
+                    <span class="font-semibold text-primary">公开 - 所有人可见，上链存储</span>
                   </label>
                   <label class="inline-flex items-center cursor-pointer">
-                    <input type="radio" name="privacy" value="private" class="sr-only peer">
-                    <div class="w-5 h-5 border-2 border-neutral-300 rounded-full flex items-center justify-center peer-checked:border-primary mr-2">
-                      <div class="w-3 h-3 bg-primary rounded-full scale-0 peer-checked:scale-100 transition-transform"></div>
-                    </div>
+                    <input type="radio" name="privacy" value="private" class="sr-only">
+                    <div class="custom-radio mr-2"></div>
                     <span>私密 - 仅自己可见，加密存储</span>
                   </label>
                 </div>
@@ -519,9 +1281,15 @@
       <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
           <div class="mb-10">
-            <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800 mb-2">
-              <i class="fa fa-book text-primary mr-2"></i>公共日记
-            </h1>
+            <div class="flex items-center justify-between mb-2">
+              <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800">
+                <i class="fa fa-book text-primary mr-2"></i>公共日记
+              </h1>
+              <div class="flex items-center text-sm text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full">
+                <i class="fa fa-heart text-red-500 mr-1"></i>
+                按点赞数排序
+              </div>
+            </div>
             <p class="text-neutral-600">浏览社区成员分享的精彩日记，感受不同的生活视角和思考方式</p>
           </div>
           
@@ -825,7 +1593,7 @@
   <!-- Firebase 配置 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, query, limitToLast, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, query, limitToLast, orderByChild, equalTo, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
     // Firebase 配置
     const firebaseConfig = {
@@ -882,22 +1650,32 @@
         const walletStatus = document.getElementById('wallet-status');
         const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
         const mobileWalletText = document.getElementById('mobile-wallet-text');
+        const mobileWalletStatus = document.getElementById('mobile-wallet-status');
         
         if (connected && currentWallet) {
           const shortAddr = currentWallet.slice(0, 4) + '...' + currentWallet.slice(-4);
-          walletBtn.className = walletBtn.className.replace('wallet-disconnected', 'wallet-connected');
-          mobileWalletBtn.className = mobileWalletBtn.className.replace('wallet-disconnected', 'wallet-connected');
+          
+          // 更新按钮状态
+          walletBtn.className = 'wallet-btn connected hidden md:flex';
+          mobileWalletBtn.className = 'wallet-btn connected flex items-center justify-center mt-2';
+          
+          // 更新文本
           walletText.textContent = shortAddr;
           mobileWalletText.textContent = shortAddr;
-          walletStatus.style.display = 'block';
           
-          // 更新状态指示器颜色
+          // 更新状态指示器
+          walletStatus.className = 'wallet-status-indicator connected';
+          mobileWalletStatus.className = 'wallet-status-indicator connected';
+          
+          // 根据网络连接状态设置不同的状态
           if (connection) {
-            walletStatus.style.background = '#10b981'; // 绿色表示网络连接正常
-            walletStatus.title = 'Solana网络连接正常';
+            walletStatus.title = '✅ 钱包已连接，Solana网络正常';
+            mobileWalletStatus.title = '✅ 钱包已连接，Solana网络正常';
           } else {
-            walletStatus.style.background = '#f59e0b'; // 黄色表示网络连接异常
-            walletStatus.title = 'Solana网络连接异常，上链功能可能不可用';
+            walletStatus.className = 'wallet-status-indicator error';
+            mobileWalletStatus.className = 'wallet-status-indicator error';
+            walletStatus.title = '⚠️ 钱包已连接，但Solana网络异常';
+            mobileWalletStatus.title = '⚠️ 钱包已连接，但Solana网络异常';
           }
           
           // 隐藏钱包警告
@@ -906,11 +1684,17 @@
             walletWarning.classList.add('hidden');
           }
         } else {
-          walletBtn.className = walletBtn.className.replace('wallet-connected', 'wallet-disconnected');
-          mobileWalletBtn.className = mobileWalletBtn.className.replace('wallet-connected', 'wallet-disconnected');
+          // 重置为未连接状态
+          walletBtn.className = 'wallet-btn disconnected hidden md:flex';
+          mobileWalletBtn.className = 'wallet-btn disconnected flex items-center justify-center mt-2';
+          
           walletText.textContent = '连接钱包';
           mobileWalletText.textContent = '连接钱包';
-          walletStatus.style.display = 'none';
+          
+          walletStatus.className = 'wallet-status-indicator disconnected';
+          mobileWalletStatus.className = 'wallet-status-indicator disconnected';
+          walletStatus.title = '点击连接Phantom钱包';
+          mobileWalletStatus.title = '点击连接Phantom钱包';
         }
       }
 
@@ -945,12 +1729,24 @@
             return;
           }
           
-          // 转为数组并按时间倒序
+          // 转为数组并按点赞数降序，然后按时间倒序
           allDiaries = Object.entries(val)
-            .map(([id, entry]) => ({ id, ...entry }))
-            .sort((a, b) => b.timestamp - a.timestamp);
+            .map(([id, entry]) => ({ 
+              id, 
+              ...entry,
+              likeCount: entry.likedBy ? Object.keys(entry.likedBy).length : 0
+            }))
+            .sort((a, b) => {
+              // 首先按点赞数降序排序
+              if (b.likeCount !== a.likeCount) {
+                return b.likeCount - a.likeCount;
+              }
+              // 点赞数相同时按时间倒序排序
+              return b.timestamp - a.timestamp;
+            });
           
           renderPublicDiaries();
+          renderFeaturedDiaries();
           if (currentWallet) {
             loadPrivateDiaries();
           }
@@ -983,6 +1779,9 @@
           const diaryCard = createDiaryCard(diary);
           container.appendChild(diaryCard);
         });
+        
+        // 加载所有日记的评论数量
+        loadAllCommentCounts(publicDiaries);
       }
 
       // 加载私人日记
@@ -1061,21 +1860,21 @@
             
             <p class="text-neutral-600 line-clamp-3 mb-4">${escapeHtml(preview)}</p>
             
-            <div class="flex justify-between items-center">
-              <div class="flex items-center space-x-4 text-neutral-500">
-                <div class="flex items-center">
-                  <i class="fa fa-heart-o mr-1"></i>
-                  <span>0</span>
+                          <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4 text-neutral-500">
+                  <button class="like-btn flex items-center transition-all hover:text-red-500" data-diary-id="${diary.id}" data-liked="${diary.likedBy && diary.likedBy[currentWallet] ? 'true' : 'false'}">
+                    <i class="fa ${diary.likedBy && diary.likedBy[currentWallet] ? 'fa-heart text-red-500' : 'fa-heart-o'} mr-1"></i>
+                    <span class="like-count-${diary.id}">${diary.likedBy ? Object.keys(diary.likedBy).length : 0}</span>
+                  </button>
+                  <div class="flex items-center">
+                    <i class="fa fa-comment-o mr-1"></i>
+                    <span class="comment-count-${diary.id}">0</span>
+                  </div>
                 </div>
-                <div class="flex items-center">
-                  <i class="fa fa-comment-o mr-1"></i>
-                  <span>0</span>
-                </div>
+                <button class="read-more-btn text-primary hover:text-primary/80 text-sm font-medium transition-colors px-3 py-1 rounded-lg hover:bg-primary/5">
+                  阅读全文 <i class="fa fa-angle-right ml-1"></i>
+                </button>
               </div>
-              <button class="text-primary hover:text-primary/80 text-sm font-medium transition-colors">
-                阅读全文 <i class="fa fa-angle-right ml-1"></i>
-              </button>
-            </div>
           </div>
         `;
         
@@ -1108,6 +1907,9 @@
       async function connectWallet() {
         if (window.solana && window.solana.isPhantom) {
           try {
+            // 显示加载状态
+            setWalletLoadingState(true);
+            
             const resp = await window.solana.connect();
             currentWallet = resp.publicKey.toString();
             
@@ -1127,10 +1929,35 @@
           } catch (error) {
             console.error('钱包连接失败:', error);
             return false;
+          } finally {
+            // 隐藏加载状态
+            setWalletLoadingState(false);
           }
         } else {
           alert('请安装 Phantom 钱包');
           return false;
+        }
+      }
+
+      // 设置钱包加载状态
+      function setWalletLoadingState(loading) {
+        const walletBtn = document.getElementById('wallet-btn');
+        const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
+        const walletText = document.getElementById('wallet-text');
+        const mobileWalletText = document.getElementById('mobile-wallet-text');
+        
+        if (loading) {
+          walletBtn.classList.add('loading');
+          mobileWalletBtn.classList.add('loading');
+          walletText.textContent = '连接中...';
+          mobileWalletText.textContent = '连接中...';
+        } else {
+          walletBtn.classList.remove('loading');
+          mobileWalletBtn.classList.remove('loading');
+          if (!currentWallet) {
+            walletText.textContent = '连接钱包';
+            mobileWalletText.textContent = '连接钱包';
+          }
         }
       }
 
@@ -1178,104 +2005,71 @@
         mobileMenu.classList.toggle('hidden');
       });
 
-      // 显示日记详情弹窗
-      function showDiaryModal(diary) {
-        // 创建弹窗HTML
-        const modalHtml = `
-          <div id="diary-detail-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-            <div class="bg-white rounded-xl shadow-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-auto">
-              <div class="p-6">
-                <div class="flex justify-between items-start mb-4">
-                  <div class="flex items-center">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white font-bold mr-3">
-                      ${diary.wallet ? diary.wallet.charAt(0).toUpperCase() : 'A'}
-                    </div>
-                    <div>
-                      <h4 class="font-medium text-neutral-800">${diary.wallet ? diary.wallet.slice(0, 4) + '...' + diary.wallet.slice(-4) : '匿名'}</h4>
-                      <p class="text-sm text-neutral-500">${formatDate(diary.timestamp)}</p>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    ${diary.txid ? `
-                      <a href="https://solscan.io/tx/${diary.txid}" target="_blank" class="flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm hover:bg-green-200 transition-colors">
-                        <i class="fa fa-link mr-1"></i>
-                        已上链
-                      </a>
-                    ` : ''}
-                    <button id="close-diary-modal" class="text-neutral-400 hover:text-neutral-600 text-xl">
-                      <i class="fa fa-times"></i>
-                    </button>
-                  </div>
-                </div>
-                
-                <h1 class="text-2xl font-bold text-neutral-800 mb-4">${escapeHtml(diary.title || '无标题')}</h1>
-                
-                <div class="prose max-w-none mb-6">
-                  <p class="text-neutral-700 leading-relaxed whitespace-pre-line">${escapeHtml(diary.content || '')}</p>
-                </div>
-                
-                ${diary.tags && diary.tags.length > 0 ? `
-                  <div class="flex flex-wrap gap-2 mb-6">
-                    ${diary.tags.map(tag => {
-                      const tagColors = {
-                        '生活': 'bg-blue-100 text-blue-800',
-                        '旅行': 'bg-green-100 text-green-800',
-                        '感悟': 'bg-purple-100 text-purple-800',
-                        '读书': 'bg-yellow-100 text-yellow-800',
-                        '工作': 'bg-gray-100 text-gray-800',
-                        '美食': 'bg-red-100 text-red-800'
-                      };
-                      const colorClass = tagColors[tag] || 'bg-gray-100 text-gray-800';
-                      return `<span class="px-3 py-1 ${colorClass} rounded-full text-sm">${tag}</span>`;
-                    }).join('')}
-                  </div>
-                ` : ''}
-                
-                                 ${diary.txid ? `
-                   <div class="bg-neutral-50 rounded-lg p-4">
-                     <p class="text-sm text-neutral-600 mb-2">区块链交易信息:</p>
-                     <p class="text-xs text-neutral-800 font-mono break-all mb-2">${diary.txid}</p>
-                     <div class="flex gap-3">
-                       <a href="https://solscan.io/tx/${diary.txid}" target="_blank" class="inline-flex items-center text-primary hover:text-primary/80 text-sm">
-                         <i class="fa fa-external-link mr-1"></i>
-                         Solscan
-                       </a>
-                       <a href="https://explorer.solana.com/tx/${diary.txid}?cluster=mainnet-beta" target="_blank" class="inline-flex items-center text-primary hover:text-primary/80 text-sm">
-                         <i class="fa fa-external-link mr-1"></i>
-                         Solana Explorer
-                       </a>
-                     </div>
-                   </div>
-                 ` : `
-                  <div class="bg-amber-50 rounded-lg p-4">
-                    <p class="text-sm text-amber-700">
-                      <i class="fa fa-info-circle mr-1"></i>
-                      此日记尚未上链或上链失败
-                    </p>
-                  </div>
-                `}
-              </div>
-            </div>
-          </div>
-        `;
-        
-        // 添加到页面
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        
-        // 添加关闭事件
-        const modal = document.getElementById('diary-detail-modal');
-        const closeBtn = document.getElementById('close-diary-modal');
-        
-        closeBtn.addEventListener('click', () => {
-          modal.remove();
-        });
-        
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            modal.remove();
+      // 自定义单选按钮交互
+      function setupCustomRadioButtons() {
+        const radioButtons = document.querySelectorAll('input[name="privacy"]');
+        const radioLabels = document.querySelectorAll('input[name="privacy"] + .custom-radio');
+        const radioTexts = document.querySelectorAll('input[name="privacy"] + .custom-radio + span');
+
+        radioButtons.forEach((radio, index) => {
+          radio.addEventListener('change', function() {
+            // 重置所有按钮状态
+            radioLabels.forEach((label, i) => {
+              label.classList.remove('checked');
+              radioTexts[i].classList.remove('font-semibold', 'text-primary');
+            });
+
+            // 设置当前选中按钮状态
+            if (this.checked) {
+              radioLabels[index].classList.add('checked');
+              radioTexts[index].classList.add('font-semibold', 'text-primary');
+            }
+          });
+
+          // 初始化状态
+          if (radio.checked) {
+            radioLabels[index].classList.add('checked');
+            radioTexts[index].classList.add('font-semibold', 'text-primary');
           }
         });
       }
+
+      // 初始化自定义单选按钮
+      setupCustomRadioButtons();
+
+      // 初始化标签选择器
+      function setupTagSelector() {
+        const tagItems = document.querySelectorAll('.tag-item');
+        
+        tagItems.forEach(tagItem => {
+          const checkbox = tagItem.querySelector('input[type="checkbox"]');
+          
+          // 点击标签时切换选中状态
+          tagItem.addEventListener('click', function(e) {
+            e.preventDefault();
+            checkbox.checked = !checkbox.checked;
+            updateTagVisualState(tagItem, checkbox.checked);
+          });
+          
+          // 初始化状态
+          updateTagVisualState(tagItem, checkbox.checked);
+        });
+      }
+
+      // 更新标签视觉状态
+      function updateTagVisualState(tagItem, isChecked) {
+        if (isChecked) {
+          tagItem.classList.add('checked');
+        } else {
+          tagItem.classList.remove('checked');
+        }
+      }
+
+      // 初始化标签选择器
+      setupTagSelector();
+      
+      // 初始化点赞按钮事件监听
+      setupDiaryCardLikeButtons();
 
       // 页面切换函数
       function switchPage(pageId) {
@@ -1703,6 +2497,672 @@
       // 页面加载完成后初始化
       initApp();
     });
+
+    // 显示日记详情弹窗
+    window.showDiaryModal = function(diary) {
+      // 创建弹窗HTML
+      const modalHtml = `
+        <div id="diary-detail-modal" class="diary-modal fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div class="diary-modal-content rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] overflow-auto">
+            <div class="p-8">
+              <!-- 头部信息 -->
+              <div class="flex justify-between items-start mb-6">
+                <div class="flex items-center">
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white font-bold mr-4 shadow-lg">
+                    ${diary.wallet ? diary.wallet.charAt(0).toUpperCase() : 'A'}
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-neutral-800 text-lg">${diary.wallet ? diary.wallet.slice(0, 4) + '...' + diary.wallet.slice(-4) : '匿名'}</h4>
+                    <p class="text-sm text-neutral-500 flex items-center">
+                      <i class="fa fa-clock-o mr-1"></i>
+                      ${formatDate(diary.timestamp)}
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  ${diary.txid ? `
+                    <a href="https://solscan.io/tx/${diary.txid}" target="_blank" class="flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm hover:bg-green-200 transition-all shadow-sm">
+                      <i class="fa fa-link mr-2"></i>
+                      已上链
+                    </a>
+                  ` : ''}
+                  <button id="close-diary-modal" class="w-10 h-10 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 hover:text-neutral-800 transition-all">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              
+                              <!-- 标题和点赞区域 -->
+                <div class="flex justify-between items-start mb-6">
+                  <h1 class="diary-title text-3xl font-bold">${escapeHtml(diary.title || '无标题')}</h1>
+                  <div class="flex items-center space-x-4">
+                    <button class="modal-like-btn flex items-center px-4 py-2 rounded-lg border border-neutral-300 hover:border-red-300 hover:bg-red-50 transition-all" data-diary-id="${diary.id}" data-liked="${diary.likedBy && diary.likedBy[currentWallet] ? 'true' : 'false'}">
+                      <i class="fa ${diary.likedBy && diary.likedBy[currentWallet] ? 'fa-heart text-red-500' : 'fa-heart-o text-neutral-500'} mr-2"></i>
+                      <span class="modal-like-count-${diary.id} font-medium">${diary.likedBy ? Object.keys(diary.likedBy).length : 0}</span>
+                    </button>
+                  </div>
+                </div>
+              
+              <!-- 标签 -->
+              ${diary.tags && diary.tags.length > 0 ? `
+                <div class="flex flex-wrap gap-3 mb-8">
+                  ${diary.tags.map(tag => {
+                    const tagColors = {
+                      '生活': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                      '旅行': 'bg-blue-100 text-blue-800 border-blue-200',
+                      '感悟': 'bg-purple-100 text-purple-800 border-purple-200',
+                      '读书': 'bg-green-100 text-green-800 border-green-200',
+                      '工作': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+                      '美食': 'bg-red-100 text-red-800 border-red-200'
+                    };
+                    const colorClass = tagColors[tag] || 'bg-gray-100 text-gray-800 border-gray-200';
+                    return `<span class="px-4 py-2 ${colorClass} rounded-full text-sm font-medium border">${tag}</span>`;
+                  }).join('')}
+                </div>
+              ` : ''}
+              
+              <!-- 内容 -->
+              <div class="diary-content mb-8 bg-white rounded-lg p-6 border border-neutral-200 shadow-sm">
+                <p class="text-neutral-700 leading-relaxed whitespace-pre-line text-lg">${escapeHtml(diary.content || '')}</p>
+              </div>
+              
+              <!-- 区块链信息 -->
+              ${diary.txid ? `
+                <div class="blockchain-info p-6">
+                  <div class="flex items-center mb-3">
+                    <i class="fa fa-link text-blue-500 mr-2"></i>
+                    <h3 class="font-semibold text-blue-800">区块链交易信息</h3>
+                  </div>
+                  <p class="text-sm text-blue-700 font-mono break-all mb-3 bg-blue-50 p-3 rounded-lg">${diary.txid}</p>
+                  <div class="flex gap-3">
+                    <a href="https://solscan.io/tx/${diary.txid}" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-sm font-medium">
+                      <i class="fa fa-external-link mr-2"></i>
+                      在 Solscan 查看
+                    </a>
+                    <a href="https://explorer.solana.com/tx/${diary.txid}?cluster=mainnet-beta" target="_blank" class="inline-flex items-center px-4 py-2 bg-neutral-500 text-white rounded-lg hover:bg-neutral-600 transition-all text-sm font-medium">
+                      <i class="fa fa-external-link mr-2"></i>
+                      在 Solana Explorer 查看
+                    </a>
+                  </div>
+                </div>
+              ` : `
+                <div class="blockchain-info error p-6">
+                  <div class="flex items-center">
+                    <i class="fa fa-exclamation-triangle text-red-500 mr-2"></i>
+                    <p class="text-red-700 font-medium">
+                      此日记尚未上链或上链失败
+                    </p>
+                  </div>
+                </div>
+              `}
+
+              <!-- 聊天留言区域 -->
+              <div class="chat-section mt-8">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-lg font-semibold text-neutral-800 flex items-center">
+                    <i class="fa fa-comments text-primary mr-2"></i>
+                    留言讨论
+                  </h3>
+                  <span class="text-sm text-neutral-500" id="comment-count">0 条留言</span>
+                </div>
+                
+                <!-- 留言列表 -->
+                <div class="comments-container bg-neutral-50 rounded-lg p-4 mb-4 max-h-64 overflow-y-auto" id="comments-list-${diary.id}">
+                  <div class="text-center text-neutral-500 py-8">
+                    <i class="fa fa-comment-o text-2xl mb-2"></i>
+                    <p>暂无留言，成为第一个留言的人吧！</p>
+                  </div>
+                </div>
+                
+                <!-- 留言输入区域 -->
+                <div class="comment-input-section">
+                  ${currentWallet ? `
+                    <div class="flex gap-3">
+                      <div class="flex-1">
+                        <textarea 
+                          id="comment-input-${diary.id}" 
+                          placeholder="写下你的想法..." 
+                          class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary resize-none"
+                          rows="2"
+                        ></textarea>
+                      </div>
+                      <button 
+                        id="send-comment-${diary.id}" 
+                        class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all font-medium flex items-center"
+                        disabled
+                      >
+                        <i class="fa fa-paper-plane mr-2"></i>
+                        发送
+                      </button>
+                    </div>
+                  ` : `
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
+                      <i class="fa fa-exclamation-triangle text-amber-500 mr-2"></i>
+                      <span class="text-amber-700">请先连接钱包以参与留言讨论</span>
+                    </div>
+                  `}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // 添加到页面
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      
+      // 添加关闭事件
+      const modal = document.getElementById('diary-detail-modal');
+      const closeBtn = document.getElementById('close-diary-modal');
+      
+      function closeModal() {
+        // 清理评论监听器
+        if (commentListeners[diary.id]) {
+          commentListeners[diary.id]();
+          delete commentListeners[diary.id];
+        }
+        
+        modal.style.animation = 'modalFadeOut 0.2s ease-in forwards';
+        setTimeout(() => {
+          modal.remove();
+        }, 200);
+      }
+      
+      closeBtn.addEventListener('click', closeModal);
+      
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+      
+      // 键盘快捷键
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      });
+      
+      // 阻止滚动穿透
+      document.body.style.overflow = 'hidden';
+      
+      // 关闭时恢复滚动
+      modal.addEventListener('remove', () => {
+        document.body.style.overflow = '';
+      });
+
+      // 初始化评论功能
+      initializeComments(diary.id);
+      
+      // 初始化点赞功能
+      initializeLikeButtons(diary.id);
+    }
+
+    // 评论功能
+    let commentListeners = {};
+
+    // 初始化评论功能
+    function initializeComments(diaryId) {
+      // 加载现有评论
+      loadComments(diaryId);
+      
+      // 设置评论输入监听
+      setupCommentInput(diaryId);
+      
+      // 监听新评论
+      listenToComments(diaryId);
+    }
+
+    // 加载评论
+    async function loadComments(diaryId) {
+      const commentsList = document.getElementById(`comments-list-${diaryId}`);
+      const commentCount = document.getElementById('comment-count');
+      
+      if (!commentsList) return;
+      
+      try {
+        // 显示加载状态
+        commentsList.innerHTML = `
+          <div class="comment-loading">
+            <i class="fa fa-spinner fa-spin mr-2"></i>
+            加载评论中...
+          </div>
+        `;
+        
+        // 从Firebase获取评论
+        const commentsRef = ref(db, `comments/${diaryId}`);
+        const snapshot = await get(commentsRef);
+        const comments = snapshot.val() || {};
+        
+        // 渲染评论
+        renderComments(diaryId, comments);
+        
+        // 更新评论数量
+        const commentCountNum = Object.keys(comments).length;
+        if (commentCount) {
+          commentCount.textContent = `${commentCountNum} 条留言`;
+        }
+      } catch (error) {
+        console.error('加载评论失败:', error);
+        commentsList.innerHTML = `
+          <div class="text-center text-red-500 py-8">
+            <i class="fa fa-exclamation-triangle text-2xl mb-2"></i>
+            <p>加载评论失败，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+
+    // 渲染评论列表
+    function renderComments(diaryId, comments) {
+      const commentsList = document.getElementById(`comments-list-${diaryId}`);
+      const commentCount = document.getElementById('comment-count');
+      
+      if (!commentsList) return;
+      
+      const commentEntries = Object.entries(comments);
+      
+      if (commentEntries.length === 0) {
+        commentsList.innerHTML = `
+          <div class="text-center text-neutral-500 py-8">
+            <i class="fa fa-comment-o text-2xl mb-2"></i>
+            <p>暂无留言，成为第一个留言的人吧！</p>
+          </div>
+        `;
+        if (commentCount) commentCount.textContent = '0 条留言';
+        return;
+      }
+      
+      // 按时间排序
+      const sortedComments = commentEntries
+        .map(([id, comment]) => ({ id, ...comment }))
+        .sort((a, b) => a.timestamp - b.timestamp);
+      
+      const commentsHtml = sortedComments.map(comment => `
+        <div class="comment-item">
+          <div class="comment-header">
+            <div class="comment-author">
+              <div class="comment-avatar">
+                ${comment.author.charAt(0).toUpperCase()}
+              </div>
+              <div class="comment-meta">
+                <div class="comment-author-name">${comment.author}</div>
+                <div class="comment-time">${formatDate(comment.timestamp)}</div>
+              </div>
+            </div>
+          </div>
+          <div class="comment-content">${escapeHtml(comment.content)}</div>
+        </div>
+      `).join('');
+      
+      commentsList.innerHTML = commentsHtml;
+      
+      // 更新评论数量
+      if (commentCount) {
+        commentCount.textContent = `${commentEntries.length} 条留言`;
+      }
+      
+      // 滚动到底部
+      commentsList.scrollTop = commentsList.scrollHeight;
+    }
+
+    // 设置评论输入监听
+    function setupCommentInput(diaryId) {
+      const commentInput = document.getElementById(`comment-input-${diaryId}`);
+      const sendButton = document.getElementById(`send-comment-${diaryId}`);
+      
+      if (!commentInput || !sendButton) return;
+      
+      // 输入监听
+      commentInput.addEventListener('input', function() {
+        const hasContent = this.value.trim().length > 0;
+        sendButton.disabled = !hasContent;
+      });
+      
+      // 发送按钮点击
+      sendButton.addEventListener('click', () => {
+        sendComment(diaryId);
+      });
+      
+      // 回车发送
+      commentInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          if (!sendButton.disabled) {
+            sendComment(diaryId);
+          }
+        }
+      });
+    }
+
+    // 发送评论
+    async function sendComment(diaryId) {
+      const commentInput = document.getElementById(`comment-input-${diaryId}`);
+      const sendButton = document.getElementById(`send-comment-${diaryId}`);
+      
+      if (!commentInput || !sendButton || !currentWallet) return;
+      
+      const content = commentInput.value.trim();
+      if (!content) return;
+      
+      try {
+        // 禁用输入
+        commentInput.disabled = true;
+        sendButton.disabled = true;
+        sendButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>发送中...';
+        
+        // 创建评论数据
+        const comment = {
+          content: content,
+          author: currentWallet.slice(0, 4) + '...' + currentWallet.slice(-4),
+          authorWallet: currentWallet,
+          timestamp: Date.now()
+        };
+        
+        // 保存到Firebase
+        const commentsRef = ref(db, `comments/${diaryId}`);
+        await push(commentsRef, comment);
+        
+        // 清空输入框
+        commentInput.value = '';
+        commentInput.disabled = false;
+        sendButton.disabled = true;
+        sendButton.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>发送';
+        
+        // 聚焦输入框
+        commentInput.focus();
+        
+      } catch (error) {
+        console.error('发送评论失败:', error);
+        alert('发送评论失败，请稍后重试');
+        
+        // 恢复输入状态
+        commentInput.disabled = false;
+        sendButton.disabled = false;
+        sendButton.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>发送';
+      }
+    }
+
+    // 监听评论变化
+    function listenToComments(diaryId) {
+      // 移除之前的监听器
+      if (commentListeners[diaryId]) {
+        commentListeners[diaryId]();
+        delete commentListeners[diaryId];
+      }
+      
+      // 设置新的监听器
+      const commentsRef = ref(db, `comments/${diaryId}`);
+      const unsubscribe = onValue(commentsRef, (snapshot) => {
+        const comments = snapshot.val() || {};
+        renderComments(diaryId, comments);
+        
+        // 更新日记卡片上的评论数量
+        updateDiaryCardCommentCount(diaryId, Object.keys(comments).length);
+      });
+      
+      commentListeners[diaryId] = unsubscribe;
+    }
+
+    // 更新日记卡片上的评论数量
+    function updateDiaryCardCommentCount(diaryId, count) {
+      const commentCountElement = document.querySelector(`.comment-count-${diaryId}`);
+      if (commentCountElement) {
+        commentCountElement.textContent = count;
+      }
+    }
+
+    // 加载所有日记的评论数量
+    async function loadAllCommentCounts(diaries) {
+      for (const diary of diaries) {
+        try {
+          const commentsRef = ref(db, `comments/${diary.id}`);
+          const snapshot = await get(commentsRef);
+          const comments = snapshot.val() || {};
+          const count = Object.keys(comments).length;
+          updateDiaryCardCommentCount(diary.id, count);
+        } catch (error) {
+          console.error(`加载日记 ${diary.id} 的评论数量失败:`, error);
+          updateDiaryCardCommentCount(diary.id, 0);
+        }
+      }
+    }
+
+    // 点赞功能
+    async function toggleLike(diaryId) {
+      if (!currentWallet) {
+        alert('请先连接钱包');
+        return;
+      }
+
+      try {
+        const diaryRef = ref(db, `diaryEntries/${diaryId}`);
+        const snapshot = await get(diaryRef);
+        const diary = snapshot.val();
+        
+        if (!diary) {
+          console.error('日记不存在');
+          return;
+        }
+
+        // 初始化likedBy对象
+        if (!diary.likedBy) {
+          diary.likedBy = {};
+        }
+
+        const isLiked = diary.likedBy[currentWallet];
+        
+        if (isLiked) {
+          // 取消点赞
+          delete diary.likedBy[currentWallet];
+        } else {
+          // 添加点赞
+          diary.likedBy[currentWallet] = Date.now();
+        }
+
+        // 更新数据库
+        await update(ref(db, `diaryEntries/${diaryId}`), {
+          likedBy: diary.likedBy
+        });
+
+        // 更新UI
+        updateLikeUI(diaryId, diary.likedBy);
+        
+        // 重新排序日记列表
+        await reorderDiariesByLikes(diaryId);
+
+      } catch (error) {
+        console.error('点赞操作失败:', error);
+        alert('点赞失败，请稍后重试');
+      }
+    }
+
+    // 更新点赞UI
+    function updateLikeUI(diaryId, likedBy) {
+      const likeCount = likedBy ? Object.keys(likedBy).length : 0;
+      const isLiked = likedBy && likedBy[currentWallet];
+
+      // 更新日记卡片上的点赞按钮
+      const likeBtn = document.querySelector(`.like-btn[data-diary-id="${diaryId}"]`);
+      if (likeBtn) {
+        const icon = likeBtn.querySelector('i');
+        const countSpan = likeBtn.querySelector(`.like-count-${diaryId}`);
+        
+        icon.className = `fa ${isLiked ? 'fa-heart text-red-500' : 'fa-heart-o'} mr-1`;
+        if (countSpan) countSpan.textContent = likeCount;
+        
+        likeBtn.setAttribute('data-liked', isLiked.toString());
+        likeBtn.classList.toggle('liked', isLiked);
+      }
+
+      // 更新弹窗中的点赞按钮
+      const modalLikeBtn = document.querySelector(`.modal-like-btn[data-diary-id="${diaryId}"]`);
+      if (modalLikeBtn) {
+        const icon = modalLikeBtn.querySelector('i');
+        const countSpan = modalLikeBtn.querySelector(`.modal-like-count-${diaryId}`);
+        
+        icon.className = `fa ${isLiked ? 'fa-heart text-red-500' : 'fa-heart-o text-neutral-500'} mr-2`;
+        if (countSpan) countSpan.textContent = likeCount;
+        
+        modalLikeBtn.setAttribute('data-liked', isLiked.toString());
+        modalLikeBtn.classList.toggle('liked', isLiked);
+      }
+    }
+
+    // 根据点赞数重新排序日记
+    async function reorderDiariesByLikes(diaryId) {
+      try {
+        // 更新当前日记的点赞数
+        const currentDiary = allDiaries.find(d => d.id === diaryId);
+        if (currentDiary) {
+          currentDiary.likeCount = currentDiary.likedBy ? Object.keys(currentDiary.likedBy).length : 0;
+        }
+
+        // 重新排序allDiaries数组
+        allDiaries.sort((a, b) => {
+          // 首先按点赞数降序排序
+          if (b.likeCount !== a.likeCount) {
+            return b.likeCount - a.likeCount;
+          }
+          // 点赞数相同时按时间倒序排序
+          return b.timestamp - a.timestamp;
+        });
+        
+        // 重新渲染公共日记
+        renderPublicDiaries();
+        
+        // 重新渲染精选日记
+        renderFeaturedDiaries();
+        
+      } catch (error) {
+        console.error('重新排序日记失败:', error);
+      }
+    }
+
+    // 初始化点赞按钮
+    function initializeLikeButtons(diaryId) {
+      // 为弹窗中的点赞按钮添加事件监听
+      const modalLikeBtn = document.querySelector(`.modal-like-btn[data-diary-id="${diaryId}"]`);
+      if (modalLikeBtn) {
+        modalLikeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleLike(diaryId);
+        });
+      }
+    }
+
+    // 为日记卡片添加点赞事件监听
+    function setupDiaryCardLikeButtons() {
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.like-btn')) {
+          e.preventDefault();
+          e.stopPropagation();
+          const likeBtn = e.target.closest('.like-btn');
+          const diaryId = likeBtn.getAttribute('data-diary-id');
+          if (diaryId) {
+            toggleLike(diaryId);
+          }
+        }
+        
+        // 精选日记卡片点击事件
+        if (e.target.closest('.featured-diary-card')) {
+          e.preventDefault();
+          e.stopPropagation();
+          const featuredCard = e.target.closest('.featured-diary-card');
+          const diaryId = featuredCard.getAttribute('data-diary-id');
+          if (diaryId) {
+            const diary = allDiaries.find(d => d.id === diaryId);
+            if (diary) {
+              showDiaryModal(diary);
+            }
+          }
+        }
+      });
+    }
+
+    // 精选日记功能
+    function renderFeaturedDiaries() {
+      const container = document.getElementById('featured-diaries-grid');
+      if (!container) return;
+
+      // 获取点赞数最高的3个公开日记
+      const publicDiaries = allDiaries.filter(d => d.public !== false);
+      const topDiaries = publicDiaries
+        .sort((a, b) => {
+          const aLikes = a.likedBy ? Object.keys(a.likedBy).length : 0;
+          const bLikes = b.likedBy ? Object.keys(b.likedBy).length : 0;
+          return bLikes - aLikes;
+        })
+        .slice(0, 3);
+
+      if (topDiaries.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+            <i class="fa fa-book-o text-neutral-300 text-6xl mb-4"></i>
+            <h3 class="text-xl font-medium text-neutral-600 mb-2">暂无精选日记</h3>
+            <p class="text-neutral-500">等待社区成员分享精彩内容</p>
+          </div>
+        `;
+        return;
+      }
+
+      const featuredHtml = topDiaries.map((diary, index) => {
+        const rank = index + 1;
+        const likeCount = diary.likedBy ? Object.keys(diary.likedBy).length : 0;
+        const preview = diary.content.length > 100 ? diary.content.substring(0, 100) + '...' : diary.content;
+        
+        return `
+          <div class="featured-diary-card rank-${rank}" data-diary-id="${diary.id}">
+            <div class="featured-rank-badge rank-${rank}">
+              ${rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}
+            </div>
+            
+            <h3 class="featured-diary-title">${escapeHtml(diary.title || '无标题')}</h3>
+            <p class="featured-diary-content">${escapeHtml(preview)}</p>
+            
+            <div class="featured-diary-meta">
+              <div class="featured-diary-stats">
+                <div class="featured-diary-stat likes">
+                  <i class="fa fa-heart"></i>
+                  <span>${likeCount}</span>
+                </div>
+                <div class="featured-diary-stat comments">
+                  <i class="fa fa-comment"></i>
+                  <span class="comment-count-${diary.id}">0</span>
+                </div>
+              </div>
+              <div class="text-xs">
+                ${formatDate(diary.timestamp)}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = featuredHtml;
+      
+      // 加载评论数量
+      loadFeaturedCommentCounts(topDiaries);
+    }
+
+    // 加载精选日记的评论数量
+    async function loadFeaturedCommentCounts(diaries) {
+      for (const diary of diaries) {
+        try {
+          const commentsRef = ref(db, `comments/${diary.id}`);
+          const snapshot = await get(commentsRef);
+          const comments = snapshot.val() || {};
+          const count = Object.keys(comments).length;
+          
+          const commentCountElement = document.querySelector(`#featured-diaries-grid .comment-count-${diary.id}`);
+          if (commentCountElement) {
+            commentCountElement.textContent = count;
+          }
+        } catch (error) {
+          console.error(`加载精选日记 ${diary.id} 的评论数量失败:`, error);
+        }
+      }
+    }
 
     // 工具函数
     function formatDate(timestamp) {
