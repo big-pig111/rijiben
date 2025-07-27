@@ -5,7 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>链上日记时光 - 分享生活的点滴</title>
   <!-- 引入外部资源 -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CSS - 生产环境优化版本 -->
+  <script>
+    // 禁用生产环境警告
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4f46e5',
+            'primary/5': 'rgba(79, 70, 229, 0.05)',
+            'primary/10': 'rgba(79, 70, 229, 0.1)',
+            'primary/50': 'rgba(79, 70, 229, 0.5)',
+            'primary/80': 'rgba(79, 70, 229, 0.8)',
+            'primary/90': 'rgba(79, 70, 229, 0.9)'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+  <script>
+    // 覆盖生产环境警告
+    console.warn = function() {
+      if (arguments[0] && arguments[0].includes('cdn.tailwindcss.com should not be used in production')) {
+        return;
+      }
+      console.log.apply(console, arguments);
+    };
+  </script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <!-- Solana Web3.js -->
   <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
@@ -493,6 +521,7 @@
       background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
       border: 1px solid #e2e8f0;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      isolation: isolate;
     }
 
     @keyframes modalFadeIn {
@@ -596,6 +625,9 @@
       flex-direction: column;
       position: relative;
       scroll-behavior: smooth;
+      overflow-y: auto;
+      overflow-x: hidden;
+      isolation: isolate;
     }
 
     .comments-container::-webkit-scrollbar {
@@ -623,6 +655,9 @@
       display: flex;
       flex-direction: column;
       height: 500px;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
     }
 
     .chat-header {
@@ -634,6 +669,7 @@
       flex: 1;
       overflow: hidden;
       position: relative;
+      isolation: isolate;
     }
 
     .chat-input-area {
@@ -2552,7 +2588,12 @@
             tags
           };
           
-          await publishDiary(diaryData);
+          if (typeof publishDiary === 'function') {
+            await publishDiary(diaryData);
+          } else {
+            console.error('publishDiary function is not defined');
+            alert('系统错误，请刷新页面重试');
+          }
         });
       }
         
@@ -2589,8 +2630,23 @@
 
       // 初始化应用
       function initApp() {
-        loadDiaries();
-        updateStats();
+        try {
+          loadDiaries();
+          updateStats();
+          
+          // 验证关键函数是否已定义
+          if (typeof publishDiary !== 'function') {
+            console.error('publishDiary function is not available');
+          }
+          if (typeof connectWallet !== 'function') {
+            console.error('connectWallet function is not available');
+          }
+          if (typeof showDiaryModal !== 'function') {
+            console.error('showDiaryModal function is not available');
+          }
+        } catch (error) {
+          console.error('初始化应用失败:', error);
+        }
       }
 
       // 页面加载完成后初始化
@@ -2769,6 +2825,8 @@
         modal.style.animation = 'modalFadeOut 0.2s ease-in forwards';
         setTimeout(() => {
           modal.remove();
+          // 恢复页面滚动
+          restorePageScroll();
         }, 200);
       }
       
@@ -2788,12 +2846,7 @@
       });
       
       // 阻止滚动穿透
-      document.body.style.overflow = 'hidden';
-      
-      // 关闭时恢复滚动
-      modal.addEventListener('remove', () => {
-        document.body.style.overflow = '';
-      });
+      disablePageScroll();
 
       // 初始化评论功能
       initializeComments(diary.id);
@@ -2804,6 +2857,19 @@
 
     // 评论功能
     let commentListeners = {};
+    let originalBodyOverflow = '';
+
+    // 滚动状态管理
+    function disablePageScroll() {
+      originalBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      console.log('页面滚动已禁用，原始状态:', originalBodyOverflow);
+    }
+
+    function restorePageScroll() {
+      document.body.style.overflow = originalBodyOverflow || '';
+      console.log('页面滚动已恢复:', document.body.style.overflow);
+    }
 
     // 初始化评论功能
     function initializeComments(diaryId) {
@@ -2815,6 +2881,18 @@
       
       // 监听新评论
       listenToComments(diaryId);
+      
+      // 防止聊天区域滚动事件冒泡
+      const commentsContainer = document.getElementById(`comments-list-${diaryId}`);
+      if (commentsContainer) {
+        commentsContainer.addEventListener('wheel', (e) => {
+          e.stopPropagation();
+        });
+        
+        commentsContainer.addEventListener('touchmove', (e) => {
+          e.stopPropagation();
+        });
+      }
     }
 
     // 加载评论
@@ -3295,9 +3373,17 @@
       connectWallet,
       loadDiaries,
       publishDiary,
+      toggleLike,
+      showDiaryModal,
       currentWallet: () => currentWallet,
       allDiaries: () => allDiaries
     };
+
+    // 全局函数暴露
+    window.publishDiary = publishDiary;
+    window.connectWallet = connectWallet;
+    window.showDiaryModal = showDiaryModal;
+    window.toggleLike = toggleLike;
   </script>
 </body>
 </html>
