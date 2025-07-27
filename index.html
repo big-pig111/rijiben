@@ -2146,7 +2146,7 @@
   <!-- Firebase 配置 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, query, limitToLast, orderByChild, equalTo, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, query, limitToLast, orderByChild, equalTo, get, update, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
     // Firebase 配置
     const firebaseConfig = {
@@ -2400,6 +2400,14 @@
         
         // 加载所有日记的评论数量
         loadAllCommentCounts(publicDiaries);
+        // 删除按钮事件监听
+        document.querySelectorAll('.delete-diary-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const diaryId = btn.getAttribute('data-diary-id');
+            deleteDiary(diaryId);
+          };
+        });
       }
 
       // 加载私人日记
@@ -2425,6 +2433,14 @@
         privateDiaries.forEach(diary => {
           const diaryCard = createDiaryCard(diary, true);
           container.appendChild(diaryCard);
+        });
+        // 删除按钮事件监听
+        document.querySelectorAll('.delete-diary-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const diaryId = btn.getAttribute('data-diary-id');
+            deleteDiary(diaryId);
+          };
         });
       }
 
@@ -2567,6 +2583,7 @@
                 ${tagHtml}
                 ${isPrivate ? '<i class="fa fa-lock text-neutral-400 text-sm"></i>' : ''}
                 ${diary.txid ? '<i class="fa fa-link text-primary text-sm" title="已上链"></i>' : ''}
+                ${diary.wallet === currentWallet ? `<button class="delete-diary-btn text-red-500 hover:text-red-700 ml-2" data-diary-id="${diary.id}" title="删除日记"><i class="fa fa-trash"></i></button>` : ''}
               </div>
             </div>
             
@@ -4603,6 +4620,24 @@
         });
       }
     };
+
+    // 删除日记函数
+    async function deleteDiary(diaryId) {
+      if (!currentWallet) {
+        alert('请先连接钱包');
+        return;
+      }
+      if (!diaryId) return;
+      if (!confirm('确定要删除这篇日记吗？删除后无法恢复！')) return;
+      try {
+        await remove(ref(db, `diaryEntries/${diaryId}`));
+        alert('删除成功');
+        loadDiaries();
+      } catch (e) {
+        alert('删除失败，请重试');
+        console.error(e);
+      }
+    }
   </script>
 </body>
 </html>
