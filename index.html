@@ -7,6 +7,8 @@
   <!-- 引入外部资源 -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Solana Web3.js -->
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
   
   <!-- 配置Tailwind主题 -->
@@ -1091,8 +1093,95 @@
 
       // 显示日记详情弹窗
       function showDiaryModal(diary) {
-        // 这里可以添加弹窗逻辑
-        console.log('显示日记:', diary);
+        // 创建弹窗HTML
+        const modalHtml = `
+          <div id="diary-detail-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-xl shadow-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-auto">
+              <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white font-bold mr-3">
+                      ${diary.wallet ? diary.wallet.charAt(0).toUpperCase() : 'A'}
+                    </div>
+                    <div>
+                      <h4 class="font-medium text-neutral-800">${diary.wallet ? diary.wallet.slice(0, 4) + '...' + diary.wallet.slice(-4) : '匿名'}</h4>
+                      <p class="text-sm text-neutral-500">${formatDate(diary.timestamp)}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    ${diary.txid ? `
+                      <a href="https://solscan.io/tx/${diary.txid}" target="_blank" class="flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm hover:bg-green-200 transition-colors">
+                        <i class="fa fa-link mr-1"></i>
+                        已上链
+                      </a>
+                    ` : ''}
+                    <button id="close-diary-modal" class="text-neutral-400 hover:text-neutral-600 text-xl">
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+                
+                <h1 class="text-2xl font-bold text-neutral-800 mb-4">${escapeHtml(diary.title || '无标题')}</h1>
+                
+                <div class="prose max-w-none mb-6">
+                  <p class="text-neutral-700 leading-relaxed whitespace-pre-line">${escapeHtml(diary.content || '')}</p>
+                </div>
+                
+                ${diary.tags && diary.tags.length > 0 ? `
+                  <div class="flex flex-wrap gap-2 mb-6">
+                    ${diary.tags.map(tag => {
+                      const tagColors = {
+                        '生活': 'bg-blue-100 text-blue-800',
+                        '旅行': 'bg-green-100 text-green-800',
+                        '感悟': 'bg-purple-100 text-purple-800',
+                        '读书': 'bg-yellow-100 text-yellow-800',
+                        '工作': 'bg-gray-100 text-gray-800',
+                        '美食': 'bg-red-100 text-red-800'
+                      };
+                      const colorClass = tagColors[tag] || 'bg-gray-100 text-gray-800';
+                      return `<span class="px-3 py-1 ${colorClass} rounded-full text-sm">${tag}</span>`;
+                    }).join('')}
+                  </div>
+                ` : ''}
+                
+                ${diary.txid ? `
+                  <div class="bg-neutral-50 rounded-lg p-4">
+                    <p class="text-sm text-neutral-600 mb-2">区块链交易信息:</p>
+                    <p class="text-xs text-neutral-800 font-mono break-all mb-2">${diary.txid}</p>
+                    <a href="https://solscan.io/tx/${diary.txid}" target="_blank" class="inline-flex items-center text-primary hover:text-primary/80 text-sm">
+                      <i class="fa fa-external-link mr-1"></i>
+                      在 Solscan 上查看完整交易
+                    </a>
+                  </div>
+                ` : `
+                  <div class="bg-amber-50 rounded-lg p-4">
+                    <p class="text-sm text-amber-700">
+                      <i class="fa fa-info-circle mr-1"></i>
+                      此日记尚未上链或上链失败
+                    </p>
+                  </div>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // 添加到页面
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        // 添加关闭事件
+        const modal = document.getElementById('diary-detail-modal');
+        const closeBtn = document.getElementById('close-diary-modal');
+        
+        closeBtn.addEventListener('click', () => {
+          modal.remove();
+        });
+        
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.remove();
+          }
+        });
       }
 
       // 页面切换函数
@@ -1162,6 +1251,75 @@
         });
       }
       
+      // Solana 连接配置
+      const connection = new solanaWeb3.Connection('https://api.mainnet-beta.solana.com', 'confirmed');
+
+      // 检查钱包余额
+      async function checkWalletBalance(walletPublicKey) {
+        try {
+          const publicKey = new solanaWeb3.PublicKey(walletPublicKey);
+          const balance = await connection.getBalance(publicKey);
+          // 返回SOL余额（lamports转SOL）
+          return balance / solanaWeb3.LAMPORTS_PER_SOL;
+        } catch (error) {
+          console.error('获取钱包余额失败:', error);
+          return 0;
+        }
+      }
+
+      // 创建Solana上链交易
+      async function createSolanaTransaction(diaryData, walletPublicKey) {
+        try {
+          // 创建日记内容的JSON字符串
+          const diaryContent = JSON.stringify({
+            title: diaryData.title,
+            content: diaryData.content,
+            tags: diaryData.tags,
+            timestamp: Date.now(),
+            author: currentWallet
+          });
+          
+          // 限制memo长度（Solana memo程序限制）
+          const maxMemoLength = 566; // Solana memo 程序的最大长度
+          let memo = diaryContent;
+          if (memo.length > maxMemoLength) {
+            // 如果内容太长，截断并添加标记
+            memo = memo.substring(0, maxMemoLength - 10) + '...[截断]';
+          }
+          
+          // 创建memo指令
+          const memoInstruction = new solanaWeb3.TransactionInstruction({
+            keys: [],
+            programId: new solanaWeb3.PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr'),
+            data: Buffer.from(memo, 'utf8')
+          });
+          
+          // 创建转账指令（小额转账以记录上链）
+          const fromPubkey = new solanaWeb3.PublicKey(walletPublicKey);
+          const toPubkey = new solanaWeb3.PublicKey(walletPublicKey); // 转给自己
+          const transferInstruction = solanaWeb3.SystemProgram.transfer({
+            fromPubkey,
+            toPubkey,
+            lamports: 1000 // 0.000001 SOL 作为上链费用
+          });
+          
+          // 获取最新的blockhash
+          const { blockhash } = await connection.getLatestBlockhash();
+          
+          // 创建交易
+          const transaction = new solanaWeb3.Transaction();
+          transaction.recentBlockhash = blockhash;
+          transaction.feePayer = fromPubkey;
+          transaction.add(transferInstruction);
+          transaction.add(memoInstruction);
+          
+          return transaction;
+        } catch (error) {
+          console.error('创建Solana交易失败:', error);
+          throw error;
+        }
+      }
+
       // 日记发布功能
       async function publishDiary(diaryData) {
         if (!currentWallet) {
@@ -1175,18 +1333,59 @@
         
         // 禁用按钮并显示加载状态
         publishBtn.disabled = true;
-        publishText.textContent = '发布中...';
+        publishText.textContent = '创建交易中...';
         publishSpinner.classList.remove('hidden');
         
-        try {
-          // 准备数据
+        let txid = null;
+        
+                  try {
+            // 第一步：创建Solana交易并上链
+            try {
+              publishText.textContent = '检查钱包余额...';
+              
+              // 检查余额
+              const balance = await checkWalletBalance(currentWallet);
+              const minBalance = 0.005; // 至少需要0.005 SOL用于交易费用
+              
+              if (balance < minBalance) {
+                throw new Error(`钱包余额不足。当前余额: ${balance.toFixed(4)} SOL，至少需要 ${minBalance} SOL`);
+              }
+              
+              publishText.textContent = '正在上链...';
+              
+              // 创建交易
+              const transaction = await createSolanaTransaction(diaryData, currentWallet);
+              
+              // 发送交易到Solana主网
+              const { signature } = await window.solana.signAndSendTransaction(transaction);
+              txid = signature;
+            
+            publishText.textContent = '确认交易中...';
+            
+            // 等待交易确认
+            const confirmation = await connection.confirmTransaction(signature, 'confirmed');
+            if (confirmation.value.err) {
+              throw new Error('交易确认失败');
+            }
+            
+            console.log('Solana交易成功:', signature);
+            publishText.textContent = '保存到数据库...';
+            
+          } catch (solanaError) {
+            console.error('Solana上链失败:', solanaError);
+            // 即使Solana上链失败，也继续保存到Firebase，但不包含txid
+            publishText.textContent = '上链失败，仅保存到数据库...';
+          }
+          
+          // 第二步：保存到Firebase数据库
           const entry = {
             title: diaryData.title,
             content: diaryData.content,
             tags: diaryData.tags,
             public: diaryData.privacy === 'public',
             wallet: currentWallet,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            txid: txid // 如果上链成功则包含交易ID
           };
           
           // 保存到Firebase
@@ -1198,7 +1397,7 @@
           document.getElementById('char-count').textContent = '0 个字';
           
           // 显示成功消息
-          showSuccessModal();
+          showSuccessModal(txid);
           
           // 重新加载数据
           setTimeout(() => {
@@ -1208,7 +1407,7 @@
           return true;
         } catch (error) {
           console.error('发布失败:', error);
-          alert('发布失败，请重试');
+          alert('发布失败：' + error.message);
           return false;
         } finally {
           // 恢复按钮状态
@@ -1230,9 +1429,52 @@
       }
 
       // 显示成功弹窗
-      function showSuccessModal() {
+      function showSuccessModal(txid = null) {
         const successModal = document.getElementById('success-modal');
         if (successModal) {
+          // 更新弹窗内容
+          const modalContent = successModal.querySelector('.text-center');
+          if (txid) {
+            modalContent.innerHTML = `
+              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa fa-check text-2xl text-green-500"></i>
+              </div>
+              <h3 class="text-xl font-bold text-neutral-800 mb-2">发布成功！</h3>
+              <p class="text-neutral-600 mb-4">你的日记已经成功发布到Solana区块链！</p>
+              <div class="bg-neutral-50 rounded-lg p-4 mb-6">
+                <p class="text-sm text-neutral-600 mb-2">交易ID:</p>
+                <p class="text-xs text-neutral-800 font-mono break-all">${txid}</p>
+                <a href="https://solscan.io/tx/${txid}" target="_blank" class="inline-block mt-2 text-primary hover:text-primary/80 text-sm">
+                  <i class="fa fa-external-link mr-1"></i>在 Solscan 上查看
+                </a>
+              </div>
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button id="view-diary" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                  查看我的日记
+                </button>
+                <button id="close-modal" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
+                  返回首页
+                </button>
+              </div>
+            `;
+          } else {
+            modalContent.innerHTML = `
+              <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa fa-exclamation-triangle text-2xl text-amber-500"></i>
+              </div>
+              <h3 class="text-xl font-bold text-neutral-800 mb-2">部分成功</h3>
+              <p class="text-neutral-600 mb-6">日记已保存，但区块链上链失败。你可以稍后重试上链。</p>
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button id="view-diary" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                  查看我的日记
+                </button>
+                <button id="close-modal" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
+                  返回首页
+                </button>
+              </div>
+            `;
+          }
+          
           successModal.classList.remove('hidden');
           setTimeout(() => {
             successModal.classList.add('opacity-100');
@@ -1294,33 +1536,36 @@
         });
       }
         
-      // 关闭弹窗按钮
-      if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', function() {
-          successModal.classList.remove('opacity-100');
-          successModal.querySelector('div').classList.remove('scale-100');
-          successModal.querySelector('div').classList.add('scale-95');
-          
-          setTimeout(() => {
-            successModal.classList.add('hidden');
-            switchPage('home');
-          }, 300);
-        });
-      }
-      
-      // 查看日记按钮
-      if (viewDiaryBtn) {
-        viewDiaryBtn.addEventListener('click', function() {
-          successModal.classList.remove('opacity-100');
-          successModal.querySelector('div').classList.remove('scale-100');
-          successModal.querySelector('div').classList.add('scale-95');
-          
-          setTimeout(() => {
-            successModal.classList.add('hidden');
-            switchPage('public');
-          }, 300);
-        });
-      }
+      // 使用事件委托处理成功弹窗按钮
+      document.addEventListener('click', function(e) {
+        if (e.target.id === 'close-modal') {
+          const successModal = document.getElementById('success-modal');
+          if (successModal) {
+            successModal.classList.remove('opacity-100');
+            successModal.querySelector('div').classList.remove('scale-100');
+            successModal.querySelector('div').classList.add('scale-95');
+            
+            setTimeout(() => {
+              successModal.classList.add('hidden');
+              switchPage('home');
+            }, 300);
+          }
+        }
+        
+        if (e.target.id === 'view-diary') {
+          const successModal = document.getElementById('success-modal');
+          if (successModal) {
+            successModal.classList.remove('opacity-100');
+            successModal.querySelector('div').classList.remove('scale-100');
+            successModal.querySelector('div').classList.add('scale-95');
+            
+            setTimeout(() => {
+              successModal.classList.add('hidden');
+              switchPage('public');
+            }, 300);
+          }
+        }
+      });
 
       // 初始化应用
       function initApp() {
