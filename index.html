@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>链上日记时光 - 分享生活的点滴</title>
-  <!-- 引入外部资源 -->
-  <!-- Tailwind CSS - 生产环境优化版本 -->
+  <title>Blockchain Diary - Share Life's Moments</title>
+  <!-- External Resources -->
+  <!-- Tailwind CSS - Production Optimized Version -->
   <script>
-    // 禁用生产环境警告
+    // Disable production environment warnings
     window.tailwind = window.tailwind || {};
     window.tailwind.config = {
       theme: {
@@ -26,7 +26,7 @@
   </script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
   <script>
-    // 覆盖生产环境警告
+    // Override production environment warnings
     console.warn = function() {
       if (arguments[0] && arguments[0].includes('cdn.tailwindcss.com should not be used in production')) {
         return;
@@ -39,14 +39,14 @@
   <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
   
-  <!-- 配置Tailwind主题 -->
+  <!-- Configure Tailwind Theme -->
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: '#4f46e5', // 深紫色主色调
-            secondary: '#ec4899', // 粉色辅助色
+            primary: '#4f46e5', // Deep purple primary color
+            secondary: '#ec4899', // Pink secondary color
             neutral: {
               50: '#fafafa',
               100: '#f5f5f5',
@@ -67,7 +67,7 @@
     }
   </script>
   
-  <!-- 自定义工具类 -->
+  <!-- Custom Utility Classes -->
   <style type="text/tailwindcss">
     @layer utilities {
       .content-auto {
@@ -83,16 +83,16 @@
   </style>
   
   <style>
-    /* 基础样式 */
+    /* Base Styles */
     body {
       overflow-x: hidden;
-      /* 确保手机端可以正常滚动 */
+      /* Ensure mobile devices can scroll normally */
       -webkit-overflow-scrolling: touch;
     }
     
-    /* 手机端优化 */
+    /* Mobile Optimization */
     @media (max-width: 768px) {
-      /* 防止模态框内容超出屏幕 */
+      /* Prevent modal content from exceeding screen */
       .modal-content,
       .diary-modal-content {
         max-height: calc(100vh - 2rem);
@@ -100,57 +100,57 @@
         -webkit-overflow-scrolling: touch;
       }
       
-      /* 确保手机端菜单可以滚动 */
+      /* Ensure mobile menu can scroll */
       #mobile-menu {
         max-height: calc(100vh - 4rem);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
       }
       
-      /* 修复固定定位的模态框在手机端的问题 */
+      /* Fix fixed positioning modal issues on mobile */
       .fixed {
         position: fixed;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
       }
       
-      /* 确保内容不会被键盘遮挡 */
+      /* Ensure content is not covered by keyboard */
       input:focus,
       textarea:focus {
         position: relative;
         z-index: 1;
       }
       
-      /* 优化表单容器在手机端的显示 */
+      /* Optimize form container display on mobile */
       .page-container {
-        padding-bottom: 80px; /* 为底部留出空间 */
+        padding-bottom: 80px; /* Leave space at the bottom */
       }
       
-      /* 确保发布按钮在手机端始终可见 */
+      /* Ensure publish button is always visible on mobile */
       #publish-btn {
         position: relative;
         z-index: 10;
       }
       
-      /* 优化手机端的padding和margin */
+      /* Optimize padding and margin for mobile */
       .container {
         padding-left: 1rem;
         padding-right: 1rem;
       }
       
-      /* 调整手机端模态框的位置 */
+      /* Adjust modal position on mobile */
       .diary-modal-content,
       .modal-content {
         margin: 1rem;
         max-width: calc(100vw - 2rem);
       }
       
-      /* 防止横向滚动 */
+      /* Prevent horizontal scrolling */
       * {
         max-width: 100vw;
       }
       
-      /* 优化手机端的触摸体验 */
+      /* Optimize touch experience on mobile */
       button,
       a,
       .clickable {
@@ -158,7 +158,7 @@
         touch-action: manipulation;
       }
       
-      /* 确保日记网格在手机端正常显示 */
+      /* Ensure diary grid displays properly on mobile */
       #diaries-grid,
       #private-diaries-grid,
       #featured-diaries-grid {
@@ -166,17 +166,17 @@
         gap: 1rem;
       }
       
-      /* 调整精选日记在手机端的显示 */
+      /* Adjust featured diary display on mobile */
       .featured-diary-card {
         padding: 1rem;
       }
       
-      /* 确保统计卡片在手机端正常堆叠 */
+      /* Ensure statistics cards stack properly on mobile */
       .grid {
         grid-template-columns: 1fr;
       }
       
-      /* 优化手机端的文字大小 */
+      /* Optimize text size for mobile */
       h1 {
         font-size: 1.875rem;
       }
@@ -189,13 +189,13 @@
         font-size: 1.25rem;
       }
       
-      /* 确保底部有足够的滚动空间 */
+      /* Ensure sufficient scroll space at bottom */
       main {
         padding-bottom: 2rem;
       }
     }
     
-    /* 页面容器样式 */
+    /* Page Container Styles */
     .page-container {
       display: none;
       opacity: 0;
@@ -214,7 +214,7 @@
       }
     }
     
-    /* 导航下划线动画 */
+    /* Navigation underline animation */
     .nav-link {
       position: relative;
     }
@@ -234,7 +234,7 @@
       width: 100%;
     }
     
-    /* 移动端导航链接样式 */
+    /* Mobile navigation link styles */
     .mobile-nav-link {
       color: #525252;
       transition: all 0.3s ease;
@@ -245,7 +245,7 @@
       color: #4f46e5;
     }
     
-    /* 日记卡片悬停效果 */
+    /* Diary card hover effect */
     .diary-card {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -255,7 +255,7 @@
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     }
     
-    /* 筛选按钮样式 */
+    /* Filter button styles */
     .filter-btn {
       transition: all 0.3s ease;
     }
@@ -265,7 +265,7 @@
       color: white;
     }
     
-    /* 自定义滚动条 */
+    /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
     }
@@ -283,7 +283,7 @@
       background: #a1a1a1;
     }
 
-    /* 精美钱包连接按钮 */
+    /* Beautiful wallet connect button */
     .wallet-btn {
       position: relative;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -329,7 +329,7 @@
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
 
-    /* 连接状态样式 */
+    /* Connection status styles */
     .wallet-btn.connected {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
@@ -357,7 +357,7 @@
       box-shadow: 0 8px 25px rgba(239, 68, 68, 0.6);
     }
 
-    /* 钱包图标动画 */
+    /* Wallet icon animation */
     .wallet-btn .wallet-icon {
       transition: transform 0.3s ease;
     }
@@ -375,7 +375,7 @@
       50% { transform: scale(1.05); }
     }
 
-    /* 状态指示器 */
+    /* Status indicator */
     .wallet-status-indicator {
       position: absolute;
       top: -3px;
@@ -402,7 +402,7 @@
       box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
     }
 
-    /* 加载动画 */
+    /* Loading animation */
     .wallet-btn.loading {
       pointer-events: none;
     }
@@ -416,7 +416,7 @@
       to { transform: rotate(360deg); }
     }
 
-    /* 移动端适配 */
+    /* Mobile adaptation */
     @media (max-width: 768px) {
       .wallet-btn {
         padding: 10px 20px;
@@ -425,7 +425,7 @@
       }
     }
 
-    /* 精美标签选择样式 */
+    /* Beautiful tag selection styles */
     .tag-selector {
       display: flex;
       flex-wrap: wrap;
@@ -477,7 +477,7 @@
       pointer-events: none;
     }
 
-    /* 标签选中状态 */
+    /* Tag selected state */
     .tag-item.checked {
       background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
       color: white;
@@ -509,86 +509,86 @@
       }
     }
 
-    /* 不同标签的颜色主题 */
-    .tag-item[data-tag="生活"] {
+    /* Different tag color themes */
+    .tag-item[data-tag="Life"] {
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
       color: #92400e;
       border-color: #fbbf24;
     }
 
-    .tag-item[data-tag="生活"].checked {
+    .tag-item[data-tag="Life"].checked {
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
       color: white;
       border-color: #f59e0b;
       box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
     }
 
-    .tag-item[data-tag="旅行"] {
+    .tag-item[data-tag="Travel"] {
       background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
       color: #1e40af;
       border-color: #3b82f6;
     }
 
-    .tag-item[data-tag="旅行"].checked {
+    .tag-item[data-tag="Travel"].checked {
       background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
       color: white;
       border-color: #3b82f6;
       box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
     }
 
-    .tag-item[data-tag="感悟"] {
+    .tag-item[data-tag="Reflection"] {
       background: linear-gradient(135deg, #e9d5ff 0%, #c084fc 100%);
       color: #7c3aed;
       border-color: #a855f7;
     }
 
-    .tag-item[data-tag="感悟"].checked {
+    .tag-item[data-tag="Reflection"].checked {
       background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
       color: white;
       border-color: #a855f7;
       box-shadow: 0 4px 16px rgba(168, 85, 247, 0.3);
     }
 
-    .tag-item[data-tag="读书"] {
+    .tag-item[data-tag="Reading"] {
       background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%);
       color: #166534;
       border-color: #22c55e;
     }
 
-    .tag-item[data-tag="读书"].checked {
+    .tag-item[data-tag="Reading"].checked {
       background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
       color: white;
       border-color: #22c55e;
       box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
     }
 
-    .tag-item[data-tag="工作"] {
+    .tag-item[data-tag="Work"] {
       background: linear-gradient(135deg, #f3e8ff 0%, #c4b5fd 100%);
       color: #6b21a8;
       border-color: #8b5cf6;
     }
 
-    .tag-item[data-tag="工作"].checked {
+    .tag-item[data-tag="Work"].checked {
       background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
       color: white;
       border-color: #8b5cf6;
       box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
     }
 
-    .tag-item[data-tag="美食"] {
+    .tag-item[data-tag="Food"] {
       background: linear-gradient(135deg, #fed7d7 0%, #fca5a5 100%);
       color: #991b1b;
       border-color: #ef4444;
     }
 
-    .tag-item[data-tag="美食"].checked {
+    .tag-item[data-tag="Food"].checked {
       background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
       color: white;
       border-color: #ef4444;
       box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
     }
 
-    /* 标签选择器容器 */
+    /* Tag selector container */
     .tag-selector-container {
       background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
       border-radius: 16px;
@@ -605,7 +605,7 @@
       display: block;
     }
 
-    /* 响应式设计 */
+    /* Responsive design */
     @media (max-width: 640px) {
       .tag-selector {
         gap: 8px;
@@ -618,7 +618,7 @@
       }
     }
 
-    /* 精美日记详情弹窗样式 */
+    /* Beautiful diary detail modal styles */
     .diary-modal {
       animation: modalFadeIn 0.3s ease-out;
     }
@@ -656,7 +656,7 @@
       }
     }
 
-    /* 日记卡片悬停效果 */
+    /* Diary card hover effect */
     .diary-card {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -667,7 +667,7 @@
       border-color: #4f46e5;
     }
 
-    /* 阅读全文按钮样式 */
+    /* Read more button styles */
     .read-more-btn {
       position: relative;
       overflow: hidden;
@@ -693,7 +693,7 @@
       transform: translateX(4px);
     }
 
-    /* 弹窗内容样式 */
+    /* Modal content styles */
     .diary-content {
       line-height: 1.8;
       font-size: 16px;
@@ -707,7 +707,7 @@
       background-clip: text;
     }
 
-    /* 区块链信息样式 */
+    /* Blockchain information styles */
     .blockchain-info {
       background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
       border: 1px solid #0ea5e9;
@@ -719,7 +719,7 @@
       border-color: #ef4444;
     }
 
-    /* 聊天留言样式 */
+    /* Chat comment styles */
     .chat-section {
       border-top: 1px solid #e5e7eb;
       padding-top: 24px;
@@ -755,7 +755,7 @@
       background: #9ca3af;
     }
 
-    /* 微信风格的聊天区域 */
+    /* WeChat-style chat area */
     .chat-section {
       border-top: 1px solid #e5e7eb;
       padding-top: 24px;
@@ -769,7 +769,7 @@
     
     @media (max-width: 768px) {
       .chat-section {
-        height: 350px; /* 手机端调整高度 */
+        height: 350px; /* Mobile height adjustment */
         padding-top: 16px;
       }
     }
@@ -793,7 +793,7 @@
 
 
 
-    /* 微信风格的消息布局 */
+    /* WeChat-style message layout */
     .comments-container {
       display: flex;
       flex-direction: column;
@@ -913,7 +913,7 @@
       box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
-    /* 个人资料按钮样式 */
+    /* Profile button styles */
     .profile-btn {
       position: relative;
       overflow: hidden;
@@ -942,7 +942,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    /* 钱包按钮断开连接样式 */
+    /* Wallet button disconnect styles */
     .wallet-btn.connected {
       position: relative;
     }
@@ -966,7 +966,7 @@
       box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
     }
 
-    /* 断开连接菜单样式 */
+    /* Disconnect menu styles */
     #disconnect-menu {
       animation: menuSlideIn 0.2s ease-out;
     }
@@ -993,7 +993,7 @@
       }
     }
 
-    /* 头像上传样式 */
+    /* Avatar upload styles */
     #avatar-preview {
       background-size: cover;
       background-position: center;
@@ -1011,7 +1011,7 @@
       border-radius: 50%;
     }
 
-    /* 个人资料弹窗动画 */
+    /* Profile modal animation */
     #profile-modal {
       animation: modalFadeIn 0.3s ease-out;
     }
@@ -1020,7 +1020,7 @@
       animation: modalSlideIn 0.3s ease-out;
     }
 
-    /* 用户资料查看弹窗动画 */
+    /* User profile view modal animation */
     #user-profile-view-modal {
       animation: modalFadeIn 0.3s ease-out;
     }
@@ -1029,7 +1029,7 @@
       animation: modalSlideIn 0.3s ease-out;
     }
 
-    /* 微信风格的输入区域 */
+    /* WeChat-style input area */
     .chat-input-area {
       background: #f9fafb;
       border-top: 1px solid #e5e7eb;
@@ -1065,7 +1065,7 @@
       box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
-    /* 留言加载动画 */
+    /* Comment loading animation */
     .comment-loading {
       display: flex;
       align-items: center;
@@ -1078,7 +1078,7 @@
       animation: spin 1s linear infinite;
     }
 
-    /* 点赞按钮样式 */
+    /* Like button styles */
     .like-btn {
       position: relative;
       overflow: hidden;
@@ -1147,7 +1147,7 @@
       animation: heartBeat 0.6s ease;
     }
 
-    /* 精选日记样式 */
+    /* Featured diary styles */
     .featured-diary-card {
       background: white;
       border-radius: 16px;
@@ -1303,7 +1303,7 @@
       margin-top: 0.125rem;
     }
 
-    /* 自定义单选按钮样式 */
+    /* Custom radio button styles */
     .custom-radio {
       position: relative;
       display: inline-block;
@@ -1339,42 +1339,42 @@
 </head>
 
 <body class="bg-neutral-50 font-sans text-neutral-800">
-  <!-- 导航栏 -->
+  <!-- Navigation Bar -->
   <header class="sticky top-0 z-40 bg-white shadow-sm border-b border-neutral-200">
     <div class="container mx-auto px-4">
       <div class="flex items-center justify-between h-16 md:h-20">
         <!-- Logo -->
         <a href="#" class="flex items-center space-x-2 page-link" data-page="home">
           <i class="fa fa-link text-primary text-2xl"></i>
-          <span class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">链上日记时光</span>
+          <span class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Blockchain Diary Time</span>
         </a>
         
-        <!-- 桌面导航 -->
+        <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center space-x-8">
-          <a href="#" class="nav-link nav-active text-neutral-800 font-medium transition-colors" data-page="home">首页</a>
-          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="upload">写日记</a>
-          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="public">公共日记</a>
-          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="private">我的日记</a>
-          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="stats">数据统计</a>
+          <a href="#" class="nav-link nav-active text-neutral-800 font-medium transition-colors" data-page="home">Home</a>
+          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="upload">Write Diary</a>
+          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="public">Public Diaries</a>
+          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="private">My Diaries</a>
+          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="stats">Statistics</a>
         </nav>
         
-        <!-- 用户区域 -->
+        <!-- User Area -->
         <div class="flex items-center space-x-4">
           <button id="wallet-btn" class="wallet-btn disconnected hidden md:flex">
             <i class="fa fa-wallet wallet-icon"></i>
-            <span id="wallet-text">连接钱包</span>
+            <span id="wallet-text">Connect Wallet</span>
             <div id="wallet-status" class="wallet-status-indicator disconnected"></div>
           </button>
           
-          <!-- 个人资料设置按钮 -->
+          <!-- Profile Settings Button -->
           <button id="profile-btn" class="profile-btn hidden md:flex items-center px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 font-medium transition-all shadow-lg hover:shadow-xl hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
             <div class="profile-icon mr-2">
               <i class="fa fa-user"></i>
             </div>
-            <span>个人资料</span>
+            <span>Profile</span>
           </button>
           
-          <!-- 移动端菜单按钮 -->
+          <!-- Mobile Menu Button -->
           <button id="mobile-menu-btn" class="md:hidden text-neutral-700">
             <i class="fa fa-bars text-xl"></i>
           </button>
@@ -1382,32 +1382,32 @@
       </div>
     </div>
     
-    <!-- 移动端导航菜单 -->
+    <!-- Mobile Navigation Menu -->
     <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-neutral-200">
       <div class="container mx-auto px-4 py-3">
         <div class="flex flex-col space-y-4 py-2">
           <a href="#" class="mobile-nav-link nav-active py-2 px-3 rounded-lg" data-page="home">
-            <i class="fa fa-home mr-2"></i>首页
+            <i class="fa fa-home mr-2"></i>Home
           </a>
           <a href="#" class="mobile-nav-link py-2 px-3 rounded-lg" data-page="upload">
-            <i class="fa fa-pencil mr-2"></i>写日记
+            <i class="fa fa-pencil mr-2"></i>Write Diary
           </a>
           <a href="#" class="mobile-nav-link py-2 px-3 rounded-lg" data-page="public">
-            <i class="fa fa-book mr-2"></i>公共日记
+            <i class="fa fa-book mr-2"></i>Public Diaries
           </a>
           <a href="#" class="mobile-nav-link py-2 px-3 rounded-lg" data-page="private">
-            <i class="fa fa-lock mr-2"></i>我的日记
+            <i class="fa fa-lock mr-2"></i>My Diaries
           </a>
           <a href="#" class="mobile-nav-link py-2 px-3 rounded-lg" data-page="stats">
-            <i class="fa fa-bar-chart mr-2"></i>数据统计
+            <i class="fa fa-bar-chart mr-2"></i>Statistics
           </a>
-          <!-- 手机端个人资料按钮 -->
+          <!-- Mobile Profile Button -->
           <button id="mobile-profile-btn" class="w-full py-2 px-3 rounded-lg bg-neutral-100 text-neutral-700 font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed text-left" disabled>
-            <i class="fa fa-user mr-2"></i>个人资料
+            <i class="fa fa-user mr-2"></i>Profile
           </button>
           <button id="mobile-wallet-btn" class="wallet-btn disconnected flex items-center justify-center mt-2">
             <i class="fa fa-wallet wallet-icon"></i>
-            <span id="mobile-wallet-text">连接钱包</span>
+            <span id="mobile-wallet-text">Connect Wallet</span>
             <div id="mobile-wallet-status" class="wallet-status-indicator disconnected"></div>
           </button>
         </div>
@@ -1415,11 +1415,11 @@
     </div>
   </header>
 
-  <!-- 主内容区 -->
+  <!-- Main Content Area -->
   <main class="min-h-[calc(100vh-4rem)] pt-1">
-    <!-- 首页 -->
+    <!-- Home Page -->
     <section id="home" class="page-container active">
-      <!-- 英雄区域 -->
+      <!-- Hero Section -->
       <div class="relative bg-gradient-to-br from-primary/5 to-secondary/5 py-20 md:py-32 overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full opacity-10">
           <i class="fa fa-pencil absolute top-20 right-20 text-[150px] text-primary"></i>
@@ -1429,30 +1429,29 @@
         <div class="container mx-auto px-4 relative z-10">
           <div class="max-w-3xl mx-auto text-center">
             <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-neutral-800 leading-tight mb-6">
-              记录生活的<span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">链上时光</span>
+              Record your <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Blockchain Moments</span>
             </h1>
             <p class="text-lg md:text-xl text-neutral-700 mb-10 leading-relaxed max-w-2xl mx-auto">
-              基于区块链技术的去中心化日记平台，让你的每一段文字都永久保存在链上，
-              既可以公开分享，也可以私密收藏，真正属于你的数字记忆。
+              A decentralized diary platform based on blockchain technology. Every word you write is permanently stored on-chain. You can share publicly or keep it private—your true digital memory.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
               <a href="#" class="page-link px-8 py-4 bg-primary text-white rounded-full hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl font-medium text-lg" data-page="upload">
-                <i class="fa fa-pencil mr-2"></i>开始记录
+                <i class="fa fa-pencil mr-2"></i>Start Writing
               </a>
               <a href="#" class="page-link px-8 py-4 bg-white text-primary border border-primary rounded-full hover:bg-primary/5 transition-all shadow-md hover:shadow-lg font-medium text-lg" data-page="public">
-                <i class="fa fa-eye mr-2"></i>浏览日记
+                <i class="fa fa-eye mr-2"></i>Browse Diaries
               </a>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- 功能介绍 -->
+      <!-- Features -->
       <div class="py-16 bg-white">
         <div class="container mx-auto px-4">
           <div class="text-center mb-16">
-            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-800 mb-4">为什么选择我们</h2>
-            <p class="text-neutral-600 max-w-2xl mx-auto">简单、优雅的日记体验，让记录成为一种享受</p>
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-800 mb-4">Why Choose Us</h2>
+            <p class="text-neutral-600 max-w-2xl mx-auto">A simple and elegant diary experience that makes writing a pleasure</p>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -1460,189 +1459,189 @@
               <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                 <i class="fa fa-pencil-square-o text-primary text-2xl"></i>
               </div>
-              <h3 class="text-xl font-bold mb-3">轻松记录</h3>
-              <p class="text-neutral-600">简洁直观的编辑器，让你专注于内容创作，随时随地记录灵感与感悟。</p>
+              <h3 class="text-xl font-bold mb-3">Easy Writing</h3>
+              <p class="text-neutral-600">A clean and intuitive editor lets you focus on your content and capture inspiration anytime, anywhere.</p>
             </div>
             
             <div class="bg-neutral-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-all border border-neutral-100">
               <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                 <i class="fa fa-share-alt text-primary text-2xl"></i>
               </div>
-              <h3 class="text-xl font-bold mb-3">分享交流</h3>
-              <p class="text-neutral-600">选择公开你的日记，与志同道合的人交流想法，发现更多生活视角。</p>
+              <h3 class="text-xl font-bold mb-3">Share & Connect</h3>
+              <p class="text-neutral-600">Choose to make your diary public and connect with like-minded people. Discover more perspectives on life.</p>
             </div>
             
             <div class="bg-neutral-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-all border border-neutral-100">
               <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                 <i class="fa fa-bar-chart text-primary text-2xl"></i>
               </div>
-              <h3 class="text-xl font-bold mb-3">数据洞察</h3>
-              <p class="text-neutral-600">通过数据了解自己的记录习惯，发现创作规律，持续提升记录质量。</p>
+              <h3 class="text-xl font-bold mb-3">Data Insights</h3>
+              <p class="text-neutral-600">Understand your writing habits through data, discover your creative patterns, and continuously improve your diary quality.</p>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- 精选日记 -->
+      <!-- Featured Diaries -->
       <div class="py-16 bg-neutral-50">
         <div class="container mx-auto px-4">
           <div class="flex justify-between items-end mb-10">
             <div>
-              <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-800 mb-2">精选日记</h2>
-              <p class="text-neutral-600">发现社区中最受欢迎的精彩内容</p>
+              <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-800 mb-2">Featured Diaries</h2>
+              <p class="text-neutral-600">Discover the most popular and exciting content in the community</p>
             </div>
             <a href="#" class="page-link text-primary hover:text-primary/80 font-medium hidden md:block" data-page="public">
-              查看全部 <i class="fa fa-arrow-right ml-1"></i>
+              View All <i class="fa fa-arrow-right ml-1"></i>
             </a>
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto" id="featured-diaries-grid">
-            <!-- 精选日记卡片将通过JavaScript动态生成 -->
+            <!-- Featured diary cards will be generated dynamically by JavaScript -->
             <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
               <i class="fa fa-spinner fa-spin text-neutral-300 text-6xl mb-4"></i>
-              <h3 class="text-xl font-medium text-neutral-600 mb-2">加载精选日记中...</h3>
-              <p class="text-neutral-500">正在获取最受欢迎的日记</p>
-                    </div>
+              <h3 class="text-xl font-medium text-neutral-600 mb-2">Loading featured diaries...</h3>
+              <p class="text-neutral-500">Fetching the most popular diaries</p>
+            </div>
           </div>
           
           <div class="text-center mt-8 md:hidden">
             <a href="#" class="page-link inline-block px-5 py-2 border border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors" data-page="public">
-              查看更多日记
+              View More Diaries
             </a>
           </div>
         </div>
       </div>
       
-      <!-- 行动召唤 -->
+      <!-- Call to Action -->
       <div class="py-16 bg-gradient-to-r from-primary to-primary/80 text-white">
         <div class="container mx-auto px-4 text-center">
-          <h2 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold mb-6">开始记录你的故事</h2>
+          <h2 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold mb-6">Start Recording Your Story</h2>
           <p class="max-w-2xl mx-auto mb-8 text-white/90 text-lg">
-            每一段经历都值得被铭记，每一个想法都值得被记录。加入我们，分享你的生活点滴。
+            Every experience is worth remembering, and every thought is worth recording. Join us, share your daily moments.
           </p>
           <a href="#" class="page-link inline-flex items-center px-8 py-4 bg-white text-primary rounded-full hover:bg-neutral-100 transition-all shadow-lg font-medium text-lg" data-page="upload">
-            <i class="fa fa-pencil-square-o mr-2"></i>立即写日记
+            <i class="fa fa-pencil-square-o mr-2"></i>Write Diary Now
           </a>
         </div>
       </div>
     </section>
 
-    <!-- 写日记页面 -->
+    <!-- Write Diary Page -->
     <section id="upload" class="page-container py-12">
       <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
           <div class="mb-10">
             <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800 mb-2">
-              <i class="fa fa-pencil-square-o text-primary mr-2"></i>写下你的日记
+              <i class="fa fa-pencil-square-o text-primary mr-2"></i>Write Down Your Diary
             </h1>
-            <p class="text-neutral-600">记录生活中的思考、感悟与美好，留下属于自己的独特印记</p>
+            <p class="text-neutral-600">Record your thoughts, reflections, and beautiful moments in life, leaving your unique mark</p>
           </div>
           
           <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8 border border-neutral-200">
             <form id="diary-form" class="space-y-6">
-              <!-- 标题输入 -->
+              <!-- Title Input -->
               <div>
-                <label for="diary-title" class="block text-sm font-medium text-neutral-700 mb-1">日记标题</label>
+                <label for="diary-title" class="block text-sm font-medium text-neutral-700 mb-1">Diary Title</label>
                 <input 
                   type="text" 
                   id="diary-title" 
                   class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-lg"
-                  placeholder="给你的日记起个标题吧..."
+                  placeholder="Give your diary a title..."
                   required
                 >
               </div>
               
-              <!-- 标签选择 -->
+              <!-- Tag Selection -->
               <div class="tag-selector-container">
-                <label>选择标签（可多选）</label>
+                <label>Select Tags (Multi-select)</label>
                 <div class="tag-selector">
-                  <label class="tag-item" data-tag="生活">
-                    <input type="checkbox" name="tags" value="生活">
-                    <span>生活</span>
+                  <label class="tag-item" data-tag="Life">
+                    <input type="checkbox" name="tags" value="Life">
+                    <span>Life</span>
                   </label>
-                  <label class="tag-item" data-tag="旅行">
-                    <input type="checkbox" name="tags" value="旅行">
-                    <span>旅行</span>
+                  <label class="tag-item" data-tag="Travel">
+                    <input type="checkbox" name="tags" value="Travel">
+                    <span>Travel</span>
                   </label>
-                  <label class="tag-item" data-tag="感悟">
-                    <input type="checkbox" name="tags" value="感悟">
-                    <span>感悟</span>
+                  <label class="tag-item" data-tag="Reflection">
+                    <input type="checkbox" name="tags" value="Reflection">
+                    <span>Reflection</span>
                   </label>
-                  <label class="tag-item" data-tag="读书">
-                    <input type="checkbox" name="tags" value="读书">
-                    <span>读书</span>
+                  <label class="tag-item" data-tag="Reading">
+                    <input type="checkbox" name="tags" value="Reading">
+                    <span>Reading</span>
                   </label>
-                  <label class="tag-item" data-tag="工作">
-                    <input type="checkbox" name="tags" value="工作">
-                    <span>工作</span>
+                  <label class="tag-item" data-tag="Work">
+                    <input type="checkbox" name="tags" value="Work">
+                    <span>Work</span>
                   </label>
-                  <label class="tag-item" data-tag="美食">
-                    <input type="checkbox" name="tags" value="美食">
-                    <span>美食</span>
+                  <label class="tag-item" data-tag="Food">
+                    <input type="checkbox" name="tags" value="Food">
+                    <span>Food</span>
                   </label>
                 </div>
               </div>
               
-              <!-- 日记内容 -->
+              <!-- Diary Content -->
               <div>
-                <label for="diary-content" class="block text-sm font-medium text-neutral-700 mb-1">日记内容</label>
+                <label for="diary-content" class="block text-sm font-medium text-neutral-700 mb-1">Diary Content</label>
                 <textarea 
                   id="diary-content" 
                   rows="10" 
                   class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none"
-                  placeholder="今天发生了什么事？有什么想记录的呢..."
+                  placeholder="What happened today? What do you want to record?"
                   required
                 ></textarea>
                 <div class="flex justify-between items-center mt-2 text-sm text-neutral-500">
-                  <span id="char-count">0 个字</span>
+                  <span id="char-count">0 characters</span>
                   <button type="button" id="clear-content" class="hover:text-primary transition-colors">
-                    <i class="fa fa-eraser mr-1"></i>清空
+                    <i class="fa fa-eraser mr-1"></i>Clear
                   </button>
                 </div>
               </div>
               
-              <!-- 隐私设置 -->
+              <!-- Privacy Settings -->
               <div class="pt-2">
-                <label class="block text-sm font-medium text-neutral-700 mb-2">隐私设置</label>
+                <label class="block text-sm font-medium text-neutral-700 mb-2">Privacy Settings</label>
                 <div class="flex items-center space-x-6">
                   <label class="inline-flex items-center cursor-pointer">
                     <input type="radio" name="privacy" value="public" class="sr-only" checked>
                     <div class="custom-radio checked mr-2"></div>
-                    <span class="font-semibold text-primary">公开 - 所有人可见，上链存储</span>
+                    <span class="font-semibold text-primary">Public - Everyone can see, stored on blockchain</span>
                   </label>
                   <label class="inline-flex items-center cursor-pointer">
                     <input type="radio" name="privacy" value="private" class="sr-only">
                     <div class="custom-radio mr-2"></div>
-                    <span>私密 - 仅自己可见，加密存储</span>
+                    <span>Private - Only you can see, encrypted storage</span>
                   </label>
                 </div>
                 <p class="text-xs text-neutral-500 mt-2">
                   <i class="fa fa-info-circle mr-1"></i>
-                  所有日记都会存储在区块链上，私密日记将使用你的钱包地址加密
+                  All diaries will be stored on the blockchain, private diaries will use your wallet address for encryption
                 </p>
               </div>
               
-              <!-- 钱包连接提示 -->
+              <!-- Wallet Connection Prompt -->
               <div id="wallet-warning" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-lg">
                 <div class="flex items-center">
                   <i class="fa fa-exclamation-triangle text-amber-500 mr-2"></i>
-                  <span class="text-amber-700">请先连接钱包以发布日记到区块链</span>
+                  <span class="text-amber-700">Please connect your wallet to publish to the blockchain</span>
                 </div>
               </div>
               
-              <!-- 上链选项 -->
+              <!-- Blockchain Option -->
               <div class="pt-2">
                 <label class="inline-flex items-center cursor-pointer">
                   <input type="checkbox" id="enable-blockchain" class="sr-only peer" checked>
                   <div class="relative w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/25 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                   <span class="ml-3 text-sm font-medium text-neutral-700">
-                    尝试上链存储 
-                    <span class="text-xs text-neutral-500">(失败时仍会保存到数据库)</span>
+                    Try storing on blockchain 
+                    <span class="text-xs text-neutral-500">(will still save to database if fails)</span>
                   </span>
                 </label>
               </div>
               
-              <!-- 提交按钮 -->
+              <!-- Submit Button -->
               <div class="pt-4 flex flex-col sm:flex-row gap-4">
                 <button 
                   type="submit" 
@@ -1650,7 +1649,7 @@
                   class="flex-1 px-6 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all shadow-md font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <i class="fa fa-paper-plane mr-2"></i>
-                  <span id="publish-text">发布日记</span>
+                  <span id="publish-text">Publish Diary</span>
                   <div id="publish-spinner" class="hidden ml-2">
                     <i class="fa fa-spinner fa-spin"></i>
                   </div>
@@ -1660,29 +1659,29 @@
                   id="draft-btn"
                   class="flex-1 px-6 py-4 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-all font-medium flex items-center justify-center"
                 >
-                  <i class="fa fa-save mr-2"></i>保存草稿
+                  <i class="fa fa-save mr-2"></i>Save Draft
                 </button>
               </div>
             </form>
           </div>
           
-          <!-- 写作提示 -->
+          <!-- Writing Tips -->
           <div class="mt-10 bg-neutral-50 rounded-xl p-6 border border-neutral-200">
             <h3 class="text-lg font-semibold mb-4 flex items-center">
-              <i class="fa fa-lightbulb-o text-primary mr-2"></i>写作提示
+              <i class="fa fa-lightbulb-o text-primary mr-2"></i>Writing Tips
             </h3>
             <ul class="space-y-2 text-neutral-700">
               <li class="flex items-start">
                 <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
-                <span>尽量使用具体的细节和感受来描述，让日记更生动</span>
+                <span>Use specific details and feelings to describe, making your diary more vivid</span>
               </li>
               <li class="flex items-start">
                 <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
-                <span>可以记录当天发生的事情，也可以写下对某件事的思考</span>
+                <span>You can record what happened today or write about your thoughts on something</span>
               </li>
               <li class="flex items-start">
                 <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
-                <span>选择合适的标签可以让更多人看到你的日记</span>
+                <span>Choosing the right tags can make your diary more visible to others</span>
               </li>
             </ul>
           </div>
@@ -1690,48 +1689,48 @@
       </div>
     </section>
 
-    <!-- 公共日记页面 -->
+    <!-- Public Diaries Page -->
     <section id="public" class="page-container py-12">
       <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
           <div class="mb-10">
             <div class="flex items-center justify-between mb-2">
               <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800">
-              <i class="fa fa-book text-primary mr-2"></i>公共日记
+              <i class="fa fa-book text-primary mr-2"></i>Public Diaries
             </h1>
               <div class="flex items-center text-sm text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full">
                 <i class="fa fa-heart text-red-500 mr-1"></i>
-                按点赞数排序
+                Order by Likes
               </div>
             </div>
-            <p class="text-neutral-600">浏览社区成员分享的精彩日记，感受不同的生活视角和思考方式</p>
+            <p class="text-neutral-600">Browse community members' exciting diary entries, experiencing different perspectives and ways of thinking</p>
           </div>
           
-          <!-- 筛选和搜索 -->
+          <!-- Filter and Search -->
           <div class="bg-white rounded-xl shadow-sm p-4 mb-8 border border-neutral-200">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div class="flex flex-wrap gap-2">
                 <button class="filter-btn active px-4 py-2 rounded-full bg-primary text-white text-sm">
-                  全部
+                  All
                 </button>
                 <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
-                  生活
+                  Life
                 </button>
                 <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
-                  旅行
+                  Travel
                 </button>
                 <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
-                  感悟
+                  Reflection
                 </button>
                 <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
-                  读书
+                  Reading
                 </button>
               </div>
               
               <div class="relative w-full md:w-auto">
                 <input 
                   type="text" 
-                  placeholder="搜索日记内容..." 
+                  placeholder="Search diary content..." 
                   class="w-full md:w-64 pl-10 pr-4 py-2 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
                 >
                 <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"></i>
@@ -1739,25 +1738,25 @@
             </div>
           </div>
           
-          <!-- 日记列表 -->
+          <!-- Diary List -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- 暂无内容提示 -->
+            <!-- No content prompt -->
             <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
               <i class="fa fa-book-o text-neutral-300 text-6xl mb-4"></i>
-              <h3 class="text-xl font-medium text-neutral-600 mb-2">暂无公共日记</h3>
-              <p class="text-neutral-500 mb-4">成为第一个分享日记的人吧！</p>
+              <h3 class="text-xl font-medium text-neutral-600 mb-2">No public diaries yet</h3>
+              <p class="text-neutral-500 mb-4">Be the first to share your diary!</p>
               <a href="#" class="page-link px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors" data-page="upload">
-                <i class="fa fa-pencil mr-2"></i>写第一篇日记
+                <i class="fa fa-pencil mr-2"></i>Write Your First Diary
               </a>
-                    </div>
-                </div>
-                
-          <!-- 分页 -->
+            </div>
+          </div>
+          
+          <!-- Pagination -->
           <div class="mt-12 flex justify-center hidden">
             <nav class="flex items-center space-x-1">
               <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                 <i class="fa fa-angle-left"></i>
-                    </button>
+              </button>
               <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white">1</button>
               <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors">2</button>
               <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors">3</button>
@@ -1765,104 +1764,104 @@
               <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors">8</button>
               <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors">
                 <i class="fa fa-angle-right"></i>
-                    </button>
+              </button>
             </nav>
-                  </div>
-                </div>
-              </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- 私人日记页面 -->
+    <!-- Private Diaries Page -->
     <section id="private" class="page-container py-12">
       <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
           <div class="mb-10">
             <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800 mb-2">
-              <i class="fa fa-lock text-primary mr-2"></i>我的私人日记
+              <i class="fa fa-lock text-primary mr-2"></i>My Private Diaries
             </h1>
-            <p class="text-neutral-600">查看你的私人日记，这些内容只有你能看到，数据已加密存储在区块链上</p>
-                </div>
-                
-          <!-- 钱包连接提示 -->
+            <p class="text-neutral-600">View your private diaries, these contents are only visible to you, and the data is encrypted and stored on the blockchain</p>
+          </div>
+          
+          <!-- Wallet Connection Prompt -->
           <div id="private-wallet-warning" class="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8">
             <div class="flex items-center justify-between">
-                  <div class="flex items-center">
+              <div class="flex items-center">
                 <i class="fa fa-exclamation-triangle text-amber-500 text-xl mr-3"></i>
-                    <div>
-                  <h3 class="font-medium text-amber-800">需要连接钱包</h3>
-                  <p class="text-amber-700 text-sm mt-1">请先连接你的钱包以查看私人日记</p>
-                    </div>
-                  </div>
-              <button id="private-connect-wallet" class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
-                连接钱包
-                    </button>
-                  </div>
+                <div>
+                  <h3 class="font-medium text-amber-800">Wallet Connection Required</h3>
+                  <p class="text-amber-700 text-sm mt-1">Please connect your wallet to view private diaries</p>
                 </div>
+              </div>
+              <button id="private-connect-wallet" class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
+                Connect Wallet
+              </button>
+            </div>
+          </div>
           
-          <!-- 筛选和搜索 -->
+          <!-- Filter and Search -->
           <div id="private-controls" class="bg-white rounded-xl shadow-sm p-4 mb-8 border border-neutral-200 hidden">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div class="flex flex-wrap gap-2">
                 <button class="filter-btn active px-4 py-2 rounded-full bg-primary text-white text-sm">
-                  全部
-                    </button>
+                  All
+                </button>
                 <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
-                  生活
-                    </button>
+                  Life
+                </button>
                 <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
-                  感悟
-                  </button>
+                  Reflection
+                </button>
                 <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
-                  工作
-                    </button>
-                  </div>
+                  Work
+                </button>
+              </div>
               
               <div class="relative w-full md:w-auto">
                 <input 
                   type="text" 
-                  placeholder="搜索我的日记..." 
+                  placeholder="Search my diaries..." 
                   class="w-full md:w-64 pl-10 pr-4 py-2 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
                 >
                 <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"></i>
-                    </div>
-                  </div>
-                </div>
-                
-          <!-- 私人日记列表 -->
-          <div id="private-diary-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
-            <!-- 日记卡片将通过JavaScript动态生成 -->
+              </div>
+            </div>
           </div>
           
-          <!-- 空状态 -->
+          <!-- Private Diary List -->
+          <div id="private-diary-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            <!-- Diary cards will be generated dynamically by JavaScript -->
+          </div>
+          
+          <!-- Empty State -->
           <div id="private-empty-state" class="flex flex-col items-center justify-center py-16 text-center hidden">
             <i class="fa fa-lock text-neutral-300 text-6xl mb-4"></i>
-            <h3 class="text-xl font-medium text-neutral-600 mb-2">还没有私人日记</h3>
-            <p class="text-neutral-500 mb-4">写下你的第一篇私人日记吧</p>
+            <h3 class="text-xl font-medium text-neutral-600 mb-2">No private diaries yet</h3>
+            <p class="text-neutral-500 mb-4">Write your first private diary</p>
             <a href="#" class="page-link px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors" data-page="upload">
-              <i class="fa fa-pencil mr-2"></i>写日记
+              <i class="fa fa-pencil mr-2"></i>Write Diary
             </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 数据统计页面 -->
+    <!-- Statistics Page -->
     <section id="stats" class="page-container py-12">
       <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
           <div class="mb-10">
             <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800 mb-2">
-              <i class="fa fa-bar-chart text-primary mr-2"></i>社区数据统计
+              <i class="fa fa-bar-chart text-primary mr-2"></i>Community Data Statistics
             </h1>
-            <p class="text-neutral-600">探索我们社区的活跃度和内容分布，看看大家都在记录和分享什么</p>
+            <p class="text-neutral-600">Explore our community's activity and content distribution, see what everyone is recording and sharing</p>
           </div>
           
-          <!-- 统计概览 -->
+          <!-- Overview -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
             <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div class="flex justify-between items-start mb-4">
                 <div>
-                  <p class="text-neutral-500 text-sm">总日记数</p>
+                  <p class="text-neutral-500 text-sm">Total Diaries</p>
                   <h3 class="text-3xl font-bold text-neutral-800 mt-1" id="total-diaries">0</h3>
                 </div>
                 <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -1871,14 +1870,14 @@
               </div>
               <div class="flex items-center text-neutral-400 text-sm">
                 <i class="fa fa-minus mr-1"></i>
-                <span>暂无数据</span>
+                <span>No data yet</span>
               </div>
             </div>
             
             <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div class="flex justify-between items-start mb-4">
                 <div>
-                  <p class="text-neutral-500 text-sm">活跃用户</p>
+                  <p class="text-neutral-500 text-sm">Active Users</p>
                   <h3 class="text-3xl font-bold text-neutral-800 mt-1" id="active-users">0</h3>
                 </div>
                 <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -1887,14 +1886,14 @@
               </div>
               <div class="flex items-center text-neutral-400 text-sm">
                 <i class="fa fa-minus mr-1"></i>
-                <span>暂无数据</span>
+                <span>No data yet</span>
               </div>
             </div>
             
             <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div class="flex justify-between items-start mb-4">
                 <div>
-                  <p class="text-neutral-500 text-sm">公开日记</p>
+                  <p class="text-neutral-500 text-sm">Public Diaries</p>
                   <h3 class="text-3xl font-bold text-neutral-800 mt-1" id="public-diaries">0</h3>
                 </div>
                 <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -1903,14 +1902,14 @@
               </div>
               <div class="flex items-center text-neutral-400 text-sm">
                 <i class="fa fa-minus mr-1"></i>
-                <span>暂无数据</span>
+                <span>No data yet</span>
               </div>
             </div>
             
             <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div class="flex justify-between items-start mb-4">
                 <div>
-                  <p class="text-neutral-500 text-sm">总评论数</p>
+                  <p class="text-neutral-500 text-sm">Total Comments</p>
                   <h3 class="text-3xl font-bold text-neutral-800 mt-1" id="total-comments">0</h3>
                 </div>
                 <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -1919,84 +1918,84 @@
               </div>
               <div class="flex items-center text-neutral-400 text-sm">
                 <i class="fa fa-minus mr-1"></i>
-                <span>暂无数据</span>
+                <span>No data yet</span>
               </div>
             </div>
           </div>
           
-          <!-- 图表区域 -->
+          <!-- Chart Area -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-            <!-- 标签分布图表 -->
+            <!-- Tag Distribution Chart -->
             <div class="bg-white rounded-xl shadow-sm p-6 border border-neutral-200 lg:col-span-1">
-              <h3 class="text-lg font-semibold mb-6">热门标签分布</h3>
+              <h3 class="text-lg font-semibold mb-6">Popular Tag Distribution</h3>
               <div class="h-80 flex items-center justify-center">
                 <div class="text-center">
                   <i class="fa fa-pie-chart text-neutral-300 text-6xl mb-4"></i>
-                  <p class="text-neutral-500">暂无数据可展示</p>
+                  <p class="text-neutral-500">No data available for display</p>
               </div>
               </div>
             </div>
             
-            <!-- 月度活跃度图表 -->
+            <!-- Monthly Activity Chart -->
             <div class="bg-white rounded-xl shadow-sm p-6 border border-neutral-200 lg:col-span-2">
               <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-semibold">月度活跃度趋势</h3>
+                <h3 class="text-lg font-semibold">Monthly Activity Trend</h3>
                 <div class="flex space-x-2">
-                  <button class="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary">月度</button>
-                  <button class="px-3 py-1 text-sm rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-colors">季度</button>
-                  <button class="px-3 py-1 text-sm rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-colors">年度</button>
+                  <button class="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary">Monthly</button>
+                  <button class="px-3 py-1 text-sm rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-colors">Quarterly</button>
+                  <button class="px-3 py-1 text-sm rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-colors">Annual</button>
                 </div>
               </div>
               <div class="h-80 flex items-center justify-center">
                 <div class="text-center">
                   <i class="fa fa-line-chart text-neutral-300 text-6xl mb-4"></i>
-                  <p class="text-neutral-500">暂无数据可展示</p>
+                  <p class="text-neutral-500">No data available for display</p>
                 </div>
               </div>
             </div>
           </div>
           
-          <!-- 活跃度分析 -->
+          <!-- Activity Analysis -->
           <div class="bg-white rounded-xl shadow-sm p-6 border border-neutral-200 mb-10">
-            <h3 class="text-lg font-semibold mb-6">用户活跃时段分析</h3>
+            <h3 class="text-lg font-semibold mb-6">User Activity Time Analysis</h3>
             <div class="h-80 flex items-center justify-center">
               <div class="text-center">
                 <i class="fa fa-bar-chart text-neutral-300 text-6xl mb-4"></i>
-                <p class="text-neutral-500">暂无数据可展示</p>
+                <p class="text-neutral-500">No data available for display</p>
             </div>
             </div>
           </div>
           
-          <!-- 热门日记排行 -->
+          <!-- Popular Diaries Ranking -->
           <div class="bg-white rounded-xl shadow-sm p-6 border border-neutral-200">
-            <h3 class="text-lg font-semibold mb-6">热门日记排行</h3>
+            <h3 class="text-lg font-semibold mb-6">Popular Diaries Ranking</h3>
             <div class="flex flex-col items-center justify-center py-16 text-center">
               <i class="fa fa-trophy text-neutral-300 text-6xl mb-4"></i>
-              <h4 class="text-xl font-medium text-neutral-600 mb-2">暂无热门日记</h4>
-              <p class="text-neutral-500">等待社区成员创建精彩内容</p>
-                </div>
-                </div>
-              </div>
+              <h4 class="text-xl font-medium text-neutral-600 mb-2">No popular diaries yet</h4>
+              <p class="text-neutral-500">Waiting for community members to create exciting content</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- 个人资料设置弹窗 -->
+  <!-- Profile Settings Modal -->
   <div id="profile-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
     <div class="modal-content bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden flex flex-col max-h-[90vh]">
-      <!-- 弹窗头部 -->
+      <!-- Modal Header -->
       <div class="bg-gradient-to-r from-primary to-secondary p-6 text-white">
         <div class="flex justify-between items-center">
-          <h2 class="text-xl font-bold">个人资料设置</h2>
+          <h2 class="text-xl font-bold">Profile Settings</h2>
           <button id="close-profile-modal" class="text-white hover:text-white/80 transition-colors">
             <i class="fa fa-times text-xl"></i>
           </button>
         </div>
       </div>
-      <!-- 弹窗内容区（可滚动） -->
+      <!-- Modal Content Area (scrollable) -->
       <div class="flex-1 overflow-y-auto px-6 py-4" id="profile-form-scroll">
         <form id="profile-form" class="space-y-6">
-          <!-- 头像上传 -->
+          <!-- Avatar Upload -->
           <div class="text-center">
             <div class="relative inline-block">
               <div id="avatar-preview" class="w-24 h-24 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 cursor-pointer hover:opacity-80 transition-opacity">
@@ -2007,41 +2006,41 @@
                 <i class="fa fa-camera text-sm"></i>
               </button>
             </div>
-            <p class="text-sm text-neutral-500">点击头像上传新图片</p>
+            <p class="text-sm text-neutral-500">Click on the avatar to upload a new image</p>
           </div>
-          <!-- 用户名 -->
+          <!-- Username -->
           <div>
-            <label for="profile-username" class="block text-sm font-medium text-neutral-700 mb-2">用户名</label>
+            <label for="profile-username" class="block text-sm font-medium text-neutral-700 mb-2">Username</label>
             <input 
               type="text" 
               id="profile-username" 
               class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-              placeholder="输入你的用户名"
+              placeholder="Enter your username"
               maxlength="20"
               required
             >
-            <p class="text-xs text-neutral-500 mt-1">用户名将显示在日记和评论中</p>
+            <p class="text-xs text-neutral-500 mt-1">Username will be displayed in diaries and comments</p>
           </div>
-          <!-- 个人简介 -->
+          <!-- Bio -->
           <div>
-            <label for="profile-bio" class="block text-sm font-medium text-neutral-700 mb-2">个人简介</label>
+            <label for="profile-bio" class="block text-sm font-medium text-neutral-700 mb-2">Bio</label>
             <textarea 
               id="profile-bio" 
               rows="3" 
               class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none"
-              placeholder="介绍一下自己..."
+              placeholder="Introduce yourself..."
               maxlength="200"
             ></textarea>
             <div class="flex justify-between items-center mt-1">
-              <p class="text-xs text-neutral-500">个人简介将显示在你的个人页面</p>
+              <p class="text-xs text-neutral-500">Bio will be displayed on your personal page</p>
               <span id="bio-char-count" class="text-xs text-neutral-400">0/200</span>
             </div>
           </div>
-          <!-- 钱包地址显示 -->
+          <!-- Wallet Address Display -->
           <div class="bg-neutral-50 rounded-lg p-4">
-            <label class="block text-sm font-medium text-neutral-700 mb-2">钱包地址</label>
+            <label class="block text-sm font-medium text-neutral-700 mb-2">Wallet Address</label>
             <div class="flex items-center justify-between">
-              <span id="profile-wallet-address" class="text-sm text-neutral-600 font-mono">未连接钱包</span>
+              <span id="profile-wallet-address" class="text-sm text-neutral-600 font-mono">Wallet not connected</span>
               <button type="button" id="copy-wallet-btn" class="text-primary hover:text-primary/80 transition-colors">
                 <i class="fa fa-copy"></i>
               </button>
@@ -2049,72 +2048,72 @@
           </div>
         </form>
       </div>
-      <!-- 按钮区 sticky -->
+      <!-- Button Area sticky -->
       <div class="px-6 py-4 border-t flex-shrink-0 bg-white sticky bottom-0 z-10 flex gap-3">
         <button type="button" id="cancel-profile-btn" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
-          取消
+          Cancel
         </button>
         <button type="submit" form="profile-form" id="save-profile-btn" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium">
-          保存资料
+          Save Profile
         </button>
       </div>
     </div>
   </div>
 
-  <!-- 用户资料查看弹窗 -->
+  <!-- User Profile View Modal -->
   <div id="user-profile-view-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
     <div class="modal-content bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
-      <!-- 弹窗头部 -->
+      <!-- Modal Header -->
       <div class="bg-gradient-to-r from-primary to-secondary p-6 text-white">
         <div class="flex justify-between items-center">
-          <h2 class="text-xl font-bold">用户资料</h2>
+          <h2 class="text-xl font-bold">User Profile</h2>
           <button id="close-user-profile-view-modal" class="text-white hover:text-white/80 transition-colors">
             <i class="fa fa-times text-xl"></i>
           </button>
         </div>
       </div>
       
-      <!-- 弹窗内容 -->
+      <!-- Modal Content -->
       <div class="p-6">
         <div class="space-y-6">
-          <!-- 头像显示 -->
+          <!-- Avatar Display -->
           <div class="text-center">
             <div id="view-avatar" class="w-24 h-24 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">
               <i class="fa fa-user"></i>
             </div>
           </div>
           
-          <!-- 用户名 -->
+          <!-- Username -->
           <div>
-            <label class="block text-sm font-medium text-neutral-700 mb-2">用户名</label>
+            <label class="block text-sm font-medium text-neutral-700 mb-2">Username</label>
             <div id="view-username" class="w-full px-4 py-3 rounded-lg bg-neutral-50 border border-neutral-200 text-neutral-800">
-              加载中...
+              Loading...
           </div>
         </div>
           
-          <!-- 个人简介 -->
+          <!-- Bio -->
           <div>
-            <label class="block text-sm font-medium text-neutral-700 mb-2">个人简介</label>
+            <label class="block text-sm font-medium text-neutral-700 mb-2">Bio</label>
             <div id="view-bio" class="w-full px-4 py-3 rounded-lg bg-neutral-50 border border-neutral-200 text-neutral-800 min-h-[4.5rem]">
-              加载中...
+              Loading...
       </div>
           </div>
           
-          <!-- 钱包地址显示 -->
+          <!-- Wallet Address Display -->
           <div class="bg-neutral-50 rounded-lg p-4">
-            <label class="block text-sm font-medium text-neutral-700 mb-2">钱包地址</label>
+            <label class="block text-sm font-medium text-neutral-700 mb-2">Wallet Address</label>
             <div class="flex items-center justify-between">
-              <span id="view-wallet-address" class="text-sm text-neutral-600 font-mono">加载中...</span>
+              <span id="view-wallet-address" class="text-sm text-neutral-600 font-mono">Loading...</span>
               <button type="button" id="copy-view-wallet-btn" class="text-primary hover:text-primary/80 transition-colors">
                 <i class="fa fa-copy"></i>
               </button>
             </div>
           </div>
           
-          <!-- 关闭按钮 -->
+          <!-- Close Button -->
           <div class="pt-4">
             <button type="button" id="close-user-profile-view-btn" class="w-full px-4 py-3 bg-neutral-100 text-neutral-700 rounded-lg hover:bg-neutral-200 transition-colors font-medium">
-              关闭
+              Close
             </button>
           </div>
         </div>
@@ -2122,33 +2121,33 @@
     </div>
 
 
-  <!-- 发布成功弹窗 -->
+  <!-- Success Modal -->
   <div id="success-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
     <div class="bg-white rounded-xl shadow-lg p-6 max-w-md w-full transform transition-transform duration-300 scale-95">
       <div class="text-center">
         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="fa fa-check text-2xl text-green-500"></i>
         </div>
-        <h3 class="text-xl font-bold text-neutral-800 mb-2">发布成功！</h3>
-        <p class="text-neutral-600 mb-6">你的日记已经成功发布到社区啦！</p>
+        <h3 class="text-xl font-bold text-neutral-800 mb-2">Success!</h3>
+        <p class="text-neutral-600 mb-6">Your diary has been successfully published to the community!</p>
         <div class="flex flex-col sm:flex-row gap-3">
           <button id="view-diary" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-            查看我的日记
+            View My Diary
           </button>
           <button id="close-modal" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
-            返回首页
+            Return to Home
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Firebase 配置 -->
+  <!-- Firebase Configuration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, query, limitToLast, orderByChild, equalTo, get, update, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, query, limitToLast, orderByChild, equalTo, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-    // Firebase 配置
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyA5Z5ieEbAcfQX0kxGSn9ldGXhzvAwx_8M",
       authDomain: "chat-294cc.firebaseapp.com",
@@ -2163,600 +2162,583 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-              // 全局变量
+    // Global Variables
     let currentWallet = '';
     let allDiaries = [];
     let connection;
-    let userProfiles = {}; // 用户资料缓存
-    let currentUserProfile = null; // 当前用户资料
+    let userProfiles = {}; // User profile cache
+    let currentUserProfile = null; // Current user profile
 
-      // Solana 连接配置 - 使用稳定的RPC端点
-      const rpcEndpoints = [
-        'https://small-holy-forest.solana-mainnet.quiknode.pro/b59315ea187b3de1b3542c5c25d7f2d5b5410ff4/',
-        'https://solana-api.projectserum.com',
-        'https://rpc.ankr.com/solana',
-        'https://api.mainnet-beta.solana.com'
-      ];
-      
-      // 尝试连接到可用的RPC端点
-      async function initializeConnection() {
-        for (const endpoint of rpcEndpoints) {
-          try {
-            console.log(`尝试连接到: ${endpoint}`);
-            const testConnection = new solanaWeb3.Connection(endpoint, 'confirmed');
-            // 测试连接
-            await testConnection.getSlot();
-            connection = testConnection;
-            console.log(`成功连接到: ${endpoint}`);
-            return true;
-          } catch (error) {
-            console.log(`连接失败: ${endpoint}`, error.message);
-            continue;
-          }
-        }
-        console.error('所有RPC端点连接失败');
-        return false;
-      }
-
-      // 更新钱包UI
-      function updateWalletUI(connected) {
-        const walletBtn = document.getElementById('wallet-btn');
-        const walletText = document.getElementById('wallet-text');
-        const walletStatus = document.getElementById('wallet-status');
-        const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
-        const mobileWalletText = document.getElementById('mobile-wallet-text');
-        const mobileWalletStatus = document.getElementById('mobile-wallet-status');
-        const profileBtn = document.getElementById('profile-btn');
-        
-        if (connected && currentWallet) {
-          const shortAddr = currentWallet.slice(0, 4) + '...' + currentWallet.slice(-4);
-          
-          // 更新按钮状态
-          walletBtn.className = 'wallet-btn connected hidden md:flex';
-          mobileWalletBtn.className = 'wallet-btn connected flex items-center justify-center mt-2';
-          
-          // 更新文本
-          walletText.textContent = shortAddr;
-          mobileWalletText.textContent = shortAddr;
-          
-          // 更新状态指示器
-          walletStatus.className = 'wallet-status-indicator connected';
-          mobileWalletStatus.className = 'wallet-status-indicator connected';
-          
-          // 根据网络连接状态设置不同的状态
-          if (connection) {
-            walletStatus.title = '✅ 钱包已连接，Solana网络正常';
-            mobileWalletStatus.title = '✅ 钱包已连接，Solana网络正常';
-          } else {
-            walletStatus.className = 'wallet-status-indicator error';
-            mobileWalletStatus.className = 'wallet-status-indicator error';
-            walletStatus.title = '⚠️ 钱包已连接，但Solana网络异常';
-            mobileWalletStatus.title = '⚠️ 钱包已连接，但Solana网络异常';
-          }
-          
-          // 隐藏钱包警告
-          const walletWarning = document.getElementById('wallet-warning');
-          if (walletWarning) {
-            walletWarning.classList.add('hidden');
-          }
-
-          // 启用个人资料按钮
-          if (profileBtn) {
-            profileBtn.disabled = false;
-            profileBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-          }
-          
-          // 启用手机端个人资料按钮
-          const mobileProfileBtn = document.getElementById('mobile-profile-btn');
-          if (mobileProfileBtn) {
-            mobileProfileBtn.disabled = false;
-            mobileProfileBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-          }
-
-          // 加载用户资料
-          loadUserProfile(currentWallet).then(profile => {
-            console.log('钱包连接后加载用户资料结果:', profile);
-            
-            // 检查是否已经提示过用户设置个人资料
-            const hasPrompted = localStorage.getItem(`profile_prompted_${currentWallet}`);
-            console.log('是否已提示过设置个人资料:', hasPrompted);
-            
-            // 如果用户没有设置过个人资料且没有提示过，自动弹出设置弹窗
-            if ((!profile || !profile.username) && !hasPrompted) {
-              console.log('需要弹出个人资料设置弹窗');
-              // 延迟一点时间，让用户看到钱包连接成功的状态
-              setTimeout(() => {
-                showProfileModal(true); // 传递true表示首次设置
-              }, 1000);
-            } else {
-              console.log('用户已有个人资料或已提示过');
-            }
-          });
-
-          // 添加断开连接功能
-          setupDisconnectWallet();
-        } else {
-          // 重置为未连接状态
-          walletBtn.className = 'wallet-btn disconnected hidden md:flex';
-          mobileWalletBtn.className = 'wallet-btn disconnected flex items-center justify-center mt-2';
-          
-          walletText.textContent = '连接钱包';
-          mobileWalletText.textContent = '连接钱包';
-          
-          walletStatus.className = 'wallet-status-indicator disconnected';
-          mobileWalletStatus.className = 'wallet-status-indicator disconnected';
-          walletStatus.title = '点击连接Phantom钱包';
-          mobileWalletStatus.title = '点击连接Phantom钱包';
-
-          // 禁用个人资料按钮
-          if (profileBtn) {
-            profileBtn.disabled = true;
-            profileBtn.classList.add('opacity-50', 'cursor-not-allowed');
-          }
-          
-          // 禁用手机端个人资料按钮
-          const mobileProfileBtn = document.getElementById('mobile-profile-btn');
-          if (mobileProfileBtn) {
-            mobileProfileBtn.disabled = true;
-            mobileProfileBtn.classList.add('opacity-50', 'cursor-not-allowed');
-          }
-        }
-      }
-
-      // 更新私人页面UI
-      function updatePrivatePageUI() {
-        const privateWarning = document.getElementById('private-wallet-warning');
-        const privateControls = document.getElementById('private-controls');
-        const privateDiaryList = document.getElementById('private-diary-list');
-        const privateEmptyState = document.getElementById('private-empty-state');
-        
-        if (currentWallet) {
-          privateWarning.classList.add('hidden');
-          privateControls.classList.remove('hidden');
-          privateDiaryList.classList.remove('hidden');
-          loadPrivateDiaries();
-        } else {
-          privateWarning.classList.remove('hidden');
-          privateControls.classList.add('hidden');
-          privateDiaryList.classList.add('hidden');
-          privateEmptyState.classList.add('hidden');
-        }
-      }
-
-      // 加载所有日记
-      function loadDiaries() {
-        const diaryRef = query(ref(db, 'diaryEntries'), limitToLast(50));
-        onValue(diaryRef, async (snapshot) => {
-          const val = snapshot.val();
-          if (!val) {
-            allDiaries = [];
-            renderPublicDiaries();
-            return;
-          }
-          
-          // 转为数组并按点赞数降序，然后按时间倒序
-          allDiaries = Object.entries(val)
-            .map(([id, entry]) => ({ 
-              id, 
-              ...entry,
-              likeCount: entry.likedBy ? Object.keys(entry.likedBy).length : 0
-            }))
-            .sort((a, b) => {
-              // 首先按点赞数降序排序
-              if (b.likeCount !== a.likeCount) {
-                return b.likeCount - a.likeCount;
-              }
-              // 点赞数相同时按时间倒序排序
-              return b.timestamp - a.timestamp;
-            });
-          
-          renderPublicDiaries();
-          renderFeaturedDiaries();
-          if (currentWallet) {
-            loadPrivateDiaries();
-          }
-          updateStats();
-          
-          // 加载所有日记作者的用户资料
-          const uniqueWallets = [...new Set(allDiaries.map(diary => diary.wallet).filter(Boolean))];
-          console.log('需要加载用户资料的钱包地址:', uniqueWallets);
-          
-          for (const wallet of uniqueWallets) {
-            if (!userProfiles[wallet]) {
-              console.log('加载用户资料:', wallet);
-              await loadUserProfile(wallet);
-            } else {
-              console.log('用户资料已缓存:', wallet);
-            }
-          }
-        });
-      }
-
-      // 渲染公共日记
-      function renderPublicDiaries() {
-        const publicDiaries = allDiaries.filter(d => d.public !== false);
-        const container = document.querySelector('#public .grid');
-        const emptyTip = document.querySelector('#public .col-span-full');
-        
-        if (!container) return;
-        
-        container.innerHTML = '';
-        
-        if (publicDiaries.length === 0) {
-          if (emptyTip) {
-            emptyTip.style.display = 'flex';
-          }
-          return;
-        }
-        
-        if (emptyTip) {
-          emptyTip.style.display = 'none';
-        }
-        
-        publicDiaries.forEach(diary => {
-          const diaryCard = createDiaryCard(diary);
-          container.appendChild(diaryCard);
-        });
-        
-        // 加载所有日记的评论数量
-        loadAllCommentCounts(publicDiaries);
-        // 删除按钮事件监听
-        document.querySelectorAll('.delete-diary-btn').forEach(btn => {
-          btn.onclick = (e) => {
-            e.stopPropagation();
-            const diaryId = btn.getAttribute('data-diary-id');
-            deleteDiary(diaryId);
-          };
-        });
-      }
-
-      // 加载私人日记
-      function loadPrivateDiaries() {
-        if (!currentWallet) return;
-        
-        const privateDiaries = allDiaries.filter(d => 
-          d.public === false && d.wallet === currentWallet
-        );
-        
-        const container = document.getElementById('private-diary-list');
-        const emptyState = document.getElementById('private-empty-state');
-        
-        container.innerHTML = '';
-        
-        if (privateDiaries.length === 0) {
-          emptyState.classList.remove('hidden');
-          return;
-        }
-        
-        emptyState.classList.add('hidden');
-        
-        privateDiaries.forEach(diary => {
-          const diaryCard = createDiaryCard(diary, true);
-          container.appendChild(diaryCard);
-        });
-        // 删除按钮事件监听
-        document.querySelectorAll('.delete-diary-btn').forEach(btn => {
-          btn.onclick = (e) => {
-            e.stopPropagation();
-            const diaryId = btn.getAttribute('data-diary-id');
-            deleteDiary(diaryId);
-          };
-        });
-      }
-
-      // 查看用户资料
-      async function viewUserProfile(walletAddress) {
-        if (!walletAddress) {
-          alert('无效的用户地址');
-          return;
-        }
-
-        const modal = document.getElementById('user-profile-view-modal');
-        const viewAvatar = document.getElementById('view-avatar');
-        const viewUsername = document.getElementById('view-username');
-        const viewBio = document.getElementById('view-bio');
-        const viewWalletAddress = document.getElementById('view-wallet-address');
-
-        // 显示加载状态
-        viewUsername.textContent = '加载中...';
-        viewBio.textContent = '加载中...';
-        viewWalletAddress.textContent = '加载中...';
-        viewAvatar.innerHTML = '<i class="fa fa-user"></i>';
-
-        // 显示弹窗
-        modal.classList.remove('hidden');
-        disablePageScroll();
-
+    // Solana Connection Configuration - Using stable RPC endpoints
+    const rpcEndpoints = [
+      'https://small-holy-forest.solana-mainnet.quiknode.pro/b59315ea187b3de1b3542c5c25d7f2d5b5410ff4/',
+      'https://solana-api.projectserum.com',
+      'https://rpc.ankr.com/solana',
+      'https://api.mainnet-beta.solana.com'
+    ];
+    
+    // Try to connect to an available RPC endpoint
+    async function initializeConnection() {
+      for (const endpoint of rpcEndpoints) {
         try {
-          // 加载用户资料
-          let profile = userProfiles[walletAddress];
-          if (!profile) {
-            profile = await loadUserProfile(walletAddress);
-          }
+          console.log(`Trying to connect to: ${endpoint}`);
+          const testConnection = new solanaWeb3.Connection(endpoint, 'confirmed');
+          // Test connection
+          await testConnection.getSlot();
+          connection = testConnection;
+          console.log(`Successfully connected to: ${endpoint}`);
+          return true;
+        } catch (error) {
+          console.log(`Connection failed: ${endpoint}`, error.message);
+          continue;
+        }
+      }
+      console.error('All RPC endpoints failed to connect');
+      return false;
+    }
 
-          // 显示钱包地址
-          viewWalletAddress.textContent = walletAddress;
+    // Update wallet UI
+    function updateWalletUI(connected) {
+      const walletBtn = document.getElementById('wallet-btn');
+      const walletText = document.getElementById('wallet-text');
+      const walletStatus = document.getElementById('wallet-status');
+      const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
+      const mobileWalletText = document.getElementById('mobile-wallet-text');
+      const mobileWalletStatus = document.getElementById('mobile-wallet-status');
+      const profileBtn = document.getElementById('profile-btn');
+      
+      if (connected && currentWallet) {
+        const shortAddr = currentWallet.slice(0, 4) + '...' + currentWallet.slice(-4);
+        
+        // Update button state
+        walletBtn.className = 'wallet-btn connected hidden md:flex';
+        mobileWalletBtn.className = 'wallet-btn connected flex items-center justify-center mt-2';
+        
+        // Update text
+        walletText.textContent = shortAddr;
+        mobileWalletText.textContent = shortAddr;
+        
+        // Update status indicator
+        walletStatus.className = 'wallet-status-indicator connected';
+        mobileWalletStatus.className = 'wallet-status-indicator connected';
+        
+        // Set status based on network connection
+        if (connection) {
+          walletStatus.title = '✅ Wallet connected, Solana network is normal';
+          mobileWalletStatus.title = '✅ Wallet connected, Solana network is normal';
+        } else {
+          walletStatus.className = 'wallet-status-indicator error';
+          mobileWalletStatus.className = 'wallet-status-indicator error';
+          walletStatus.title = '⚠️ Wallet connected, but Solana network is abnormal';
+          mobileWalletStatus.title = '⚠️ Wallet connected, but Solana network is abnormal';
+        }
+        
+        // Hide wallet warning
+        const walletWarning = document.getElementById('wallet-warning');
+        if (walletWarning) {
+          walletWarning.classList.add('hidden');
+        }
 
-          if (profile) {
-            // 显示用户名
-            viewUsername.textContent = profile.username || '未设置用户名';
-            
-            // 显示个人简介
-            viewBio.textContent = profile.bio || '该用户还没有设置个人简介';
-            
-            // 显示头像
-            if (profile.avatar) {
-              viewAvatar.innerHTML = `<img src="${profile.avatar}" alt="头像" class="w-full h-full object-cover rounded-full">`;
-            } else {
-              const displayName = getUserDisplayName(walletAddress);
-              viewAvatar.innerHTML = displayName.charAt(0).toUpperCase();
-            }
+        // Enable profile button
+        if (profileBtn) {
+          profileBtn.disabled = false;
+          profileBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+        
+        // Enable mobile profile button
+        const mobileProfileBtn = document.getElementById('mobile-profile-btn');
+        if (mobileProfileBtn) {
+          mobileProfileBtn.disabled = false;
+          mobileProfileBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        // Load user profile
+        loadUserProfile(currentWallet).then(profile => {
+          console.log('User profile loaded after wallet connection:', profile);
+          
+          // Check if user prompt has already been shown
+          const hasPrompted = localStorage.getItem(`profile_prompted_${currentWallet}`);
+          console.log('Has user prompt been shown:', hasPrompted);
+          
+          // If user hasn't set up their profile and hasn't been prompted, show prompt
+          if ((!profile || !profile.username) && !hasPrompted) {
+            console.log('Prompt needed for user profile setup');
+            // Delay a bit to let user see wallet connection success
+            setTimeout(() => {
+              showProfileModal(true); // Pass true for initial setup
+            }, 1000);
           } else {
-            // 用户没有设置资料
+            console.log('User already has profile or has been prompted');
+          }
+        });
+
+        // Add disconnect functionality
+        setupDisconnectWallet();
+      } else {
+        // Reset to disconnected state
+        walletBtn.className = 'wallet-btn disconnected hidden md:flex';
+        mobileWalletBtn.className = 'wallet-btn disconnected flex items-center justify-center mt-2';
+        
+        walletText.textContent = 'Connect Wallet';
+        mobileWalletText.textContent = 'Connect Wallet';
+        
+        walletStatus.className = 'wallet-status-indicator disconnected';
+        mobileWalletStatus.className = 'wallet-status-indicator disconnected';
+        walletStatus.title = 'Connect to Phantom Wallet';
+        mobileWalletStatus.title = 'Connect to Phantom Wallet';
+
+        // Disable profile button
+        if (profileBtn) {
+          profileBtn.disabled = true;
+          profileBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+        
+        // Disable mobile profile button
+        const mobileProfileBtn = document.getElementById('mobile-profile-btn');
+        if (mobileProfileBtn) {
+          mobileProfileBtn.disabled = true;
+          mobileProfileBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+      }
+    }
+
+    // Update private page UI
+    function updatePrivatePageUI() {
+      const privateWarning = document.getElementById('private-wallet-warning');
+      const privateControls = document.getElementById('private-controls');
+      const privateDiaryList = document.getElementById('private-diary-list');
+      const privateEmptyState = document.getElementById('private-empty-state');
+      
+      if (currentWallet) {
+        privateWarning.classList.add('hidden');
+        privateControls.classList.remove('hidden');
+        privateDiaryList.classList.remove('hidden');
+        loadPrivateDiaries();
+      } else {
+        privateWarning.classList.remove('hidden');
+        privateControls.classList.add('hidden');
+        privateDiaryList.classList.add('hidden');
+        privateEmptyState.classList.add('hidden');
+      }
+    }
+
+    // Load all diaries
+    function loadDiaries() {
+      const diaryRef = query(ref(db, 'diaryEntries'), limitToLast(50));
+      onValue(diaryRef, async (snapshot) => {
+        const val = snapshot.val();
+        if (!val) {
+          allDiaries = [];
+          renderPublicDiaries();
+          return;
+        }
+        
+        // Convert to array and sort by likes in descending order, then by timestamp
+        allDiaries = Object.entries(val)
+          .map(([id, entry]) => ({ 
+            id, 
+            ...entry,
+            likeCount: entry.likedBy ? Object.keys(entry.likedBy).length : 0
+          }))
+          .sort((a, b) => {
+            // First, sort by likes in descending order
+            if (b.likeCount !== a.likeCount) {
+              return b.likeCount - a.likeCount;
+            }
+            // If likes are the same, sort by timestamp
+            return b.timestamp - a.timestamp;
+          });
+        
+        renderPublicDiaries();
+        renderFeaturedDiaries();
+        if (currentWallet) {
+          loadPrivateDiaries();
+        }
+        updateStats();
+        
+        // Load user profiles for all unique wallets
+        const uniqueWallets = [...new Set(allDiaries.map(diary => diary.wallet).filter(Boolean))];
+        console.log('User profiles needed for wallets:', uniqueWallets);
+        
+        for (const wallet of uniqueWallets) {
+          if (!userProfiles[wallet]) {
+            console.log('Loading user profile:', wallet);
+            await loadUserProfile(wallet);
+          } else {
+            console.log('User profile already cached:', wallet);
+          }
+        }
+      });
+    }
+
+    // Render public diaries
+    function renderPublicDiaries() {
+      const publicDiaries = allDiaries.filter(d => d.public !== false);
+      const container = document.querySelector('#public .grid');
+      const emptyTip = document.querySelector('#public .col-span-full');
+      
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      if (publicDiaries.length === 0) {
+        if (emptyTip) {
+          emptyTip.style.display = 'flex';
+        }
+        return;
+      }
+      
+      if (emptyTip) {
+        emptyTip.style.display = 'none';
+      }
+      
+      publicDiaries.forEach(diary => {
+        const diaryCard = createDiaryCard(diary);
+        container.appendChild(diaryCard);
+      });
+      
+      // Load comment counts for all diaries
+      loadAllCommentCounts(publicDiaries);
+    }
+
+    // Load private diaries
+    function loadPrivateDiaries() {
+      if (!currentWallet) return;
+      
+      const privateDiaries = allDiaries.filter(d => 
+        d.public === false && d.wallet === currentWallet
+      );
+      
+      const container = document.getElementById('private-diary-list');
+      const emptyState = document.getElementById('private-empty-state');
+      
+      container.innerHTML = '';
+      
+      if (privateDiaries.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      
+      emptyState.classList.add('hidden');
+      
+      privateDiaries.forEach(diary => {
+        const diaryCard = createDiaryCard(diary, true);
+        container.appendChild(diaryCard);
+      });
+    }
+
+    // View user profile
+    async function viewUserProfile(walletAddress) {
+      if (!walletAddress) {
+        alert('Invalid user address');
+        return;
+      }
+
+      const modal = document.getElementById('user-profile-view-modal');
+      const viewAvatar = document.getElementById('view-avatar');
+      const viewUsername = document.getElementById('view-username');
+      const viewBio = document.getElementById('view-bio');
+      const viewWalletAddress = document.getElementById('view-wallet-address');
+
+      // Show loading state
+      viewUsername.textContent = 'Loading...';
+      viewBio.textContent = 'Loading...';
+      viewWalletAddress.textContent = 'Loading...';
+      viewAvatar.innerHTML = '<i class="fa fa-user"></i>';
+
+      // Show modal
+      modal.classList.remove('hidden');
+      disablePageScroll();
+
+      try {
+        // Load user profile
+        let profile = userProfiles[walletAddress];
+        if (!profile) {
+          profile = await loadUserProfile(walletAddress);
+        }
+
+        // Show wallet address
+        viewWalletAddress.textContent = walletAddress;
+
+        if (profile) {
+          // Show username
+          viewUsername.textContent = profile.username || 'No username set';
+          
+          // Show bio
+          viewBio.textContent = profile.bio || 'This user hasn\'t set up a bio yet';
+          
+          // Show avatar
+          if (profile.avatar) {
+            viewAvatar.innerHTML = `<img src="${profile.avatar}" alt="Avatar" class="w-full h-full object-cover rounded-full">`;
+          } else {
             const displayName = getUserDisplayName(walletAddress);
-            viewUsername.textContent = displayName;
-            viewBio.textContent = '该用户还没有设置个人资料';
             viewAvatar.innerHTML = displayName.charAt(0).toUpperCase();
           }
-
-          // 设置复制钱包地址功能
-          setupViewCopyWallet(walletAddress);
-
-        } catch (error) {
-          console.error('加载用户资料失败:', error);
-          viewUsername.textContent = '加载失败';
-          viewBio.textContent = '无法加载用户资料';
-          viewWalletAddress.textContent = walletAddress;
+        } else {
+          // User has no profile data
+          const displayName = getUserDisplayName(walletAddress);
+          viewUsername.textContent = displayName;
+          viewBio.textContent = 'This user hasn\'t set up their profile yet';
+          viewAvatar.innerHTML = displayName.charAt(0).toUpperCase();
         }
-      }
 
-      // 设置查看弹窗的复制钱包地址功能
-      function setupViewCopyWallet(walletAddress) {
-        const copyBtn = document.getElementById('copy-view-wallet-btn');
-        if (copyBtn) {
-          copyBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(walletAddress).then(() => {
-              // 显示复制成功提示
-              const originalText = copyBtn.innerHTML;
-              copyBtn.innerHTML = '<i class="fa fa-check"></i>';
-              copyBtn.classList.add('text-green-500');
-              
-              setTimeout(() => {
-                copyBtn.innerHTML = originalText;
-                copyBtn.classList.remove('text-green-500');
-              }, 2000);
-            });
+        // Set functionality to copy wallet address
+        setupViewCopyWallet(walletAddress);
+
+      } catch (error) {
+        console.error('Failed to load user profile:', error);
+        viewUsername.textContent = 'Load failed';
+        viewBio.textContent = 'Unable to load user profile';
+        viewWalletAddress.textContent = walletAddress;
+      }
+    }
+
+    // Set functionality for copying wallet address in the view modal
+    function setupViewCopyWallet(walletAddress) {
+      const copyBtn = document.getElementById('copy-view-wallet-btn');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(walletAddress).then(() => {
+            // Show copy success notification
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fa fa-check"></i>';
+            copyBtn.classList.add('text-green-500');
+            
+            setTimeout(() => {
+              copyBtn.innerHTML = originalText;
+              copyBtn.classList.remove('text-green-500');
+            }, 2000);
           });
-        }
+        });
       }
+    }
 
-      // 隐藏用户资料查看弹窗
-      function hideUserProfileViewModal() {
-        const modal = document.getElementById('user-profile-view-modal');
-        modal.classList.add('hidden');
-        restorePageScroll();
+    // Hide user profile view modal
+    function hideUserProfileViewModal() {
+      const modal = document.getElementById('user-profile-view-modal');
+      modal.classList.add('hidden');
+      restorePageScroll();
+    }
+
+    // Create diary card
+    function createDiaryCard(diary, isPrivate = false) {
+      const card = document.createElement('article');
+      card.className = 'diary-card bg-white rounded-xl shadow-sm overflow-hidden border border-neutral-200 cursor-pointer';
+      
+      const title = diary.title || 'Untitled';
+      const content = diary.content || '';
+      const preview = content.length > 120 ? content.slice(0, 120) + '...' : content;
+      const author = getUserDisplayName(diary.wallet);
+      const userAvatar = getUserAvatar(diary.wallet);
+      const date = formatDate(diary.timestamp);
+      const tags = diary.tags || [];
+      
+      let tagHtml = '';
+      if (tags.length > 0) {
+        const tag = tags[0];
+        const tagColors = {
+          'Life': 'bg-blue-100 text-blue-800',
+          'Travel': 'bg-green-100 text-green-800',
+          'Reflection': 'bg-purple-100 text-purple-800',
+          'Reading': 'bg-yellow-100 text-yellow-800',
+          'Work': 'bg-gray-100 text-gray-800',
+          'Food': 'bg-red-100 text-red-800'
+        };
+        const colorClass = tagColors[tag] || 'bg-gray-100 text-gray-800';
+        tagHtml = `<span class="px-2.5 py-0.5 ${colorClass} text-xs rounded-full">${tag}</span>`;
       }
-
-      // 创建日记卡片
-      function createDiaryCard(diary, isPrivate = false) {
-        const card = document.createElement('article');
-        card.className = 'diary-card bg-white rounded-xl shadow-sm overflow-hidden border border-neutral-200 cursor-pointer';
-        
-        const title = diary.title || '无标题';
-        const content = diary.content || '';
-        const preview = content.length > 120 ? content.slice(0, 120) + '...' : content;
-        const author = getUserDisplayName(diary.wallet);
-        const userAvatar = getUserAvatar(diary.wallet);
-        const date = formatDate(diary.timestamp);
-        const tags = diary.tags || [];
-        
-        let tagHtml = '';
-        if (tags.length > 0) {
-          const tag = tags[0];
-          const tagColors = {
-            '生活': 'bg-blue-100 text-blue-800',
-            '旅行': 'bg-green-100 text-green-800',
-            '感悟': 'bg-purple-100 text-purple-800',
-            '读书': 'bg-yellow-100 text-yellow-800',
-            '工作': 'bg-gray-100 text-gray-800',
-            '美食': 'bg-red-100 text-red-800'
-          };
-          const colorClass = tagColors[tag] || 'bg-gray-100 text-gray-800';
-          tagHtml = `<span class="px-2.5 py-0.5 ${colorClass} text-xs rounded-full">${tag}</span>`;
-        }
-        
-        card.innerHTML = `
-          <div class="p-6">
-            <div class="flex justify-between items-start mb-4">
-              <div class="flex items-center flex-1">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-sm font-bold mr-3 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity" onclick="event.stopPropagation(); viewUserProfile('${diary.wallet}')">
-                  ${userAvatar 
-                    ? `<img src="${userAvatar}" alt="头像" class="w-full h-full object-cover">`
-                    : author.charAt(0).toUpperCase()}
-                </div>
-                <div class="flex-1">
-                  <h4 class="font-medium text-neutral-800 cursor-pointer hover:text-primary transition-colors" onclick="event.stopPropagation(); viewUserProfile('${diary.wallet}')">${author}</h4>
-                  <p class="text-xs text-neutral-500">${date}</p>
-                </div>
+      
+      card.innerHTML = `
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex items-center flex-1">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-sm font-bold mr-3 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity" onclick="event.stopPropagation(); viewUserProfile('${diary.wallet}')">
+                ${userAvatar 
+                  ? `<img src="${userAvatar}" alt="Avatar" class="w-full h-full object-cover">`
+                  : author.charAt(0).toUpperCase()}
               </div>
-              <div class="flex items-center gap-2">
-                ${tagHtml}
-                ${isPrivate ? '<i class="fa fa-lock text-neutral-400 text-sm"></i>' : ''}
-                ${diary.txid ? '<i class="fa fa-link text-primary text-sm" title="已上链"></i>' : ''}
-                ${diary.wallet === currentWallet ? `<button class="delete-diary-btn text-red-500 hover:text-red-700 ml-2" data-diary-id="${diary.id}" title="删除日记"><i class="fa fa-trash"></i></button>` : ''}
+              <div class="flex-1">
+                <h4 class="font-medium text-neutral-800 cursor-pointer hover:text-primary transition-colors" onclick="event.stopPropagation(); viewUserProfile('${diary.wallet}')">${author}</h4>
+                <p class="text-xs text-neutral-500">${date}</p>
               </div>
             </div>
-            
-            <h3 class="text-xl font-bold mb-3 text-neutral-800 hover:text-primary transition-colors">${escapeHtml(title)}</h3>
-            
-            <p class="text-neutral-600 line-clamp-3 mb-4">${escapeHtml(preview)}</p>
-            
-            <div class="flex justify-between items-center">
-              <div class="flex items-center space-x-4 text-neutral-500">
-                <button class="like-btn flex items-center transition-all hover:text-red-500" data-diary-id="${diary.id}" data-liked="${diary.likedBy && diary.likedBy[currentWallet] ? 'true' : 'false'}">
-                  <i class="fa ${diary.likedBy && diary.likedBy[currentWallet] ? 'fa-heart text-red-500' : 'fa-heart-o'} mr-1"></i>
-                  <span class="like-count-${diary.id}">${diary.likedBy ? Object.keys(diary.likedBy).length : 0}</span>
-                </button>
-                <div class="flex items-center">
-                  <i class="fa fa-comment-o mr-1"></i>
-                  <span class="comment-count-${diary.id}">0</span>
-                </div>
-              </div>
-              <button class="read-more-btn text-primary hover:text-primary/80 text-sm font-medium transition-colors px-3 py-1 rounded-lg hover:bg-primary/5">
-                阅读全文 <i class="fa fa-angle-right ml-1"></i>
-              </button>
+            <div class="flex items-center gap-2">
+              ${tagHtml}
+              ${isPrivate ? '<i class="fa fa-lock text-neutral-400 text-sm"></i>' : ''}
+              ${diary.txid ? '<i class="fa fa-link text-primary text-sm" title="On-chain"></i>' : ''}
             </div>
           </div>
-        `;
-        
-        // 添加点击事件
-        card.addEventListener('click', () => showDiaryModal(diary));
-        
-        return card;
-      }
+          
+          <h3 class="text-xl font-bold mb-3 text-neutral-800 hover:text-primary transition-colors">${escapeHtml(title)}</h3>
+          
+          <p class="text-neutral-600 line-clamp-3 mb-4">${escapeHtml(preview)}</p>
+          
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-4 text-neutral-500">
+              <button class="like-btn flex items-center transition-all hover:text-red-500" data-diary-id="${diary.id}" data-liked="${diary.likedBy && diary.likedBy[currentWallet] ? 'true' : 'false'}">
+                <i class="fa ${diary.likedBy && diary.likedBy[currentWallet] ? 'fa-heart text-red-500' : 'fa-heart-o'} mr-1"></i>
+                <span class="like-count-${diary.id}">${diary.likedBy ? Object.keys(diary.likedBy).length : 0}</span>
+              </button>
+              <div class="flex items-center">
+                <i class="fa fa-comment-o mr-1"></i>
+                <span class="comment-count-${diary.id}">0</span>
+              </div>
+            </div>
+            <button class="read-more-btn text-primary hover:text-primary/80 text-sm font-medium transition-colors px-3 py-1 rounded-lg hover:bg-primary/5">
+              Read Full Text <i class="fa fa-angle-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Add click event
+      card.addEventListener('click', () => showDiaryModal(diary));
+      
+      return card;
+    }
 
-      // 更新统计数据
-      function updateStats() {
-        const totalDiaries = allDiaries.length;
-        const publicDiaries = allDiaries.filter(d => d.public !== false).length;
-        const privateDiaries = allDiaries.filter(d => d.public === false && d.wallet === currentWallet).length;
-        const activeUsers = new Set(allDiaries.map(d => d.wallet)).size;
-        
-        // 更新统计显示
-        const totalElement = document.getElementById('total-diaries');
-        const publicElement = document.getElementById('public-diaries');
-        const activeElement = document.getElementById('active-users');
-        const commentsElement = document.getElementById('total-comments');
-        
-        if (totalElement) totalElement.textContent = totalDiaries;
-        if (publicElement) publicElement.textContent = publicDiaries;
-        if (activeElement) activeElement.textContent = activeUsers;
-        if (commentsElement) commentsElement.textContent = '0'; // 暂时设为0
-      }
+    // Update stats
+    function updateStats() {
+      const totalDiaries = allDiaries.length;
+      const publicDiaries = allDiaries.filter(d => d.public !== false).length;
+      const privateDiaries = allDiaries.filter(d => d.public === false && d.wallet === currentWallet).length;
+      const activeUsers = new Set(allDiaries.map(d => d.wallet)).size;
+      
+      // Update display
+      const totalElement = document.getElementById('total-diaries');
+      const publicElement = document.getElementById('public-diaries');
+      const activeElement = document.getElementById('active-users');
+      const commentsElement = document.getElementById('total-comments');
+      
+      if (totalElement) totalElement.textContent = totalDiaries;
+      if (publicElement) publicElement.textContent = publicDiaries;
+      if (activeElement) activeElement.textContent = activeUsers;
+      if (commentsElement) commentsElement.textContent = '0'; // Temporary set to 0
+    }
 
-      // 钱包连接功能
-      async function connectWallet() {
-        if (window.solana && window.solana.isPhantom) {
-          try {
-            // 显示加载状态
-            setWalletLoadingState(true);
-            
-            const resp = await window.solana.connect();
-            currentWallet = resp.publicKey.toString();
-            
-            // 连接钱包后立即初始化Solana网络连接
-            console.log('正在初始化Solana网络连接...');
-            const networkConnected = await initializeConnection();
-            if (networkConnected) {
-              console.log('Solana网络连接成功');
-            } else {
-              console.warn('Solana网络连接失败，上链功能可能不可用');
-            }
-            
-            updateWalletUI(true);
-            updatePrivatePageUI();
-            loadDiaries();
-            return true;
-          } catch (error) {
-            console.error('钱包连接失败:', error);
-            return false;
-          } finally {
-            // 隐藏加载状态
-            setWalletLoadingState(false);
+    // Wallet connection functionality
+    async function connectWallet() {
+      if (window.solana && window.solana.isPhantom) {
+        try {
+          // Show loading state
+          setWalletLoadingState(true);
+          
+          const resp = await window.solana.connect();
+          currentWallet = resp.publicKey.toString();
+          
+          // Initialize Solana network connection immediately after connecting wallet
+          console.log('Initializing Solana network connection...');
+          const networkConnected = await initializeConnection();
+          if (networkConnected) {
+            console.log('Solana network connection successful');
+          } else {
+            console.warn('Solana network connection failed, blockchain functionality may be unavailable');
           }
-        } else {
-          alert('请安装 Phantom 钱包');
+          
+          updateWalletUI(true);
+          updatePrivatePageUI();
+          loadDiaries();
+          return true;
+        } catch (error) {
+          console.error('Wallet connection failed:', error);
           return false;
+        } finally {
+          // Hide loading state
+          setWalletLoadingState(false);
+        }
+      } else {
+        alert('Please install Phantom Wallet');
+        return false;
+      }
+    }
+
+    // Set wallet loading state
+    function setWalletLoadingState(loading) {
+      const walletBtn = document.getElementById('wallet-btn');
+      const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
+      const walletText = document.getElementById('wallet-text');
+      const mobileWalletText = document.getElementById('mobile-wallet-text');
+      
+      if (loading) {
+        walletBtn.classList.add('loading');
+        mobileWalletBtn.classList.add('loading');
+        walletText.textContent = 'Connecting...';
+        mobileWalletText.textContent = 'Connecting...';
+      } else {
+        walletBtn.classList.remove('loading');
+        mobileWalletBtn.classList.remove('loading');
+        if (!currentWallet) {
+          walletText.textContent = 'Connect Wallet';
+          mobileWalletText.textContent = 'Connect Wallet';
         }
       }
+    }
 
-      // 设置钱包加载状态
-      function setWalletLoadingState(loading) {
-        const walletBtn = document.getElementById('wallet-btn');
-        const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
-        const walletText = document.getElementById('wallet-text');
-        const mobileWalletText = document.getElementById('mobile-wallet-text');
-        
-        if (loading) {
-          walletBtn.classList.add('loading');
-          mobileWalletBtn.classList.add('loading');
-          walletText.textContent = '连接中...';
-          mobileWalletText.textContent = '连接中...';
-        } else {
-          walletBtn.classList.remove('loading');
-          mobileWalletBtn.classList.remove('loading');
-          if (!currentWallet) {
-            walletText.textContent = '连接钱包';
-            mobileWalletText.textContent = '连接钱包';
-          }
-        }
-      }
-
-    // 页面切换功能
+    // Page switching functionality
     document.addEventListener('DOMContentLoaded', function() {
-      // 获取所有页面链接和页面容器
+      // Get all page links and page containers
       const pageLinks = document.querySelectorAll('.page-link, .nav-link, .mobile-nav-link');
       const pageContainers = document.querySelectorAll('.page-container');
       const mobileMenuBtn = document.getElementById('mobile-menu-btn');
       const mobileMenu = document.getElementById('mobile-menu');
       
-      // 自动检测钱包连接
+      // Automatically check wallet connection
       async function checkWalletConnection() {
         if (window.solana && window.solana.isPhantom) {
           try {
             const resp = await window.solana.connect({ onlyIfTrusted: true });
             currentWallet = resp.publicKey.toString();
             
-            // 自动连接时也初始化Solana网络
-            console.log('自动检测到钱包，初始化Solana网络连接...');
+            // Initialize Solana network connection when auto-connected
+            console.log('Auto-detected wallet, initializing Solana network connection...');
             const networkConnected = await initializeConnection();
             if (networkConnected) {
-              console.log('Solana网络连接成功');
+              console.log('Solana network connection successful');
             }
             
             updateWalletUI(true);
             updatePrivatePageUI();
             loadDiaries();
             
-            // 加载用户资料
+            // Load user profile
             loadUserProfile(currentWallet).then(profile => {
-              console.log('自动检测钱包连接后加载用户资料结果:', profile);
+              console.log('User profile loaded after auto-wallet connection:', profile);
               if (profile) {
-                console.log('用户资料加载成功，用户名:', profile.username);
+                console.log('User profile loaded successfully, username:', profile.username);
               }
             });
             
-            // 设置断开连接功能
+            // Set disconnect functionality
             setupDisconnectWallet();
           } catch (error) {
-            // 用户未授权，保持未连接状态
+            // User not authorized, stay in disconnected state
           }
         }
       }
 
-      // 钱包连接事件
+      // Wallet connection event
       document.getElementById('wallet-btn').addEventListener('click', connectWallet);
       document.getElementById('mobile-wallet-btn').addEventListener('click', connectWallet);
       document.getElementById('private-connect-wallet').addEventListener('click', connectWallet);
       
-      // 页面加载时自动检测钱包
+      // Check wallet connection automatically when page loads
       checkWalletConnection();
       
-      // 添加键盘快捷键
+      // Add keyboard shortcut
       document.addEventListener('keydown', (e) => {
-        // ESC键断开钱包连接
+        // ESC key disconnects wallet
         if (e.key === 'Escape' && currentWallet) {
           e.preventDefault();
           disconnectWallet();
         }
       });
       
-      // 移动端菜单切换
+      // Mobile menu toggle
       mobileMenuBtn.addEventListener('click', function() {
         mobileMenu.classList.toggle('hidden');
       });
 
-      // 自定义单选按钮交互
+      // Custom radio button interaction
       function setupCustomRadioButtons() {
         const radioButtons = document.querySelectorAll('input[name="privacy"]');
         const radioLabels = document.querySelectorAll('input[name="privacy"] + .custom-radio');
@@ -2764,20 +2746,20 @@
 
         radioButtons.forEach((radio, index) => {
           radio.addEventListener('change', function() {
-            // 重置所有按钮状态
+            // Reset all button states
             radioLabels.forEach((label, i) => {
               label.classList.remove('checked');
               radioTexts[i].classList.remove('font-semibold', 'text-primary');
             });
 
-            // 设置当前选中按钮状态
+            // Set current selected button state
             if (this.checked) {
               radioLabels[index].classList.add('checked');
               radioTexts[index].classList.add('font-semibold', 'text-primary');
             }
           });
 
-          // 初始化状态
+          // Initial state
           if (radio.checked) {
             radioLabels[index].classList.add('checked');
             radioTexts[index].classList.add('font-semibold', 'text-primary');
@@ -2785,29 +2767,29 @@
         });
       }
 
-      // 初始化自定义单选按钮
+      // Initialize custom radio buttons
       setupCustomRadioButtons();
 
-      // 初始化标签选择器
+      // Initialize tag selector
       function setupTagSelector() {
         const tagItems = document.querySelectorAll('.tag-item');
         
         tagItems.forEach(tagItem => {
           const checkbox = tagItem.querySelector('input[type="checkbox"]');
           
-          // 点击标签时切换选中状态
+          // Clicking on a tag toggles its selected state
           tagItem.addEventListener('click', function(e) {
             e.preventDefault();
             checkbox.checked = !checkbox.checked;
             updateTagVisualState(tagItem, checkbox.checked);
           });
           
-          // 初始化状态
+          // Initial state
           updateTagVisualState(tagItem, checkbox.checked);
         });
       }
 
-      // 更新标签视觉状态
+      // Update tag visual state
       function updateTagVisualState(tagItem, isChecked) {
         if (isChecked) {
           tagItem.classList.add('checked');
@@ -2816,40 +2798,40 @@
         }
       }
 
-      // 初始化标签选择器
+      // Initialize tag selector
       setupTagSelector();
       
-      // 初始化点赞按钮事件监听
+      // Initialize like button event listeners
       setupDiaryCardLikeButtons();
 
-      // 初始化个人资料功能
+      // Initialize profile features
       setupProfileFeatures();
       
-      // 页面切换函数
+      // Page switching function
       function switchPage(pageId) {
-        // 隐藏所有页面
+        // Hide all pages
         pageContainers.forEach(container => {
           container.classList.remove('active');
         });
         
-        // 显示目标页面
+        // Show target page
         const targetPage = document.getElementById(pageId);
         if (targetPage) {
           targetPage.classList.add('active');
           
-          // 滚动到顶部
+          // Scroll to top
           window.scrollTo({
             top: 0,
             behavior: 'smooth'
           });
           
-          // 特殊页面逻辑
+          // Special page logic
           if (pageId === 'private') {
             updatePrivatePageUI();
           }
         }
         
-        // 更新导航激活状态
+        // Update navigation active state
         document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
           link.classList.remove('nav-active');
           if (link.getAttribute('data-page') === pageId) {
@@ -2857,11 +2839,11 @@
           }
         });
         
-        // 关闭移动端菜单
+        // Close mobile menu
         mobileMenu.classList.add('hidden');
       }
       
-      // 为所有页面链接添加点击事件
+      // Add click event listeners to all page links
       pageLinks.forEach(link => {
         link.addEventListener('click', function(e) {
           e.preventDefault();
@@ -2872,63 +2854,63 @@
         });
       });
       
-      // 日记内容字数统计
+      // Diary content character count
       const diaryContent = document.getElementById('diary-content');
       const charCount = document.getElementById('char-count');
       
       if (diaryContent && charCount) {
         diaryContent.addEventListener('input', function() {
           const count = this.value.length;
-          charCount.textContent = `${count} 个字`;
+          charCount.textContent = `${count} characters`;
         });
       }
       
-      // 清空内容按钮
+      // Clear content button
       const clearContentBtn = document.getElementById('clear-content');
       if (clearContentBtn && diaryContent) {
         clearContentBtn.addEventListener('click', function() {
           diaryContent.value = '';
-          charCount.textContent = '0 个字';
+          charCount.textContent = '0 characters';
         });
       }
       
-      // 上链选项变化时更新按钮文本
+      // Update button text when blockchain option changes
       const enableBlockchainToggle = document.getElementById('enable-blockchain');
       const publishText = document.getElementById('publish-text');
       
       if (enableBlockchainToggle && publishText) {
         function updatePublishButtonText() {
           if (enableBlockchainToggle.checked) {
-            publishText.textContent = '发布并上链';
+            publishText.textContent = 'Publish and store on blockchain';
           } else {
-            publishText.textContent = '发布日记';
+            publishText.textContent = 'Publish Diary';
           }
         }
         
         enableBlockchainToggle.addEventListener('change', updatePublishButtonText);
-        updatePublishButtonText(); // 初始化
+        updatePublishButtonText(); // Initialization
       }
 
-      // 检查钱包余额
+      // Check wallet balance
       async function checkWalletBalance(walletPublicKey) {
         try {
-          // 确保连接已初始化
+          // Ensure connection is initialized
           if (!connection) {
             const connected = await initializeConnection();
             if (!connected) {
-              throw new Error('无法连接到Solana网络');
+              throw new Error('Unable to connect to Solana network');
             }
           }
           
           const publicKey = new solanaWeb3.PublicKey(walletPublicKey);
           const balance = await connection.getBalance(publicKey);
-          // 返回SOL余额（lamports转SOL）
+          // Return SOL balance (lamports to SOL)
           return balance / solanaWeb3.LAMPORTS_PER_SOL;
         } catch (error) {
-          console.error('获取钱包余额失败:', error);
-          // 如果是网络错误，尝试重新连接
+          console.error('Failed to get wallet balance:', error);
+          // If it's a network error, try reconnecting
           if (error.message.includes('403') || error.message.includes('fetch')) {
-            console.log('尝试重新连接...');
+            console.log('Retrying connection...');
             const reconnected = await initializeConnection();
             if (reconnected) {
               try {
@@ -2936,7 +2918,7 @@
                 const balance = await connection.getBalance(publicKey);
                 return balance / solanaWeb3.LAMPORTS_PER_SOL;
               } catch (retryError) {
-                console.error('重试获取余额失败:', retryError);
+                console.error('Failed to retry getting balance:', retryError);
               }
             }
           }
@@ -2944,31 +2926,31 @@
         }
       }
 
-      // 创建Solana上链交易（使用Memo程序）
+      // Create Solana transaction on-chain (using Memo program)
       async function createSolanaTransaction(diaryData, walletPublicKey) {
         try {
-          // 确保连接已初始化
+          // Ensure connection is initialized
           if (!connection) {
             const connected = await initializeConnection();
             if (!connected) {
-              throw new Error('无法连接到Solana网络');
+              throw new Error('Unable to connect to Solana network');
             }
           }
 
-          // 创建日记内容
+          // Create diary content
           const title = diaryData.title || '';
           const content = diaryData.content || '';
           const message = title ? `[${title}] ${content}` : content;
           
-          // 编码消息
+          // Encode message
           const encodedMessage = new TextEncoder().encode(message);
           
-          // 检查长度限制
+          // Check length limit
           if (encodedMessage.length > 566) {
-            throw new Error(`日记内容过长，无法上链（最大566字节，当前${encodedMessage.length}字节）`);
+            throw new Error(`Diary content too long, cannot be stored on-chain (max 566 bytes, current ${encodedMessage.length} bytes)`);
           }
           
-          // 创建memo指令
+          // Create memo instruction
           const memoProgramId = new solanaWeb3.PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr');
           const fromPubkey = new solanaWeb3.PublicKey(walletPublicKey);
           
@@ -2978,10 +2960,10 @@
             data: encodedMessage
           });
           
-          // 获取最新的blockhash
+          // Get latest blockhash
           const { blockhash } = await connection.getLatestBlockhash();
           
-          // 创建交易
+          // Create transaction
           const transaction = new solanaWeb3.Transaction();
           transaction.recentBlockhash = blockhash;
           transaction.feePayer = fromPubkey;
@@ -2989,12 +2971,12 @@
           
           return transaction;
         } catch (error) {
-          console.error('创建Solana交易失败:', error);
+          console.error('Failed to create Solana transaction:', error);
           throw error;
         }
       }
 
-      // 日记发布功能
+      // Diary publishing functionality
       async function publishDiary(diaryData) {
         if (!currentWallet) {
           showWalletWarning();
@@ -3005,67 +2987,67 @@
         const publishText = document.getElementById('publish-text');
         const publishSpinner = document.getElementById('publish-spinner');
         
-        // 禁用按钮并显示加载状态
+        // Disable button and show loading state
         publishBtn.disabled = true;
-        publishText.textContent = '创建交易中...';
+        publishText.textContent = 'Creating transaction...';
         publishSpinner.classList.remove('hidden');
         
         let txid = null;
         
-                          // 检查是否要尝试上链
+        // Check if we want to try storing on blockchain
         const enableBlockchain = document.getElementById('enable-blockchain').checked;
         
         try {
-          // 第一步：如果启用了上链，尝试创建Solana交易并上链
+          // First: if blockchain storage is enabled, try creating Solana transaction and storing on blockchain
           if (enableBlockchain && currentWallet) {
             try {
-              publishText.textContent = '检查钱包余额...';
+              publishText.textContent = 'Checking wallet balance...';
               
-              // 检查余额
+              // Check balance
               const balance = await checkWalletBalance(currentWallet);
-              const minBalance = 0.0005; // 至少需要0.0005 SOL用于交易费用（Memo程序成本更低）
+              const minBalance = 0.0005; // At least 0.0005 SOL needed for transaction fees (Memo program is cheaper)
               
               if (balance < minBalance) {
-                throw new Error(`钱包余额不足。当前余额: ${balance.toFixed(6)} SOL，至少需要 ${minBalance} SOL`);
+                throw new Error(`Insufficient wallet balance. Current balance: ${balance.toFixed(6)} SOL, at least ${minBalance} SOL needed`);
               }
               
-              publishText.textContent = '正在上链...';
+              publishText.textContent = 'Storing on blockchain...';
               
-              // 创建交易
+              // Create transaction
               const transaction = await createSolanaTransaction(diaryData, currentWallet);
               
-              // 签名并发送交易到Solana主网
+              // Sign and send transaction to Solana mainnet
               const signed = await window.solana.signTransaction(transaction);
               const signature = await connection.sendRawTransaction(signed.serialize());
               txid = signature;
               
-              publishText.textContent = '确认交易中...';
+              publishText.textContent = 'Confirming transaction...';
               
-              // 等待交易确认
+              // Wait for transaction confirmation
               await connection.confirmTransaction(signature, 'confirmed');
               
-              console.log('Solana交易成功:', signature);
+              console.log('Solana transaction successful:', signature);
               const shortSig = signature.slice(0, 4) + '...' + signature.slice(-6);
-              console.log(`✅ 日记已上链，交易ID: ${shortSig}`);
-              publishText.textContent = '保存到数据库...';
+              console.log(`✅ Diary stored on blockchain, transaction ID: ${shortSig}`);
+              publishText.textContent = 'Saving to database...';
               
             } catch (solanaError) {
-              console.error('Solana上链失败:', solanaError);
-              // 即使Solana上链失败，也继续保存到Firebase，但不包含txid
-              publishText.textContent = '上链失败，仅保存到数据库...';
+              console.error('Failed to store on blockchain:', solanaError);
+              // Even if storing on blockchain fails, continue saving to Firebase, but without txid
+              publishText.textContent = 'Storing on blockchain failed, saving to database...';
               
-              // 显示具体错误信息
-              if (solanaError.message.includes('日记内容过长')) {
-                console.warn('内容过长，建议缩短日记内容');
-              } else if (solanaError.message.includes('余额不足')) {
-                console.warn('钱包余额不足，请充值后重试');
+              // Show specific error message
+              if (solanaError.message.includes('Diary content too long')) {
+                console.warn('Content too long, consider shortening diary content');
+              } else if (solanaError.message.includes('Insufficient balance')) {
+                console.warn('Insufficient wallet balance, please top up and try again');
               }
             }
           } else {
-            publishText.textContent = '保存到数据库...';
+            publishText.textContent = 'Saving to database...';
           }
           
-          // 第二步：保存到Firebase数据库
+          // Second: save to Firebase database
           const entry = {
             title: diaryData.title,
             content: diaryData.content,
@@ -3073,40 +3055,40 @@
             public: diaryData.privacy === 'public',
             wallet: currentWallet,
             timestamp: Date.now(),
-            txid: txid // 如果上链成功则包含交易ID
+            txid: txid // If storing on blockchain was successful, include transaction ID
           };
           
-          // 保存到Firebase
+          // Save to Firebase
           const diaryRef = ref(db, 'diaryEntries');
           const result = await push(diaryRef, entry);
           
-          // 重置表单
+          // Reset form
           document.getElementById('diary-form').reset();
-          document.getElementById('char-count').textContent = '0 个字';
+          document.getElementById('char-count').textContent = '0 characters';
           
-          // 显示成功消息
+          // Show success message
           showSuccessModal(txid);
           
-          // 重新加载数据
+          // Reload data
           setTimeout(() => {
             loadDiaries();
           }, 1000);
           
           return true;
         } catch (error) {
-          console.error('发布失败:', error);
-          alert('发布失败：' + error.message);
+          console.error('Failed to publish:', error);
+          alert('Failed to publish: ' + error.message);
           return false;
         } finally {
-          // 恢复按钮状态
+          // Restore button state
           publishBtn.disabled = false;
           const enableBlockchain = document.getElementById('enable-blockchain').checked;
-          publishText.textContent = enableBlockchain ? '发布并上链' : '发布日记';
+          publishText.textContent = enableBlockchain ? 'Publish and store on blockchain' : 'Publish Diary';
           publishSpinner.classList.add('hidden');
         }
       }
 
-      // 显示钱包警告
+      // Show wallet warning
       function showWalletWarning() {
         const walletWarning = document.getElementById('wallet-warning');
         if (walletWarning) {
@@ -3117,21 +3099,21 @@
         }
       }
           
-          // 显示成功弹窗
+      // Show success modal
       function showSuccessModal(txid = null) {
         const successModal = document.getElementById('success-modal');
         if (successModal) {
-          // 更新弹窗内容
+          // Update modal content
           const modalContent = successModal.querySelector('.text-center');
           if (txid) {
             modalContent.innerHTML = `
               <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fa fa-check text-2xl text-green-500"></i>
               </div>
-              <h3 class="text-xl font-bold text-neutral-800 mb-2">发布成功！</h3>
-              <p class="text-neutral-600 mb-4">你的日记已经成功发布到Solana区块链！</p>
+              <h3 class="text-xl font-bold text-neutral-800 mb-2">Success!</h3>
+              <p class="text-neutral-600 mb-4">Your diary has been successfully published to Solana blockchain!</p>
               <div class="bg-neutral-50 rounded-lg p-4 mb-6">
-                <p class="text-sm text-neutral-600 mb-2">交易ID:</p>
+                <p class="text-sm text-neutral-600 mb-2">Transaction ID:</p>
                 <p class="text-xs text-neutral-800 font-mono break-all">${txid}</p>
                 <div class="flex gap-2 mt-2">
                   <a href="https://solscan.io/tx/${txid}" target="_blank" class="inline-block text-primary hover:text-primary/80 text-sm">
@@ -3144,10 +3126,10 @@
               </div>
               <div class="flex flex-col sm:flex-row gap-3">
                 <button id="view-diary" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-                  查看我的日记
+                  View My Diary
                 </button>
                 <button id="close-modal" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
-                  返回首页
+                  Return to Home
                 </button>
               </div>
             `;
@@ -3156,14 +3138,14 @@
               <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fa fa-exclamation-triangle text-2xl text-amber-500"></i>
               </div>
-              <h3 class="text-xl font-bold text-neutral-800 mb-2">部分成功</h3>
-              <p class="text-neutral-600 mb-6">日记已保存，但区块链上链失败。你可以稍后重试上链。</p>
+              <h3 class="text-xl font-bold text-neutral-800 mb-2">Partial Success</h3>
+              <p class="text-neutral-600 mb-6">Diary saved, but failed to store on blockchain. You can try resubmitting later.</p>
               <div class="flex flex-col sm:flex-row gap-3">
                 <button id="view-diary" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-                  查看我的日记
+                  View My Diary
                 </button>
                 <button id="close-modal" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
-                  返回首页
+                  Return to Home
                 </button>
               </div>
             `;
@@ -3178,7 +3160,7 @@
         }
       }
 
-      // 日记发布表单提交
+      // Diary submission form submission
       const diaryForm = document.getElementById('diary-form');
       const successModal = document.getElementById('success-modal');
       const closeModalBtn = document.getElementById('close-modal');
@@ -3188,7 +3170,7 @@
         diaryForm.addEventListener('submit', async function(e) {
           e.preventDefault();
           
-          // 获取表单数据
+          // Get form data
           const formData = new FormData(this);
           const title = document.getElementById('diary-title').value;
           const content = document.getElementById('diary-content').value;
@@ -3196,7 +3178,7 @@
           const tags = Array.from(formData.getAll('tags'));
           
           if (!title.trim() || !content.trim()) {
-            alert('请填写标题和内容');
+            alert('Please fill out title and content');
             return;
           }
           
@@ -3211,12 +3193,12 @@
             await publishDiary(diaryData);
           } else {
             console.error('publishDiary function is not defined');
-            alert('系统错误，请刷新页面重试');
+            alert('System error, please refresh and try again');
           }
         });
       }
         
-      // 使用事件委托处理成功弹窗按钮
+      // Use event delegation to handle success modal button clicks
       document.addEventListener('click', function(e) {
         if (e.target.id === 'close-modal') {
           const successModal = document.getElementById('success-modal');
@@ -3247,13 +3229,13 @@
         }
       });
 
-      // 初始化应用
+      // Initialize application
       function initApp() {
         try {
           loadDiaries();
           updateStats();
           
-          // 验证关键函数是否已定义
+          // Verify that the critical functions are defined
           if (typeof publishDiary !== 'function') {
             console.error('publishDiary function is not available');
           }
@@ -3264,14 +3246,14 @@
             console.error('showDiaryModal function is not available');
           }
         } catch (error) {
-          console.error('初始化应用失败:', error);
+          console.error('Failed to initialize application:', error);
         }
       }
 
-      // 页面加载完成后初始化
+      // Initialize when page loads
       initApp();
       
-      // 在DOMContentLoaded内部暴露函数到全局
+      // Expose functions to global scope for debugging
       window.publishDiary = publishDiary;
       window.connectWallet = connectWallet;
       window.toggleLike = toggleLike;
@@ -3283,7 +3265,7 @@
       window.showWalletWarning = showWalletWarning;
       window.loadDiaries = loadDiaries;
       
-      // 将函数暴露到全局作用域以便调试
+      // Expose functions to global scope for debugging
       window.blockchainDiary = {
         connectWallet,
         loadDiaries,
@@ -3294,17 +3276,17 @@
         allDiaries: () => allDiaries
       };
       
-      console.log('全局函数已暴露');
+      console.log('Critical functions exposed');
     });
 
-    // 显示日记详情弹窗
+    // Show diary details modal
     window.showDiaryModal = function(diary) {
-      // 创建弹窗HTML
+      // Create modal HTML
       const modalHtml = `
         <div id="diary-detail-modal" class="diary-modal fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div class="diary-modal-content rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] overflow-auto">
             <div class="p-8">
-              <!-- 头部信息 -->
+              <!-- Header Information -->
               <div class="flex justify-between items-start mb-6">
                 <div class="flex items-center">
                   <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white font-bold mr-4 shadow-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity" onclick="viewUserProfile('${diary.wallet}')">
@@ -3312,7 +3294,7 @@
                       const userAvatar = getUserAvatar(diary.wallet);
                       const displayName = getUserDisplayName(diary.wallet);
                       return userAvatar 
-                        ? `<img src="${userAvatar}" alt="头像" class="w-full h-full object-cover">`
+                        ? `<img src="${userAvatar}" alt="Avatar" class="w-full h-full object-cover">`
                         : displayName.charAt(0).toUpperCase();
                     })()}
                   </div>
@@ -3328,7 +3310,7 @@
                   ${diary.txid ? `
                     <a href="https://solscan.io/tx/${diary.txid}" target="_blank" class="flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm hover:bg-green-200 transition-all shadow-sm">
                       <i class="fa fa-link mr-2"></i>
-                      已上链
+                      On-chain
                     </a>
                   ` : ''}
                   <button id="close-diary-modal" class="w-10 h-10 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 hover:text-neutral-800 transition-all">
@@ -3337,28 +3319,28 @@
                 </div>
               </div>
               
-                              <!-- 标题和点赞区域 -->
-                <div class="flex justify-between items-start mb-6">
-                  <h1 class="diary-title text-3xl font-bold">${escapeHtml(diary.title || '无标题')}</h1>
-                  <div class="flex items-center space-x-4">
-                    <button class="modal-like-btn flex items-center px-4 py-2 rounded-lg border border-neutral-300 hover:border-red-300 hover:bg-red-50 transition-all" data-diary-id="${diary.id}" data-liked="${diary.likedBy && diary.likedBy[currentWallet] ? 'true' : 'false'}">
-                      <i class="fa ${diary.likedBy && diary.likedBy[currentWallet] ? 'fa-heart text-red-500' : 'fa-heart-o text-neutral-500'} mr-2"></i>
-                      <span class="modal-like-count-${diary.id} font-medium">${diary.likedBy ? Object.keys(diary.likedBy).length : 0}</span>
-                    </button>
-                  </div>
+              <!-- Title and Like Area -->
+              <div class="flex justify-between items-start mb-6">
+                <h1 class="diary-title text-3xl font-bold">${escapeHtml(diary.title || 'Untitled')}</h1>
+                <div class="flex items-center space-x-4">
+                  <button class="modal-like-btn flex items-center px-4 py-2 rounded-lg border border-neutral-300 hover:border-red-300 hover:bg-red-50 transition-all" data-diary-id="${diary.id}" data-liked="${diary.likedBy && diary.likedBy[currentWallet] ? 'true' : 'false'}">
+                    <i class="fa ${diary.likedBy && diary.likedBy[currentWallet] ? 'fa-heart text-red-500' : 'fa-heart-o text-neutral-500'} mr-2"></i>
+                    <span class="modal-like-count-${diary.id} font-medium">${diary.likedBy ? Object.keys(diary.likedBy).length : 0}</span>
+                  </button>
                 </div>
+              </div>
               
-              <!-- 标签 -->
+              <!-- Tags -->
               ${diary.tags && diary.tags.length > 0 ? `
                 <div class="flex flex-wrap gap-3 mb-8">
                   ${diary.tags.map(tag => {
                     const tagColors = {
-                      '生活': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                      '旅行': 'bg-blue-100 text-blue-800 border-blue-200',
-                      '感悟': 'bg-purple-100 text-purple-800 border-purple-200',
-                      '读书': 'bg-green-100 text-green-800 border-green-200',
-                      '工作': 'bg-indigo-100 text-indigo-800 border-indigo-200',
-                      '美食': 'bg-red-100 text-red-800 border-red-200'
+                      'Life': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                      'Travel': 'bg-blue-100 text-blue-800 border-blue-200',
+                      'Reflection': 'bg-purple-100 text-purple-800 border-purple-200',
+                      'Reading': 'bg-green-100 text-green-800 border-green-200',
+                      'Work': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+                      'Food': 'bg-red-100 text-red-800 border-red-200'
                     };
                     const colorClass = tagColors[tag] || 'bg-gray-100 text-gray-800 border-gray-200';
                     return `<span class="px-4 py-2 ${colorClass} rounded-full text-sm font-medium border">${tag}</span>`;
@@ -3366,27 +3348,27 @@
                 </div>
               ` : ''}
               
-              <!-- 内容 -->
+              <!-- Content -->
               <div class="diary-content mb-8 bg-white rounded-lg p-6 border border-neutral-200 shadow-sm">
                 <p class="text-neutral-700 leading-relaxed whitespace-pre-line text-lg">${escapeHtml(diary.content || '')}</p>
               </div>
               
-              <!-- 区块链信息 -->
+              <!-- Blockchain Information -->
               ${diary.txid ? `
                 <div class="blockchain-info p-6">
                   <div class="flex items-center mb-3">
                     <i class="fa fa-link text-blue-500 mr-2"></i>
-                    <h3 class="font-semibold text-blue-800">区块链交易信息</h3>
+                    <h3 class="font-semibold text-blue-800">Blockchain Transaction Information</h3>
                   </div>
                   <p class="text-sm text-blue-700 font-mono break-all mb-3 bg-blue-50 p-3 rounded-lg">${diary.txid}</p>
                   <div class="flex gap-3">
                     <a href="https://solscan.io/tx/${diary.txid}" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-sm font-medium">
                       <i class="fa fa-external-link mr-2"></i>
-                      在 Solscan 查看
+                      View on Solscan
                     </a>
                     <a href="https://explorer.solana.com/tx/${diary.txid}?cluster=mainnet-beta" target="_blank" class="inline-flex items-center px-4 py-2 bg-neutral-500 text-white rounded-lg hover:bg-neutral-600 transition-all text-sm font-medium">
                       <i class="fa fa-external-link mr-2"></i>
-                      在 Solana Explorer 查看
+                      View on Solana Explorer
                     </a>
                   </div>
                 </div>
@@ -3395,43 +3377,43 @@
                   <div class="flex items-center">
                     <i class="fa fa-exclamation-triangle text-red-500 mr-2"></i>
                     <p class="text-red-700 font-medium">
-                      此日记尚未上链或上链失败
+                      This diary has not been stored on-chain or failed to store
                     </p>
                   </div>
                 </div>
               `}
 
-              <!-- 聊天留言区域 -->
+              <!-- Chat Comment Area -->
               <div class="chat-section mt-8">
-                <!-- 聊天头部 -->
+                <!-- Chat Header -->
                 <div class="chat-header">
                   <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-neutral-800 flex items-center">
                       <i class="fa fa-comments text-primary mr-2"></i>
-                      留言讨论
+                      Comment Discussion
                     </h3>
-                    <span class="text-sm text-neutral-500" id="comment-count">0 条留言</span>
+                    <span class="text-sm text-neutral-500" id="comment-count">0 comments</span>
                   </div>
                 </div>
                 
-                <!-- 聊天消息区域 -->
+                <!-- Chat Message Area -->
                 <div class="chat-messages">
                   <div class="comments-container bg-neutral-50 rounded-lg p-4 h-full overflow-y-auto" id="comments-list-${diary.id}">
                     <div class="text-center text-neutral-500 py-8">
                       <i class="fa fa-comment-o text-2xl mb-2"></i>
-                      <p>暂无留言，成为第一个留言的人吧！</p>
+                      <p>No comments yet, be the first to leave one!</p>
                     </div>
                   </div>
                 </div>
                 
-                <!-- 聊天输入区域 -->
+                <!-- Chat Input Area -->
                 <div class="chat-input-area">
                   ${currentWallet ? `
                     <div class="flex gap-3">
                       <div class="flex-1">
                         <textarea 
                           id="comment-input-${diary.id}" 
-                          placeholder="写下你的想法..." 
+                          placeholder="Write your thoughts..." 
                           class="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary resize-none"
                           rows="2"
                         ></textarea>
@@ -3442,13 +3424,13 @@
                         disabled
                       >
                         <i class="fa fa-paper-plane mr-2"></i>
-                        发送
+                        Send
                       </button>
                     </div>
                   ` : `
                     <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
                       <i class="fa fa-exclamation-triangle text-amber-500 mr-2"></i>
-                      <span class="text-amber-700">请先连接钱包以参与留言讨论</span>
+                      <span class="text-amber-700">Please connect wallet to participate in comment discussion</span>
                     </div>
                   `}
                 </div>
@@ -3458,15 +3440,15 @@
         </div>
       `;
       
-      // 添加到页面
+      // Add to page
       document.body.insertAdjacentHTML('beforeend', modalHtml);
       
-      // 添加关闭事件
+      // Add close event
       const modal = document.getElementById('diary-detail-modal');
       const closeBtn = document.getElementById('close-diary-modal');
       
       function closeModal() {
-        // 清理评论监听器
+        // Clear comment listeners
         if (commentListeners[diary.id]) {
           commentListeners[diary.id]();
           delete commentListeners[diary.id];
@@ -3475,7 +3457,7 @@
         modal.style.animation = 'modalFadeOut 0.2s ease-in forwards';
         setTimeout(() => {
           modal.remove();
-          // 恢复页面滚动
+          // Restore page scrolling
           restorePageScroll();
         }, 200);
       }
@@ -3488,48 +3470,48 @@
         }
       });
       
-      // 键盘快捷键
+      // Keyboard shortcut
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
           closeModal();
         }
       });
       
-      // 阻止滚动穿透
+      // Prevent scroll bleed
       disablePageScroll();
 
-      // 初始化评论功能
+      // Initialize comment functionality
       initializeComments(diary.id);
       
-      // 初始化点赞功能
+      // Initialize like functionality
       initializeLikeButtons(diary.id);
     }
 
-    // 评论功能
+    // Comment functionality
     let commentListeners = {};
     let originalBodyOverflow = '';
 
-    // 滚动状态管理
+    // Scroll state management
     function disablePageScroll() {
       originalBodyOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-      console.log('页面滚动已禁用，原始状态:', originalBodyOverflow);
+      console.log('Page scrolling disabled, original state:', originalBodyOverflow);
     }
 
     function restorePageScroll() {
       document.body.style.overflow = originalBodyOverflow || '';
-      console.log('页面滚动已恢复:', document.body.style.overflow);
+      console.log('Page scrolling restored:', document.body.style.overflow);
     }
 
-    // 用户资料管理
+    // User profile management
     async function loadUserProfile(walletAddress) {
-            // 添加实时监听器
+      // Add real-time listener
       if (walletAddress === currentWallet && !window.profileListener) {
-        console.log('设置用户资料实时监听器');
+        console.log('Setting up real-time user profile listener');
         const profileRef = ref(db, `userProfiles/${walletAddress}`);
         window.profileListener = onValue(profileRef, (snapshot) => {
           const profile = snapshot.val();
-          console.log('实时监听器检测到用户资料变化:', profile);
+          console.log('Real-time listener detected user profile change:', profile);
           if (profile) {
             userProfiles[walletAddress] = profile;
             currentUserProfile = profile;
@@ -3538,37 +3520,37 @@
       }
       
       try {
-        console.log('开始加载用户资料:', walletAddress);
+        console.log('Loading user profile:', walletAddress);
         const profileRef = ref(db, `userProfiles/${walletAddress}`);
         const snapshot = await get(profileRef);
         const profile = snapshot.val();
         
-        console.log('从Firebase获取到的用户资料:', profile);
+        console.log('User profile retrieved from Firebase:', profile);
         
         if (profile) {
           userProfiles[walletAddress] = profile;
           if (walletAddress === currentWallet) {
             currentUserProfile = profile;
-            console.log('设置当前用户资料:', profile);
+            console.log('Setting current user profile:', profile);
           }
           return profile;
         }
-        console.log('用户资料不存在');
+        console.log('User profile does not exist');
         return null;
       } catch (error) {
-        console.error('加载用户资料失败:', error);
+        console.error('Failed to load user profile:', error);
         return null;
       }
     }
 
     async function saveUserProfile(profileData) {
       if (!currentWallet) {
-        alert('请先连接钱包');
+        alert('Please connect wallet first');
         return false;
       }
 
       try {
-        console.log('开始保存用户资料:', currentWallet, profileData);
+        console.log('Saving user profile:', currentWallet, profileData);
         
         const profileRef = ref(db, `userProfiles/${currentWallet}`);
         const saveData = {
@@ -3577,23 +3559,23 @@
           updatedAt: Date.now()
         };
         
-        console.log('保存到Firebase的数据:', saveData);
+        console.log('Data to be saved to Firebase:', saveData);
         
         await update(profileRef, saveData);
-        console.log('Firebase更新成功');
+        console.log('Firebase update successful');
 
-        // 更新缓存
+        // Update cache
         userProfiles[currentWallet] = profileData;
         currentUserProfile = profileData;
 
-        // 记录用户已经设置过个人资料
+        // Record that user has already set up their profile
         localStorage.setItem(`profile_prompted_${currentWallet}`, 'true');
 
-        console.log('用户资料保存成功，缓存已更新');
+        console.log('User profile saved successfully, cache updated');
         return true;
       } catch (error) {
-        console.error('保存用户资料失败:', error);
-        alert('保存失败，请稍后重试');
+        console.error('Failed to save user profile:', error);
+        alert('Failed to save, please try again later');
         return false;
       }
     }
@@ -3603,7 +3585,7 @@
       if (profile && profile.username) {
         return profile.username;
       }
-      return walletAddress ? walletAddress.slice(0, 4) + '...' + walletAddress.slice(-4) : '匿名';
+      return walletAddress ? walletAddress.slice(0, 4) + '...' + walletAddress.slice(-4) : 'Anonymous';
     }
 
     function getUserAvatar(walletAddress) {
@@ -3619,10 +3601,10 @@
       return profile ? profile.bio || '' : '';
     }
 
-    // 个人资料弹窗管理
+    // Profile modal management
     function showProfileModal(isFirstTime = false) {
       if (!currentWallet) {
-        alert('请先连接钱包');
+        alert('Please connect wallet first');
         return;
       }
 
@@ -3632,42 +3614,42 @@
       const walletAddressSpan = document.getElementById('profile-wallet-address');
       const avatarPreview = document.getElementById('avatar-preview');
 
-      // 显示钱包地址
+      // Show wallet address
       walletAddressSpan.textContent = currentWallet;
 
-      // 加载当前用户资料
+      // Load current user profile
       if (currentUserProfile) {
-        console.log('显示弹窗时使用缓存的用户资料:', currentUserProfile);
+        console.log('Using cached user profile for modal:', currentUserProfile);
         usernameInput.value = currentUserProfile.username || '';
         bioInput.value = currentUserProfile.bio || '';
         
-        // 显示头像
+        // Show avatar
         if (currentUserProfile.avatar) {
-          avatarPreview.innerHTML = `<img src="${currentUserProfile.avatar}" alt="头像">`;
+          avatarPreview.innerHTML = `<img src="${currentUserProfile.avatar}" alt="Avatar">`;
           avatarPreview.classList.add('has-image');
         } else {
           avatarPreview.innerHTML = '<i class="fa fa-user"></i>';
           avatarPreview.classList.remove('has-image');
         }
       } else {
-        console.log('显示弹窗时没有缓存的用户资料，尝试从Firebase加载...');
-        // 尝试从Firebase重新加载用户资料
+        console.log('No cached user profile available, trying to load from Firebase...');
+        // Try to load user profile from Firebase
         loadUserProfile(currentWallet).then(profile => {
           if (profile) {
-            console.log('从Firebase加载到用户资料:', profile);
+            console.log('User profile loaded from Firebase:', profile);
             usernameInput.value = profile.username || '';
             bioInput.value = profile.bio || '';
             
-            // 显示头像
+            // Show avatar
             if (profile.avatar) {
-              avatarPreview.innerHTML = `<img src="${profile.avatar}" alt="头像">`;
+              avatarPreview.innerHTML = `<img src="${profile.avatar}" alt="Avatar">`;
               avatarPreview.classList.add('has-image');
             } else {
               avatarPreview.innerHTML = '<i class="fa fa-user"></i>';
               avatarPreview.classList.remove('has-image');
             }
           } else {
-            console.log('Firebase中也没有用户资料');
+            console.log('No user profile found in Firebase');
             usernameInput.value = '';
             bioInput.value = '';
             avatarPreview.innerHTML = '<i class="fa fa-user"></i>';
@@ -3676,21 +3658,21 @@
         });
       }
 
-      // 更新字数统计
+      // Update character count
       updateBioCharCount();
 
-      // 显示弹窗
+      // Show modal
       modal.classList.remove('hidden');
       disablePageScroll();
 
-      // 如果是首次设置，显示欢迎提示
+      // If this is the first time, show welcome prompt
       if (isFirstTime) {
         const modalTitle = modal.querySelector('.bg-gradient-to-r h2');
         if (modalTitle) {
-          modalTitle.textContent = '欢迎！请设置您的个人资料';
+          modalTitle.textContent = 'Welcome! Please set up your profile';
         }
         
-        // 添加首次设置的提示信息
+        // Add prompt for first-time setup
         const form = document.getElementById('profile-form');
         if (form && !form.querySelector('.first-time-tip')) {
           const tip = document.createElement('div');
@@ -3699,8 +3681,8 @@
             <div class="flex items-start">
               <i class="fa fa-info-circle text-blue-500 mt-0.5 mr-2"></i>
               <div>
-                <p class="text-blue-800 text-sm font-medium mb-1">欢迎使用链上日记时光！</p>
-                <p class="text-blue-700 text-sm">设置个人资料后，您的用户名和头像将显示在日记和评论中，让其他用户更好地认识您。</p>
+                <p class="text-blue-800 text-sm font-medium mb-1">Welcome to Blockchain Diary Time!</p>
+                <p class="text-blue-700 text-sm">After setting up your profile, your username and avatar will appear in diaries and comments, helping others get to know you better.</p>
               </div>
             </div>
           `;
@@ -3714,13 +3696,13 @@
       modal.classList.add('hidden');
       restorePageScroll();
       
-      // 恢复弹窗标题
+      // Restore modal title
       const modalTitle = modal.querySelector('.bg-gradient-to-r h2');
       if (modalTitle) {
-        modalTitle.textContent = '个人资料设置';
+        modalTitle.textContent = 'Profile Settings';
       }
       
-      // 移除首次设置提示
+      // Remove first-time setup prompt
       const firstTimeTip = modal.querySelector('.first-time-tip');
       if (firstTimeTip) {
         firstTimeTip.remove();
@@ -3736,13 +3718,13 @@
       }
     }
 
-    // 头像上传处理
+    // Avatar upload handling
     function setupAvatarUpload() {
       const avatarPreview = document.getElementById('avatar-preview');
       const avatarUpload = document.getElementById('avatar-upload');
       const uploadBtn = document.getElementById('upload-avatar-btn');
 
-      // 点击头像或上传按钮触发文件选择
+      // Clicking on avatar or upload button triggers file selection
       [avatarPreview, uploadBtn].forEach(element => {
         if (element) {
           element.addEventListener('click', () => {
@@ -3751,19 +3733,19 @@
         }
       });
 
-      // 文件选择处理
+      // File selection handling
       if (avatarUpload) {
         avatarUpload.addEventListener('change', function(e) {
           const file = e.target.files[0];
           if (file) {
-            if (file.size > 5 * 1024 * 1024) { // 5MB限制
-              alert('图片大小不能超过5MB');
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+              alert('Image size cannot exceed 5MB');
               return;
             }
 
             const reader = new FileReader();
             reader.onload = function(e) {
-              avatarPreview.innerHTML = `<img src="${e.target.result}" alt="头像">`;
+              avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Avatar">`;
               avatarPreview.classList.add('has-image');
             };
             reader.readAsDataURL(file);
@@ -3772,14 +3754,14 @@
       }
     }
 
-    // 复制钱包地址
+    // Copy wallet address
     function setupCopyWallet() {
       const copyBtn = document.getElementById('copy-wallet-btn');
       if (copyBtn) {
         copyBtn.addEventListener('click', () => {
           if (currentWallet) {
             navigator.clipboard.writeText(currentWallet).then(() => {
-              // 显示复制成功提示
+              // Show copy success notification
               const originalText = copyBtn.innerHTML;
               copyBtn.innerHTML = '<i class="fa fa-check"></i>';
               copyBtn.classList.add('text-green-500');
@@ -3796,64 +3778,64 @@
 
 
 
-    // 断开钱包连接
+    // Disconnect wallet
     async function disconnectWallet() {
       try {
-        // 断开Phantom钱包连接
+        // Disconnect Phantom wallet
         if (window.solana && window.solana.disconnect) {
           await window.solana.disconnect();
         }
         
-        // 清除当前钱包状态
+        // Clear current wallet state
         currentWallet = '';
         currentUserProfile = null;
         
-        // 清除用户资料缓存（可选，保留其他用户的资料）
+        // Clear user profile cache (optional, keep other users' profiles)
         // userProfiles = {};
         
-        // 更新UI状态
+        // Update UI state
         updateWalletUI(false);
         
-        // 更新私人页面UI
+        // Update private page UI
         updatePrivatePageUI();
         
-        // 清除评论监听器
+        // Clear comment listeners
         clearCommentListeners();
         
-        // 清除用户资料监听器
+        // Clear user profile listener
         if (window.profileListener) {
           window.profileListener();
           window.profileListener = null;
         }
         
-        console.log('钱包已断开连接');
+        console.log('Wallet disconnected');
         
-        // 显示断开连接成功提示
+        // Show success message for disconnection
         showDisconnectSuccessMessage();
         
       } catch (error) {
-        console.error('断开钱包连接失败:', error);
-        alert('断开连接失败，请稍后重试');
+        console.error('Failed to disconnect wallet:', error);
+        alert('Failed to disconnect, please try again later');
       }
     }
 
-    // 设置断开连接功能
+    // Set disconnect functionality
     function setupDisconnectWallet() {
       const walletBtn = document.getElementById('wallet-btn');
       const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
       
-      // 为桌面端钱包按钮添加右键菜单
+      // Add right-click menu for desktop wallet button
       if (walletBtn) {
         walletBtn.addEventListener('contextmenu', (e) => {
           e.preventDefault();
           showDisconnectMenu(e, walletBtn);
         });
         
-        // 添加长按提示
-        walletBtn.title = '右键点击断开连接';
+        // Add long press prompt
+        walletBtn.title = 'Right-click to disconnect';
       }
       
-      // 为移动端钱包按钮添加长按功能
+      // Add long press functionality for mobile wallet button
       if (mobileWalletBtn) {
         let longPressTimer;
         let isLongPress = false;
@@ -3876,46 +3858,46 @@
           clearTimeout(longPressTimer);
         });
         
-        // 添加长按提示
-        mobileWalletBtn.title = '长按断开连接';
+        // Add long press prompt
+        mobileWalletBtn.title = 'Long press to disconnect';
       }
     }
 
-    // 显示断开连接菜单
+    // Show disconnect menu
     function showDisconnectMenu(event, button) {
-      // 移除已存在的菜单
+      // Remove existing menu
       const existingMenu = document.getElementById('disconnect-menu');
       if (existingMenu) {
         existingMenu.remove();
       }
       
-      // 创建断开连接菜单
+      // Create disconnect menu
       const menu = document.createElement('div');
       menu.id = 'disconnect-menu';
       menu.className = 'fixed z-50 bg-white rounded-lg shadow-lg border border-neutral-200 py-2 min-w-[160px]';
       menu.innerHTML = `
         <button class="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 transition-colors flex items-center">
           <i class="fa fa-sign-out mr-2"></i>
-          断开连接
+          Disconnect
         </button>
       `;
       
-      // 添加断开连接事件
+      // Add disconnect event
       const disconnectBtn = menu.querySelector('button');
       disconnectBtn.addEventListener('click', () => {
         disconnectWallet();
         menu.remove();
       });
       
-      // 定位菜单
+      // Position menu
       const rect = button.getBoundingClientRect();
       menu.style.left = `${rect.left}px`;
       menu.style.top = `${rect.bottom + 5}px`;
       
-      // 添加到页面
+      // Add to page
       document.body.appendChild(menu);
       
-      // 点击外部关闭菜单
+      // Click outside to close menu
       const closeMenu = (e) => {
         if (!menu.contains(e.target) && !button.contains(e.target)) {
           menu.remove();
@@ -3923,32 +3905,32 @@
         }
       };
       
-      // 延迟添加事件监听，避免立即触发
+      // Delay adding event listener to avoid immediate trigger
       setTimeout(() => {
         document.addEventListener('click', closeMenu);
       }, 100);
     }
 
-    // 显示断开连接成功消息
+    // Show disconnect success message
     function showDisconnectSuccessMessage() {
-      // 创建成功提示
+      // Create success notification
       const message = document.createElement('div');
       message.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full';
       message.innerHTML = `
         <div class="flex items-center">
           <i class="fa fa-check-circle mr-2"></i>
-          <span>钱包已断开连接</span>
+          <span>Wallet disconnected</span>
         </div>
       `;
       
       document.body.appendChild(message);
       
-      // 显示动画
+      // Show animation
       setTimeout(() => {
         message.classList.remove('translate-x-full');
       }, 100);
       
-      // 自动隐藏
+      // Auto hide
       setTimeout(() => {
         message.classList.add('translate-x-full');
         setTimeout(() => {
@@ -3957,7 +3939,7 @@
       }, 3000);
     }
 
-    // 清除评论监听器
+    // Clear comment listeners
     function clearCommentListeners() {
       if (window.commentListeners) {
         Object.values(window.commentListeners).forEach(unsubscribe => {
@@ -3969,20 +3951,20 @@
       }
     }
 
-    // 初始化个人资料功能
+    // Initialize profile features
     function setupProfileFeatures() {
-      // 个人资料按钮点击事件
+      // Profile button click event
       const profileBtn = document.getElementById('profile-btn');
       if (profileBtn) {
-        profileBtn.addEventListener('click', () => showProfileModal(false)); // 传递false表示非首次设置
+        profileBtn.addEventListener('click', () => showProfileModal(false)); // Pass false to indicate not first-time setup
       }
       
-      // 手机端个人资料按钮点击事件
+      // Mobile profile button click event
       const mobileProfileBtn = document.getElementById('mobile-profile-btn');
       if (mobileProfileBtn) {
         mobileProfileBtn.addEventListener('click', () => {
           showProfileModal(false);
-          // 关闭手机端菜单
+          // Close mobile menu
           const mobileMenu = document.getElementById('mobile-menu');
           if (mobileMenu) {
             mobileMenu.classList.add('hidden');
@@ -3990,7 +3972,7 @@
         });
       }
 
-      // 关闭个人资料弹窗
+      // Close profile modal
       const closeProfileModal = document.getElementById('close-profile-modal');
       const cancelProfileBtn = document.getElementById('cancel-profile-btn');
       if (closeProfileModal) {
@@ -4000,7 +3982,7 @@
         cancelProfileBtn.addEventListener('click', hideProfileModal);
       }
 
-      // 点击弹窗外部关闭
+      // Click outside modal to close
       const profileModal = document.getElementById('profile-modal');
       if (profileModal) {
         profileModal.addEventListener('click', (e) => {
@@ -4010,7 +3992,7 @@
         });
       }
 
-      // 关闭用户资料查看弹窗
+      // Close user profile view modal
       const closeUserProfileViewModal = document.getElementById('close-user-profile-view-modal');
       const closeUserProfileViewBtn = document.getElementById('close-user-profile-view-btn');
       if (closeUserProfileViewModal) {
@@ -4020,7 +4002,7 @@
         closeUserProfileViewBtn.addEventListener('click', hideUserProfileViewModal);
       }
 
-      // 点击用户资料查看弹窗外部关闭
+      // Click outside user profile view modal to close
       const userProfileViewModal = document.getElementById('user-profile-view-modal');
       if (userProfileViewModal) {
         userProfileViewModal.addEventListener('click', (e) => {
@@ -4030,19 +4012,19 @@
         });
       }
 
-      // 个人简介字数统计
+      // Bio character count
       const bioInput = document.getElementById('profile-bio');
       if (bioInput) {
         bioInput.addEventListener('input', updateBioCharCount);
       }
 
-      // 头像上传
+      // Avatar upload
       setupAvatarUpload();
 
-      // 复制钱包地址
+      // Copy wallet address
       setupCopyWallet();
 
-      // 个人资料表单提交
+      // Profile form submission
       const profileForm = document.getElementById('profile-form');
       if (profileForm) {
         profileForm.addEventListener('submit', async (e) => {
@@ -4053,11 +4035,11 @@
           const avatarPreview = document.getElementById('avatar-preview');
           
           if (!username) {
-            alert('请输入用户名');
+            alert('Please enter a username');
             return;
           }
 
-          // 获取头像数据
+          // Get avatar data
           let avatar = null;
           const avatarImg = avatarPreview.querySelector('img');
           if (avatarImg) {
@@ -4073,9 +4055,9 @@
           const success = await saveUserProfile(profileData);
           if (success) {
             hideProfileModal();
-            alert('个人资料保存成功！');
+            alert('Profile saved successfully!');
             
-            // 重新渲染日记和评论以显示新的用户名和头像
+            // Re-render diaries and comments to show new username and avatar
             renderPublicDiaries();
             renderFeaturedDiaries();
             if (currentWallet) {
@@ -4086,18 +4068,18 @@
       }
     }
 
-    // 初始化评论功能
+    // Initialize comment functionality
     function initializeComments(diaryId) {
-      // 加载现有评论
+      // Load existing comments
       loadComments(diaryId);
       
-      // 设置评论输入监听
+      // Setup comment input listeners
       setupCommentInput(diaryId);
       
-      // 监听新评论
+      // Listen for new comments
       listenToComments(diaryId);
       
-      // 防止聊天区域滚动事件冒泡
+      // Prevent chat area scroll event bubbling
       const commentsContainer = document.getElementById(`comments-list-${diaryId}`);
       if (commentsContainer) {
         commentsContainer.addEventListener('wheel', (e) => {
@@ -4110,7 +4092,7 @@
       }
     }
 
-    // 加载评论
+    // Load comments
     async function loadComments(diaryId) {
       const commentsList = document.getElementById(`comments-list-${diaryId}`);
       const commentCount = document.getElementById('comment-count');
@@ -4118,39 +4100,39 @@
       if (!commentsList) return;
       
       try {
-        // 显示加载状态
+        // Show loading state
         commentsList.innerHTML = `
           <div class="comment-loading">
             <i class="fa fa-spinner fa-spin mr-2"></i>
-            加载评论中...
+            Loading comments...
           </div>
         `;
         
-        // 从Firebase获取评论
+        // Get comments from Firebase
         const commentsRef = ref(db, `comments/${diaryId}`);
         const snapshot = await get(commentsRef);
         const comments = snapshot.val() || {};
         
-        // 渲染评论
+        // Render comments
         renderComments(diaryId, comments);
         
-        // 更新评论数量
+        // Update comment count
         const commentCountNum = Object.keys(comments).length;
         if (commentCount) {
-          commentCount.textContent = `${commentCountNum} 条留言`;
+          commentCount.textContent = `${commentCountNum} comments`;
         }
       } catch (error) {
-        console.error('加载评论失败:', error);
+        console.error('Failed to load comments:', error);
         commentsList.innerHTML = `
           <div class="text-center text-red-500 py-8">
             <i class="fa fa-exclamation-triangle text-2xl mb-2"></i>
-            <p>加载评论失败，请稍后重试</p>
+            <p>Failed to load comments, please try again later</p>
           </div>
         `;
       }
     }
 
-    // 渲染评论列表
+    // Render comment list
     function renderComments(diaryId, comments) {
       const commentsList = document.getElementById(`comments-list-${diaryId}`);
       const commentCount = document.getElementById('comment-count');
@@ -4163,14 +4145,14 @@
         commentsList.innerHTML = `
           <div class="text-center text-neutral-500 py-8">
             <i class="fa fa-comment-o text-2xl mb-2"></i>
-            <p>暂无留言，成为第一个留言的人吧！</p>
+            <p>No comments yet, be the first to leave one!</p>
           </div>
         `;
-        if (commentCount) commentCount.textContent = '0 条留言';
+        if (commentCount) commentCount.textContent = '0 comments';
         return;
       }
       
-      // 按时间排序
+      // Sort by time
       const sortedComments = commentEntries
         .map(([id, comment]) => ({ id, ...comment }))
         .sort((a, b) => a.timestamp - b.timestamp);
@@ -4178,7 +4160,7 @@
       const commentsHtml = sortedComments.map(comment => {
         const userAvatar = getUserAvatar(comment.authorWallet);
         const avatarHtml = userAvatar 
-          ? `<img src="${userAvatar}" alt="头像" class="w-full h-full object-cover rounded-full">`
+          ? `<img src="${userAvatar}" alt="Avatar" class="w-full h-full object-cover rounded-full">`
           : comment.author.charAt(0).toUpperCase();
         
         return `
@@ -4201,36 +4183,36 @@
       
       commentsList.innerHTML = commentsHtml;
       
-      // 更新评论数量
+      // Update comment count
       if (commentCount) {
-        commentCount.textContent = `${commentEntries.length} 条留言`;
+        commentCount.textContent = `${commentEntries.length} comments`;
       }
       
-      // 滚动到底部
+      // Scroll to bottom
       setTimeout(() => {
         commentsList.scrollTop = commentsList.scrollHeight;
       }, 100);
     }
 
-    // 设置评论输入监听
+    // Setup comment input listeners
     function setupCommentInput(diaryId) {
       const commentInput = document.getElementById(`comment-input-${diaryId}`);
       const sendButton = document.getElementById(`send-comment-${diaryId}`);
       
       if (!commentInput || !sendButton) return;
       
-      // 输入监听
+      // Input listener
       commentInput.addEventListener('input', function() {
         const hasContent = this.value.trim().length > 0;
         sendButton.disabled = !hasContent;
       });
       
-      // 发送按钮点击
+      // Send button click
       sendButton.addEventListener('click', () => {
         sendComment(diaryId);
       });
       
-      // 回车发送
+      // Enter to send
       commentInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
@@ -4241,7 +4223,7 @@
       });
     }
 
-    // 发送评论
+    // Send comment
     async function sendComment(diaryId) {
       const commentInput = document.getElementById(`comment-input-${diaryId}`);
       const sendButton = document.getElementById(`send-comment-${diaryId}`);
@@ -4252,12 +4234,12 @@
       if (!content) return;
       
       try {
-        // 禁用输入
+        // Disable input
         commentInput.disabled = true;
         sendButton.disabled = true;
-        sendButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>发送中...';
+        sendButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>Sending...';
         
-        // 创建评论数据
+        // Create comment data
         const comment = {
           content: content,
           author: getUserDisplayName(currentWallet),
@@ -4265,52 +4247,52 @@
           timestamp: Date.now()
         };
         
-        // 保存到Firebase
+        // Save to Firebase
         const commentsRef = ref(db, `comments/${diaryId}`);
         await push(commentsRef, comment);
         
-        // 清空输入框
+        // Clear input
         commentInput.value = '';
         commentInput.disabled = false;
         sendButton.disabled = true;
-        sendButton.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>发送';
+        sendButton.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>Send';
         
-        // 聚焦输入框
+        // Focus input
         commentInput.focus();
         
       } catch (error) {
-        console.error('发送评论失败:', error);
-        alert('发送评论失败，请稍后重试');
+        console.error('Failed to send comment:', error);
+        alert('Failed to send comment, please try again later');
         
-        // 恢复输入状态
+        // Restore input state
         commentInput.disabled = false;
         sendButton.disabled = false;
-        sendButton.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>发送';
+        sendButton.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>Send';
       }
     }
 
-    // 监听评论变化
+    // Listen for comment changes
     function listenToComments(diaryId) {
-      // 移除之前的监听器
+      // Remove previous listener
       if (commentListeners[diaryId]) {
         commentListeners[diaryId]();
         delete commentListeners[diaryId];
       }
       
-      // 设置新的监听器
+      // Set up new listener
       const commentsRef = ref(db, `comments/${diaryId}`);
       const unsubscribe = onValue(commentsRef, (snapshot) => {
         const comments = snapshot.val() || {};
         renderComments(diaryId, comments);
         
-        // 更新日记卡片上的评论数量
+        // Update comment count on diary card
         updateDiaryCardCommentCount(diaryId, Object.keys(comments).length);
       });
       
       commentListeners[diaryId] = unsubscribe;
     }
 
-    // 更新日记卡片上的评论数量
+    // Update comment count on diary card
     function updateDiaryCardCommentCount(diaryId, count) {
       const commentCountElement = document.querySelector(`.comment-count-${diaryId}`);
       if (commentCountElement) {
@@ -4318,7 +4300,7 @@
       }
     }
 
-    // 加载所有日记的评论数量
+    // Load comment counts for all diaries
     async function loadAllCommentCounts(diaries) {
       for (const diary of diaries) {
         try {
@@ -4328,16 +4310,16 @@
           const count = Object.keys(comments).length;
           updateDiaryCardCommentCount(diary.id, count);
         } catch (error) {
-          console.error(`加载日记 ${diary.id} 的评论数量失败:`, error);
+          console.error(`Failed to load comment count for diary ${diary.id}:`, error);
           updateDiaryCardCommentCount(diary.id, 0);
         }
       }
     }
 
-    // 点赞功能
+    // Like functionality
     async function toggleLike(diaryId) {
       if (!currentWallet) {
-        alert('请先连接钱包');
+        alert('Please connect wallet first');
         return;
       }
 
@@ -4347,11 +4329,11 @@
         const diary = snapshot.val();
         
         if (!diary) {
-          console.error('日记不存在');
+          console.error('Diary does not exist');
           return;
         }
 
-        // 初始化likedBy对象
+        // Initialize likedBy object
         if (!diary.likedBy) {
           diary.likedBy = {};
         }
@@ -4359,36 +4341,36 @@
         const isLiked = diary.likedBy[currentWallet];
         
         if (isLiked) {
-          // 取消点赞
+          // Unlike
           delete diary.likedBy[currentWallet];
         } else {
-          // 添加点赞
+          // Like
           diary.likedBy[currentWallet] = Date.now();
         }
 
-        // 更新数据库
+        // Update database
         await update(ref(db, `diaryEntries/${diaryId}`), {
           likedBy: diary.likedBy
         });
 
-        // 更新UI
+        // Update UI
         updateLikeUI(diaryId, diary.likedBy);
         
-        // 重新排序日记列表
+        // Reorder diary list
         await reorderDiariesByLikes(diaryId);
 
       } catch (error) {
-        console.error('点赞操作失败:', error);
-        alert('点赞失败，请稍后重试');
+        console.error('Like operation failed:', error);
+        alert('Like failed, please try again later');
       }
     }
 
-    // 更新点赞UI
+    // Update like UI
     function updateLikeUI(diaryId, likedBy) {
       const likeCount = likedBy ? Object.keys(likedBy).length : 0;
       const isLiked = likedBy && likedBy[currentWallet];
 
-      // 更新日记卡片上的点赞按钮
+      // Update like button on diary card
       const likeBtn = document.querySelector(`.like-btn[data-diary-id="${diaryId}"]`);
       if (likeBtn) {
         const icon = likeBtn.querySelector('i');
@@ -4401,7 +4383,7 @@
         likeBtn.classList.toggle('liked', isLiked);
       }
 
-      // 更新弹窗中的点赞按钮
+      // Update like button in modal
       const modalLikeBtn = document.querySelector(`.modal-like-btn[data-diary-id="${diaryId}"]`);
       if (modalLikeBtn) {
         const icon = modalLikeBtn.querySelector('i');
@@ -4415,39 +4397,39 @@
       }
     }
 
-    // 根据点赞数重新排序日记
+    // Reorder diaries by likes
     async function reorderDiariesByLikes(diaryId) {
       try {
-        // 更新当前日记的点赞数
+        // Update current diary's like count
         const currentDiary = allDiaries.find(d => d.id === diaryId);
         if (currentDiary) {
           currentDiary.likeCount = currentDiary.likedBy ? Object.keys(currentDiary.likedBy).length : 0;
         }
 
-        // 重新排序allDiaries数组
+        // Reorder allDiaries array
         allDiaries.sort((a, b) => {
-          // 首先按点赞数降序排序
+          // First sort by likes in descending order
           if (b.likeCount !== a.likeCount) {
             return b.likeCount - a.likeCount;
           }
-          // 点赞数相同时按时间倒序排序
+          // If likes are the same, sort by timestamp in descending order
           return b.timestamp - a.timestamp;
         });
         
-        // 重新渲染公共日记
+        // Re-render public diaries
         renderPublicDiaries();
         
-        // 重新渲染精选日记
+        // Re-render featured diaries
         renderFeaturedDiaries();
         
       } catch (error) {
-        console.error('重新排序日记失败:', error);
+        console.error('Failed to reorder diaries:', error);
       }
     }
 
-    // 初始化点赞按钮
+    // Initialize like buttons
     function initializeLikeButtons(diaryId) {
-      // 为弹窗中的点赞按钮添加事件监听
+      // Add event listener for like button in modal
       const modalLikeBtn = document.querySelector(`.modal-like-btn[data-diary-id="${diaryId}"]`);
       if (modalLikeBtn) {
         modalLikeBtn.addEventListener('click', (e) => {
@@ -4457,7 +4439,7 @@
       }
     }
 
-    // 为日记卡片添加点赞事件监听
+    // Add like event listeners to diary cards
     function setupDiaryCardLikeButtons() {
       document.addEventListener('click', (e) => {
         if (e.target.closest('.like-btn')) {
@@ -4470,7 +4452,7 @@
           }
         }
         
-        // 精选日记卡片点击事件
+        // Featured diary card click event
         if (e.target.closest('.featured-diary-card')) {
           e.preventDefault();
           e.stopPropagation();
@@ -4486,12 +4468,12 @@
       });
     }
 
-    // 精选日记功能
+    // Featured diaries functionality
     function renderFeaturedDiaries() {
       const container = document.getElementById('featured-diaries-grid');
       if (!container) return;
 
-      // 获取点赞数最高的3个公开日记
+      // Get top 3 public diaries by likes
       const publicDiaries = allDiaries.filter(d => d.public !== false);
       const topDiaries = publicDiaries
         .sort((a, b) => {
@@ -4505,8 +4487,8 @@
         container.innerHTML = `
           <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
             <i class="fa fa-book-o text-neutral-300 text-6xl mb-4"></i>
-            <h3 class="text-xl font-medium text-neutral-600 mb-2">暂无精选日记</h3>
-            <p class="text-neutral-500">等待社区成员分享精彩内容</p>
+            <h3 class="text-xl font-medium text-neutral-600 mb-2">No featured diaries yet</h3>
+            <p class="text-neutral-500">Waiting for community members to share exciting content</p>
           </div>
         `;
         return;
@@ -4529,7 +4511,7 @@
                 ${(() => {
                   const userAvatar = getUserAvatar(diary.wallet);
                   return userAvatar 
-                    ? `<img src="${userAvatar}" alt="头像" class="w-full h-full object-cover rounded-full">`
+                    ? `<img src="${userAvatar}" alt="Avatar" class="w-full h-full object-cover rounded-full">`
                     : author.charAt(0).toUpperCase();
                 })()}
               </div>
@@ -4539,7 +4521,7 @@
               </div>
             </div>
             
-            <h3 class="featured-diary-title">${escapeHtml(diary.title || '无标题')}</h3>
+            <h3 class="featured-diary-title">${escapeHtml(diary.title || 'Untitled')}</h3>
             <p class="featured-diary-content">${escapeHtml(preview)}</p>
             
             <div class="featured-diary-meta">
@@ -4560,11 +4542,11 @@
 
       container.innerHTML = featuredHtml;
       
-      // 加载评论数量
+      // Load comment counts
       loadFeaturedCommentCounts(topDiaries);
     }
 
-    // 加载精选日记的评论数量
+    // Load comment counts for featured diaries
     async function loadFeaturedCommentCounts(diaries) {
       for (const diary of diaries) {
         try {
@@ -4578,16 +4560,16 @@
             commentCountElement.textContent = count;
           }
         } catch (error) {
-          console.error(`加载精选日记 ${diary.id} 的评论数量失败:`, error);
+          console.error(`Failed to load comment count for featured diary ${diary.id}:`, error);
         }
       }
     }
 
-    // 工具函数
+    // Utility functions
     function formatDate(timestamp) {
       if (!timestamp) return '';
       const date = new Date(timestamp);
-      return date.toLocaleString('zh-CN', {
+      return date.toLocaleString('en-US', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -4605,39 +4587,21 @@
 
 
     
-    // 调试函数
+    // Debug functions
     window.debugUserProfiles = function() {
-      console.log('=== 用户资料调试信息 ===');
-      console.log('当前钱包地址:', currentWallet);
-      console.log('当前用户资料:', currentUserProfile);
-      console.log('所有用户资料缓存:', userProfiles);
-      console.log('localStorage中的提示状态:', Object.keys(localStorage).filter(key => key.startsWith('profile_prompted_')));
+      console.log('=== User Profile Debug Info ===');
+      console.log('Current wallet address:', currentWallet);
+      console.log('Current user profile:', currentUserProfile);
+      console.log('All user profile cache:', userProfiles);
+      console.log('localStorage prompt status:', Object.keys(localStorage).filter(key => key.startsWith('profile_prompted_')));
       
       if (currentWallet) {
-        console.log('检查Firebase中的用户资料...');
+        console.log('Checking user profile in Firebase...');
         loadUserProfile(currentWallet).then(profile => {
-          console.log('Firebase中的用户资料:', profile);
+          console.log('User profile in Firebase:', profile);
         });
       }
     };
-
-    // 删除日记函数
-    async function deleteDiary(diaryId) {
-      if (!currentWallet) {
-        alert('请先连接钱包');
-        return;
-      }
-      if (!diaryId) return;
-      if (!confirm('确定要删除这篇日记吗？删除后无法恢复！')) return;
-      try {
-        await remove(ref(db, `diaryEntries/${diaryId}`));
-        alert('删除成功');
-        loadDiaries();
-      } catch (e) {
-        alert('删除失败，请重试');
-        console.error(e);
-      }
-    }
   </script>
 </body>
 </html>
