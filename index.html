@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>链上日记时光 - 分享生活的点滴</title>
+  <!-- 引入外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- 配置Tailwind主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4f46e5', // 深紫色主色调
+            secondary: '#ec4899', // 粉色辅助色
+            neutral: {
+              50: '#fafafa',
+              100: '#f5f5f5',
+              200: '#e5e5e5',
+              300: '#d4d4d4',
+              600: '#525252',
+              700: '#404040',
+              800: '#262626',
+              900: '#171717'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['Merriweather', 'Georgia', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .page-transition {
+        transition: opacity 0.4s ease, transform 0.4s ease;
+      }
+      .nav-active {
+        @apply text-primary border-primary;
+      }
+    }
+  </style>
+  
+  <style>
+    /* 基础样式 */
+    body {
+      overflow-x: hidden;
+    }
+    
+    /* 页面容器样式 */
+    .page-container {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .page-container.active {
+      display: block;
+      animation: pageIn 0.5s forwards;
+    }
+    
+    @keyframes pageIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* 导航下划线动画 */
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: #4f46e5;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link.nav-active::after {
+      width: 100%;
+    }
+    
+    /* 移动端导航链接样式 */
+    .mobile-nav-link {
+      color: #525252;
+      transition: all 0.3s ease;
+    }
+    
+    .mobile-nav-link.nav-active {
+      background-color: #4f46e510;
+      color: #4f46e5;
+    }
+    
+    /* 日记卡片悬停效果 */
+    .diary-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .diary-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* 筛选按钮样式 */
+    .filter-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .filter-btn.active {
+      background-color: #4f46e5;
+      color: white;
+    }
+    
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a1a1a1;
+    }
+
+    /* 钱包连接状态 */
+    .wallet-connected {
+      background: linear-gradient(45deg, #10b981, #059669);
+    }
+    
+    .wallet-disconnected {
+      background: linear-gradient(45deg, #ef4444, #dc2626);
+    }
+
+    /* 区块链状态指示器 */
+    .blockchain-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 12px;
+      height: 12px;
+      background: #10b981;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+  </style>
+</head>
+
+<body class="bg-neutral-50 font-sans text-neutral-800">
+  <!-- 导航栏 -->
+  <header class="sticky top-0 z-40 bg-white shadow-sm border-b border-neutral-200">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        <!-- Logo -->
+        <a href="#" class="flex items-center space-x-2 page-link" data-page="home">
+          <i class="fa fa-link text-primary text-2xl"></i>
+          <span class="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">链上日记时光</span>
+        </a>
+        
+        <!-- 桌面导航 -->
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="#" class="nav-link nav-active text-neutral-800 font-medium transition-colors" data-page="home">首页</a>
+          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="upload">写日记</a>
+          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="public">公共日记</a>
+          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="private">我的日记</a>
+          <a href="#" class="nav-link text-neutral-600 font-medium transition-colors" data-page="stats">数据统计</a>
+        </nav>
+        
+        <!-- 用户区域 -->
+        <div class="flex items-center space-x-4">
+          <button id="wallet-btn" class="hidden md:flex items-center px-4 py-2 rounded-full wallet-disconnected text-white hover:opacity-90 transition-all relative">
+            <i class="fa fa-wallet mr-2"></i>
+            <span id="wallet-text">连接钱包</span>
+            <div id="wallet-status" class="blockchain-badge" style="display: none;"></div>
+          </button>
+          
+          <!-- 移动端菜单按钮 -->
+          <button id="mobile-menu-btn" class="md:hidden text-neutral-700">
+            <i class="fa fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-neutral-200">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex flex-col space-y-4 py-2">
+          <a href="#" class="mobile-nav-link nav-active py-2 px-3 rounded-lg" data-page="home">
+            <i class="fa fa-home mr-2"></i>首页
+          </a>
+          <a href="#" class="mobile-nav-link py-2 px-3 rounded-lg" data-page="upload">
+            <i class="fa fa-pencil mr-2"></i>写日记
+          </a>
+          <a href="#" class="mobile-nav-link py-2 px-3 rounded-lg" data-page="public">
+            <i class="fa fa-book mr-2"></i>公共日记
+          </a>
+          <a href="#" class="mobile-nav-link py-2 px-3 rounded-lg" data-page="private">
+            <i class="fa fa-lock mr-2"></i>我的日记
+          </a>
+          <a href="#" class="mobile-nav-link py-2 px-3 rounded-lg" data-page="stats">
+            <i class="fa fa-bar-chart mr-2"></i>数据统计
+          </a>
+          <button id="mobile-wallet-btn" class="flex items-center justify-center px-4 py-2 rounded-full wallet-disconnected text-white hover:opacity-90 transition-all mt-2">
+            <i class="fa fa-wallet mr-2"></i>
+            <span id="mobile-wallet-text">连接钱包</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="min-h-[calc(100vh-4rem)] pt-1">
+    <!-- 首页 -->
+    <section id="home" class="page-container active">
+      <!-- 英雄区域 -->
+      <div class="relative bg-gradient-to-br from-primary/5 to-secondary/5 py-20 md:py-32 overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10">
+          <i class="fa fa-pencil absolute top-20 right-20 text-[150px] text-primary"></i>
+          <i class="fa fa-book absolute bottom-10 left-10 text-[120px] text-secondary"></i>
+        </div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+          <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-neutral-800 leading-tight mb-6">
+              记录生活的<span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">链上时光</span>
+            </h1>
+            <p class="text-lg md:text-xl text-neutral-700 mb-10 leading-relaxed max-w-2xl mx-auto">
+              基于区块链技术的去中心化日记平台，让你的每一段文字都永久保存在链上，
+              既可以公开分享，也可以私密收藏，真正属于你的数字记忆。
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+              <a href="#" class="page-link px-8 py-4 bg-primary text-white rounded-full hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl font-medium text-lg" data-page="upload">
+                <i class="fa fa-pencil mr-2"></i>开始记录
+              </a>
+              <a href="#" class="page-link px-8 py-4 bg-white text-primary border border-primary rounded-full hover:bg-primary/5 transition-all shadow-md hover:shadow-lg font-medium text-lg" data-page="public">
+                <i class="fa fa-eye mr-2"></i>浏览日记
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 功能介绍 -->
+      <div class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-16">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-800 mb-4">为什么选择我们</h2>
+            <p class="text-neutral-600 max-w-2xl mx-auto">简单、优雅的日记体验，让记录成为一种享受</p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div class="bg-neutral-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-all border border-neutral-100">
+              <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                <i class="fa fa-pencil-square-o text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">轻松记录</h3>
+              <p class="text-neutral-600">简洁直观的编辑器，让你专注于内容创作，随时随地记录灵感与感悟。</p>
+            </div>
+            
+            <div class="bg-neutral-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-all border border-neutral-100">
+              <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                <i class="fa fa-share-alt text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">分享交流</h3>
+              <p class="text-neutral-600">选择公开你的日记，与志同道合的人交流想法，发现更多生活视角。</p>
+            </div>
+            
+            <div class="bg-neutral-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-all border border-neutral-100">
+              <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                <i class="fa fa-bar-chart text-primary text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-3">数据洞察</h3>
+              <p class="text-neutral-600">通过数据了解自己的记录习惯，发现创作规律，持续提升记录质量。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 精选日记 -->
+      <div class="py-16 bg-neutral-50">
+        <div class="container mx-auto px-4">
+          <div class="flex justify-between items-end mb-10">
+            <div>
+              <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-800 mb-2">精选日记</h2>
+              <p class="text-neutral-600">发现社区中最受欢迎的精彩内容</p>
+            </div>
+            <a href="#" class="page-link text-primary hover:text-primary/80 font-medium hidden md:block" data-page="public">
+              查看全部 <i class="fa fa-arrow-right ml-1"></i>
+            </a>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <!-- 暂无内容提示 -->
+            <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+              <i class="fa fa-book-o text-neutral-300 text-6xl mb-4"></i>
+              <h3 class="text-xl font-medium text-neutral-600 mb-2">暂无精选日记</h3>
+              <p class="text-neutral-500">等待社区成员分享精彩内容</p>
+            </div>
+          </div>
+          
+          <div class="text-center mt-8 md:hidden">
+            <a href="#" class="page-link inline-block px-5 py-2 border border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors" data-page="public">
+              查看更多日记
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 行动召唤 -->
+      <div class="py-16 bg-gradient-to-r from-primary to-primary/80 text-white">
+        <div class="container mx-auto px-4 text-center">
+          <h2 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold mb-6">开始记录你的故事</h2>
+          <p class="max-w-2xl mx-auto mb-8 text-white/90 text-lg">
+            每一段经历都值得被铭记，每一个想法都值得被记录。加入我们，分享你的生活点滴。
+          </p>
+          <a href="#" class="page-link inline-flex items-center px-8 py-4 bg-white text-primary rounded-full hover:bg-neutral-100 transition-all shadow-lg font-medium text-lg" data-page="upload">
+            <i class="fa fa-pencil-square-o mr-2"></i>立即写日记
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 写日记页面 -->
+    <section id="upload" class="page-container py-12">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="mb-10">
+            <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800 mb-2">
+              <i class="fa fa-pencil-square-o text-primary mr-2"></i>写下你的日记
+            </h1>
+            <p class="text-neutral-600">记录生活中的思考、感悟与美好，留下属于自己的独特印记</p>
+          </div>
+          
+          <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8 border border-neutral-200">
+            <form id="diary-form" class="space-y-6">
+              <!-- 标题输入 -->
+              <div>
+                <label for="diary-title" class="block text-sm font-medium text-neutral-700 mb-1">日记标题</label>
+                <input 
+                  type="text" 
+                  id="diary-title" 
+                  class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-lg"
+                  placeholder="给你的日记起个标题吧..."
+                  required
+                >
+              </div>
+              
+              <!-- 标签选择 -->
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 mb-2">选择标签（可多选）</label>
+                <div class="flex flex-wrap gap-2">
+                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
+                    <input type="checkbox" name="tags" value="生活" class="sr-only peer">
+                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">生活</span>
+                  </label>
+                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
+                    <input type="checkbox" name="tags" value="旅行" class="sr-only peer">
+                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">旅行</span>
+                  </label>
+                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
+                    <input type="checkbox" name="tags" value="感悟" class="sr-only peer">
+                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">感悟</span>
+                  </label>
+                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
+                    <input type="checkbox" name="tags" value="读书" class="sr-only peer">
+                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">读书</span>
+                  </label>
+                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
+                    <input type="checkbox" name="tags" value="工作" class="sr-only peer">
+                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">工作</span>
+                  </label>
+                  <label class="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-neutral-300 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
+                    <input type="checkbox" name="tags" value="美食" class="sr-only peer">
+                    <span class="peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all">美食</span>
+                  </label>
+                </div>
+              </div>
+              
+              <!-- 日记内容 -->
+              <div>
+                <label for="diary-content" class="block text-sm font-medium text-neutral-700 mb-1">日记内容</label>
+                <textarea 
+                  id="diary-content" 
+                  rows="10" 
+                  class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none"
+                  placeholder="今天发生了什么事？有什么想记录的呢..."
+                  required
+                ></textarea>
+                <div class="flex justify-between items-center mt-2 text-sm text-neutral-500">
+                  <span id="char-count">0 个字</span>
+                  <button type="button" id="clear-content" class="hover:text-primary transition-colors">
+                    <i class="fa fa-eraser mr-1"></i>清空
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 隐私设置 -->
+              <div class="pt-2">
+                <label class="block text-sm font-medium text-neutral-700 mb-2">隐私设置</label>
+                <div class="flex items-center space-x-6">
+                  <label class="inline-flex items-center cursor-pointer">
+                    <input type="radio" name="privacy" value="public" class="sr-only peer" checked>
+                    <div class="w-5 h-5 border-2 border-neutral-300 rounded-full flex items-center justify-center peer-checked:border-primary mr-2">
+                      <div class="w-3 h-3 bg-primary rounded-full scale-0 peer-checked:scale-100 transition-transform"></div>
+                    </div>
+                    <span>公开 - 所有人可见，上链存储</span>
+                  </label>
+                  <label class="inline-flex items-center cursor-pointer">
+                    <input type="radio" name="privacy" value="private" class="sr-only peer">
+                    <div class="w-5 h-5 border-2 border-neutral-300 rounded-full flex items-center justify-center peer-checked:border-primary mr-2">
+                      <div class="w-3 h-3 bg-primary rounded-full scale-0 peer-checked:scale-100 transition-transform"></div>
+                    </div>
+                    <span>私密 - 仅自己可见，加密存储</span>
+                  </label>
+                </div>
+                <p class="text-xs text-neutral-500 mt-2">
+                  <i class="fa fa-info-circle mr-1"></i>
+                  所有日记都会存储在区块链上，私密日记将使用你的钱包地址加密
+                </p>
+              </div>
+              
+              <!-- 钱包连接提示 -->
+              <div id="wallet-warning" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                <div class="flex items-center">
+                  <i class="fa fa-exclamation-triangle text-amber-500 mr-2"></i>
+                  <span class="text-amber-700">请先连接钱包以发布日记到区块链</span>
+                </div>
+              </div>
+              
+              <!-- 提交按钮 -->
+              <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                <button 
+                  type="submit" 
+                  id="publish-btn"
+                  class="flex-1 px-6 py-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all shadow-md font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <i class="fa fa-link mr-2"></i>
+                  <span id="publish-text">发布到区块链</span>
+                  <div id="publish-spinner" class="hidden ml-2">
+                    <i class="fa fa-spinner fa-spin"></i>
+                  </div>
+                </button>
+                <button 
+                  type="button" 
+                  id="draft-btn"
+                  class="flex-1 px-6 py-4 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-all font-medium flex items-center justify-center"
+                >
+                  <i class="fa fa-save mr-2"></i>保存草稿
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <!-- 写作提示 -->
+          <div class="mt-10 bg-neutral-50 rounded-xl p-6 border border-neutral-200">
+            <h3 class="text-lg font-semibold mb-4 flex items-center">
+              <i class="fa fa-lightbulb-o text-primary mr-2"></i>写作提示
+            </h3>
+            <ul class="space-y-2 text-neutral-700">
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span>尽量使用具体的细节和感受来描述，让日记更生动</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span>可以记录当天发生的事情，也可以写下对某件事的思考</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                <span>选择合适的标签可以让更多人看到你的日记</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 公共日记页面 -->
+    <section id="public" class="page-container py-12">
+      <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+          <div class="mb-10">
+            <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800 mb-2">
+              <i class="fa fa-book text-primary mr-2"></i>公共日记
+            </h1>
+            <p class="text-neutral-600">浏览社区成员分享的精彩日记，感受不同的生活视角和思考方式</p>
+          </div>
+          
+          <!-- 筛选和搜索 -->
+          <div class="bg-white rounded-xl shadow-sm p-4 mb-8 border border-neutral-200">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div class="flex flex-wrap gap-2">
+                <button class="filter-btn active px-4 py-2 rounded-full bg-primary text-white text-sm">
+                  全部
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                  生活
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                  旅行
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                  感悟
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                  读书
+                </button>
+              </div>
+              
+              <div class="relative w-full md:w-auto">
+                <input 
+                  type="text" 
+                  placeholder="搜索日记内容..." 
+                  class="w-full md:w-64 pl-10 pr-4 py-2 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                >
+                <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 日记列表 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 暂无内容提示 -->
+            <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+              <i class="fa fa-book-o text-neutral-300 text-6xl mb-4"></i>
+              <h3 class="text-xl font-medium text-neutral-600 mb-2">暂无公共日记</h3>
+              <p class="text-neutral-500 mb-4">成为第一个分享日记的人吧！</p>
+              <a href="#" class="page-link px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors" data-page="upload">
+                <i class="fa fa-pencil mr-2"></i>写第一篇日记
+              </a>
+            </div>
+          </div>
+          
+          <!-- 分页 -->
+          <div class="mt-12 flex justify-center hidden">
+            <nav class="flex items-center space-x-1">
+              <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <i class="fa fa-angle-left"></i>
+              </button>
+              <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white">1</button>
+              <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors">2</button>
+              <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors">3</button>
+              <span class="w-10 h-10 flex items-center justify-center">...</span>
+              <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors">8</button>
+              <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:border-primary hover:text-primary transition-colors">
+                <i class="fa fa-angle-right"></i>
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 私人日记页面 -->
+    <section id="private" class="page-container py-12">
+      <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+          <div class="mb-10">
+            <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800 mb-2">
+              <i class="fa fa-lock text-primary mr-2"></i>我的私人日记
+            </h1>
+            <p class="text-neutral-600">查看你的私人日记，这些内容只有你能看到，数据已加密存储在区块链上</p>
+          </div>
+          
+          <!-- 钱包连接提示 -->
+          <div id="private-wallet-warning" class="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fa fa-exclamation-triangle text-amber-500 text-xl mr-3"></i>
+                <div>
+                  <h3 class="font-medium text-amber-800">需要连接钱包</h3>
+                  <p class="text-amber-700 text-sm mt-1">请先连接你的钱包以查看私人日记</p>
+                </div>
+              </div>
+              <button id="private-connect-wallet" class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
+                连接钱包
+              </button>
+            </div>
+          </div>
+          
+          <!-- 筛选和搜索 -->
+          <div id="private-controls" class="bg-white rounded-xl shadow-sm p-4 mb-8 border border-neutral-200 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div class="flex flex-wrap gap-2">
+                <button class="filter-btn active px-4 py-2 rounded-full bg-primary text-white text-sm">
+                  全部
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                  生活
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                  感悟
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                  工作
+                </button>
+              </div>
+              
+              <div class="relative w-full md:w-auto">
+                <input 
+                  type="text" 
+                  placeholder="搜索我的日记..." 
+                  class="w-full md:w-64 pl-10 pr-4 py-2 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                >
+                <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 私人日记列表 -->
+          <div id="private-diary-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            <!-- 日记卡片将通过JavaScript动态生成 -->
+          </div>
+          
+          <!-- 空状态 -->
+          <div id="private-empty-state" class="flex flex-col items-center justify-center py-16 text-center hidden">
+            <i class="fa fa-lock text-neutral-300 text-6xl mb-4"></i>
+            <h3 class="text-xl font-medium text-neutral-600 mb-2">还没有私人日记</h3>
+            <p class="text-neutral-500 mb-4">写下你的第一篇私人日记吧</p>
+            <a href="#" class="page-link px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors" data-page="upload">
+              <i class="fa fa-pencil mr-2"></i>写日记
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 数据统计页面 -->
+    <section id="stats" class="page-container py-12">
+      <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+          <div class="mb-10">
+            <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800 mb-2">
+              <i class="fa fa-bar-chart text-primary mr-2"></i>社区数据统计
+            </h1>
+            <p class="text-neutral-600">探索我们社区的活跃度和内容分布，看看大家都在记录和分享什么</p>
+          </div>
+          
+          <!-- 统计概览 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p class="text-neutral-500 text-sm">总日记数</p>
+                  <h3 class="text-3xl font-bold text-neutral-800 mt-1" id="total-diaries">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <i class="fa fa-book text-primary"></i>
+                </div>
+              </div>
+              <div class="flex items-center text-neutral-400 text-sm">
+                <i class="fa fa-minus mr-1"></i>
+                <span>暂无数据</span>
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p class="text-neutral-500 text-sm">活跃用户</p>
+                  <h3 class="text-3xl font-bold text-neutral-800 mt-1" id="active-users">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <i class="fa fa-users text-primary"></i>
+                </div>
+              </div>
+              <div class="flex items-center text-neutral-400 text-sm">
+                <i class="fa fa-minus mr-1"></i>
+                <span>暂无数据</span>
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p class="text-neutral-500 text-sm">公开日记</p>
+                  <h3 class="text-3xl font-bold text-neutral-800 mt-1" id="public-diaries">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <i class="fa fa-eye text-primary"></i>
+                </div>
+              </div>
+              <div class="flex items-center text-neutral-400 text-sm">
+                <i class="fa fa-minus mr-1"></i>
+                <span>暂无数据</span>
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p class="text-neutral-500 text-sm">总评论数</p>
+                  <h3 class="text-3xl font-bold text-neutral-800 mt-1" id="total-comments">0</h3>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <i class="fa fa-comments text-primary"></i>
+                </div>
+              </div>
+              <div class="flex items-center text-neutral-400 text-sm">
+                <i class="fa fa-minus mr-1"></i>
+                <span>暂无数据</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 图表区域 -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+            <!-- 标签分布图表 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-neutral-200 lg:col-span-1">
+              <h3 class="text-lg font-semibold mb-6">热门标签分布</h3>
+              <div class="h-80 flex items-center justify-center">
+                <div class="text-center">
+                  <i class="fa fa-pie-chart text-neutral-300 text-6xl mb-4"></i>
+                  <p class="text-neutral-500">暂无数据可展示</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 月度活跃度图表 -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-neutral-200 lg:col-span-2">
+              <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold">月度活跃度趋势</h3>
+                <div class="flex space-x-2">
+                  <button class="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary">月度</button>
+                  <button class="px-3 py-1 text-sm rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-colors">季度</button>
+                  <button class="px-3 py-1 text-sm rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-colors">年度</button>
+                </div>
+              </div>
+              <div class="h-80 flex items-center justify-center">
+                <div class="text-center">
+                  <i class="fa fa-line-chart text-neutral-300 text-6xl mb-4"></i>
+                  <p class="text-neutral-500">暂无数据可展示</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 活跃度分析 -->
+          <div class="bg-white rounded-xl shadow-sm p-6 border border-neutral-200 mb-10">
+            <h3 class="text-lg font-semibold mb-6">用户活跃时段分析</h3>
+            <div class="h-80 flex items-center justify-center">
+              <div class="text-center">
+                <i class="fa fa-bar-chart text-neutral-300 text-6xl mb-4"></i>
+                <p class="text-neutral-500">暂无数据可展示</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 热门日记排行 -->
+          <div class="bg-white rounded-xl shadow-sm p-6 border border-neutral-200">
+            <h3 class="text-lg font-semibold mb-6">热门日记排行</h3>
+            <div class="flex flex-col items-center justify-center py-16 text-center">
+              <i class="fa fa-trophy text-neutral-300 text-6xl mb-4"></i>
+              <h4 class="text-xl font-medium text-neutral-600 mb-2">暂无热门日记</h4>
+              <p class="text-neutral-500">等待社区成员创建精彩内容</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+
+  <!-- 发布成功弹窗 -->
+  <div id="success-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-white rounded-xl shadow-lg p-6 max-w-md w-full transform transition-transform duration-300 scale-95">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa fa-check text-2xl text-green-500"></i>
+        </div>
+        <h3 class="text-xl font-bold text-neutral-800 mb-2">发布成功！</h3>
+        <p class="text-neutral-600 mb-6">你的日记已经成功发布到社区啦！</p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button id="view-diary" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+            查看我的日记
+          </button>
+          <button id="close-modal" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
+            返回首页
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase 配置 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, query, limitToLast, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    // Firebase 配置
+    const firebaseConfig = {
+      apiKey: "AIzaSyA5Z5ieEbAcfQX0kxGSn9ldGXhzvAwx_8M",
+      authDomain: "chat-294cc.firebaseapp.com",
+      databaseURL: "https://chat-294cc-default-rtdb.firebaseio.com",
+      projectId: "chat-294cc",
+      storageBucket: "chat-294cc.firebasestorage.app",
+      messagingSenderId: "913615304269",
+      appId: "1:913615304269:web:0274ffaccb8e6b678e4e04",
+      measurementId: "G-SJR9NDW86B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // 全局变量
+    let currentWallet = '';
+    let allDiaries = [];
+    
+    // 钱包连接功能
+    async function connectWallet() {
+      if (window.solana && window.solana.isPhantom) {
+        try {
+          const resp = await window.solana.connect();
+          currentWallet = resp.publicKey.toString();
+          updateWalletUI(true);
+          updatePrivatePageUI();
+          loadDiaries();
+          return true;
+        } catch (error) {
+          console.error('钱包连接失败:', error);
+          return false;
+        }
+      } else {
+        alert('请安装 Phantom 钱包');
+        return false;
+      }
+    }
+
+    // 更新钱包UI
+    function updateWalletUI(connected) {
+      const walletBtn = document.getElementById('wallet-btn');
+      const walletText = document.getElementById('wallet-text');
+      const walletStatus = document.getElementById('wallet-status');
+      const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
+      const mobileWalletText = document.getElementById('mobile-wallet-text');
+      
+      if (connected && currentWallet) {
+        const shortAddr = currentWallet.slice(0, 4) + '...' + currentWallet.slice(-4);
+        walletBtn.className = walletBtn.className.replace('wallet-disconnected', 'wallet-connected');
+        mobileWalletBtn.className = mobileWalletBtn.className.replace('wallet-disconnected', 'wallet-connected');
+        walletText.textContent = shortAddr;
+        mobileWalletText.textContent = shortAddr;
+        walletStatus.style.display = 'block';
+        
+        // 隐藏钱包警告
+        const walletWarning = document.getElementById('wallet-warning');
+        if (walletWarning) {
+          walletWarning.classList.add('hidden');
+        }
+      } else {
+        walletBtn.className = walletBtn.className.replace('wallet-connected', 'wallet-disconnected');
+        mobileWalletBtn.className = mobileWalletBtn.className.replace('wallet-connected', 'wallet-disconnected');
+        walletText.textContent = '连接钱包';
+        mobileWalletText.textContent = '连接钱包';
+        walletStatus.style.display = 'none';
+      }
+    }
+
+    // 更新私人页面UI
+    function updatePrivatePageUI() {
+      const privateWarning = document.getElementById('private-wallet-warning');
+      const privateControls = document.getElementById('private-controls');
+      const privateDiaryList = document.getElementById('private-diary-list');
+      const privateEmptyState = document.getElementById('private-empty-state');
+      
+      if (currentWallet) {
+        privateWarning.classList.add('hidden');
+        privateControls.classList.remove('hidden');
+        privateDiaryList.classList.remove('hidden');
+        loadPrivateDiaries();
+      } else {
+        privateWarning.classList.remove('hidden');
+        privateControls.classList.add('hidden');
+        privateDiaryList.classList.add('hidden');
+        privateEmptyState.classList.add('hidden');
+      }
+    }
+
+    // 页面切换功能
+    document.addEventListener('DOMContentLoaded', function() {
+      // 获取所有页面链接和页面容器
+      const pageLinks = document.querySelectorAll('.page-link, .nav-link, .mobile-nav-link');
+      const pageContainers = document.querySelectorAll('.page-container');
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      // 钱包连接事件
+      document.getElementById('wallet-btn').addEventListener('click', connectWallet);
+      document.getElementById('mobile-wallet-btn').addEventListener('click', connectWallet);
+      document.getElementById('private-connect-wallet').addEventListener('click', connectWallet);
+      
+      // 页面加载时自动检测钱包
+      checkWalletConnection();
+      
+      // 移动端菜单切换
+      mobileMenuBtn.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+      
+      // 自动检测钱包连接
+      async function checkWalletConnection() {
+        if (window.solana && window.solana.isPhantom) {
+          try {
+            const resp = await window.solana.connect({ onlyIfTrusted: true });
+            currentWallet = resp.publicKey.toString();
+            updateWalletUI(true);
+            updatePrivatePageUI();
+            loadDiaries();
+          } catch (error) {
+            // 用户未授权，保持未连接状态
+          }
+        }
+      }
+
+      // 加载所有日记
+      function loadDiaries() {
+        const diaryRef = query(ref(db, 'diaryEntries'), limitToLast(50));
+        onValue(diaryRef, (snapshot) => {
+          const val = snapshot.val();
+          if (!val) {
+            allDiaries = [];
+            renderPublicDiaries();
+            return;
+          }
+          
+          // 转为数组并按时间倒序
+          allDiaries = Object.entries(val)
+            .map(([id, entry]) => ({ id, ...entry }))
+            .sort((a, b) => b.timestamp - a.timestamp);
+          
+          renderPublicDiaries();
+          if (currentWallet) {
+            loadPrivateDiaries();
+          }
+          updateStats();
+        });
+      }
+
+      // 渲染公共日记
+      function renderPublicDiaries() {
+        const publicDiaries = allDiaries.filter(d => d.public !== false);
+        const container = document.querySelector('#public .grid');
+        const emptyTip = document.querySelector('#public .col-span-full');
+        
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        if (publicDiaries.length === 0) {
+          if (emptyTip) {
+            emptyTip.style.display = 'flex';
+          }
+          return;
+        }
+        
+        if (emptyTip) {
+          emptyTip.style.display = 'none';
+        }
+        
+        publicDiaries.forEach(diary => {
+          const diaryCard = createDiaryCard(diary);
+          container.appendChild(diaryCard);
+        });
+      }
+
+      // 加载私人日记
+      function loadPrivateDiaries() {
+        if (!currentWallet) return;
+        
+        const privateDiaries = allDiaries.filter(d => 
+          d.public === false && d.wallet === currentWallet
+        );
+        
+        const container = document.getElementById('private-diary-list');
+        const emptyState = document.getElementById('private-empty-state');
+        
+        container.innerHTML = '';
+        
+        if (privateDiaries.length === 0) {
+          emptyState.classList.remove('hidden');
+          return;
+        }
+        
+        emptyState.classList.add('hidden');
+        
+        privateDiaries.forEach(diary => {
+          const diaryCard = createDiaryCard(diary, true);
+          container.appendChild(diaryCard);
+        });
+      }
+
+      // 创建日记卡片
+      function createDiaryCard(diary, isPrivate = false) {
+        const card = document.createElement('article');
+        card.className = 'diary-card bg-white rounded-xl shadow-sm overflow-hidden border border-neutral-200 cursor-pointer';
+        
+        const title = diary.title || '无标题';
+        const content = diary.content || '';
+        const preview = content.length > 120 ? content.slice(0, 120) + '...' : content;
+        const author = diary.wallet ? diary.wallet.slice(0, 4) + '...' + diary.wallet.slice(-4) : '匿名';
+        const date = formatDate(diary.timestamp);
+        const tags = diary.tags || [];
+        
+        let tagHtml = '';
+        if (tags.length > 0) {
+          const tag = tags[0];
+          const tagColors = {
+            '生活': 'bg-blue-100 text-blue-800',
+            '旅行': 'bg-green-100 text-green-800',
+            '感悟': 'bg-purple-100 text-purple-800',
+            '读书': 'bg-yellow-100 text-yellow-800',
+            '工作': 'bg-gray-100 text-gray-800',
+            '美食': 'bg-red-100 text-red-800'
+          };
+          const colorClass = tagColors[tag] || 'bg-gray-100 text-gray-800';
+          tagHtml = `<span class="px-2.5 py-0.5 ${colorClass} text-xs rounded-full">${tag}</span>`;
+        }
+        
+        card.innerHTML = `
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex items-center flex-1">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-sm font-bold mr-3">
+                  ${author.charAt(0).toUpperCase()}
+                </div>
+                <div class="flex-1">
+                  <h4 class="font-medium text-neutral-800">${author}</h4>
+                  <p class="text-xs text-neutral-500">${date}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                ${tagHtml}
+                ${isPrivate ? '<i class="fa fa-lock text-neutral-400 text-sm"></i>' : ''}
+                ${diary.txid ? '<i class="fa fa-link text-primary text-sm" title="已上链"></i>' : ''}
+              </div>
+            </div>
+            
+            <h3 class="text-xl font-bold mb-3 text-neutral-800 hover:text-primary transition-colors">${escapeHtml(title)}</h3>
+            
+            <p class="text-neutral-600 line-clamp-3 mb-4">${escapeHtml(preview)}</p>
+            
+            <div class="flex justify-between items-center">
+              <div class="flex items-center space-x-4 text-neutral-500">
+                <div class="flex items-center">
+                  <i class="fa fa-heart-o mr-1"></i>
+                  <span>0</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fa fa-comment-o mr-1"></i>
+                  <span>0</span>
+                </div>
+              </div>
+              <button class="text-primary hover:text-primary/80 text-sm font-medium transition-colors">
+                阅读全文 <i class="fa fa-angle-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // 添加点击事件
+        card.addEventListener('click', () => showDiaryModal(diary));
+        
+        return card;
+      }
+
+      // 显示日记详情弹窗
+      function showDiaryModal(diary) {
+        // 这里可以添加弹窗逻辑
+        console.log('显示日记:', diary);
+      }
+
+      // 页面切换函数
+      function switchPage(pageId) {
+        // 隐藏所有页面
+        pageContainers.forEach(container => {
+          container.classList.remove('active');
+        });
+        
+        // 显示目标页面
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+          targetPage.classList.add('active');
+          
+          // 滚动到顶部
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+          
+          // 特殊页面逻辑
+          if (pageId === 'private') {
+            updatePrivatePageUI();
+          }
+        }
+        
+        // 更新导航激活状态
+        document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
+          link.classList.remove('nav-active');
+          if (link.getAttribute('data-page') === pageId) {
+            link.classList.add('nav-active');
+          }
+        });
+        
+        // 关闭移动端菜单
+        mobileMenu.classList.add('hidden');
+      }
+      
+      // 为所有页面链接添加点击事件
+      pageLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const pageId = this.getAttribute('data-page');
+          if (pageId) {
+            switchPage(pageId);
+          }
+        });
+      });
+      
+      // 日记内容字数统计
+      const diaryContent = document.getElementById('diary-content');
+      const charCount = document.getElementById('char-count');
+      
+      if (diaryContent && charCount) {
+        diaryContent.addEventListener('input', function() {
+          const count = this.value.length;
+          charCount.textContent = `${count} 个字`;
+        });
+      }
+      
+      // 清空内容按钮
+      const clearContentBtn = document.getElementById('clear-content');
+      if (clearContentBtn && diaryContent) {
+        clearContentBtn.addEventListener('click', function() {
+          diaryContent.value = '';
+          charCount.textContent = '0 个字';
+        });
+      }
+      
+      // 日记发布功能
+      async function publishDiary(diaryData) {
+        if (!currentWallet) {
+          showWalletWarning();
+          return false;
+        }
+
+        const publishBtn = document.getElementById('publish-btn');
+        const publishText = document.getElementById('publish-text');
+        const publishSpinner = document.getElementById('publish-spinner');
+        
+        // 禁用按钮并显示加载状态
+        publishBtn.disabled = true;
+        publishText.textContent = '发布中...';
+        publishSpinner.classList.remove('hidden');
+        
+        try {
+          // 准备数据
+          const entry = {
+            title: diaryData.title,
+            content: diaryData.content,
+            tags: diaryData.tags,
+            public: diaryData.privacy === 'public',
+            wallet: currentWallet,
+            timestamp: Date.now()
+          };
+          
+          // 保存到Firebase
+          const diaryRef = ref(db, 'diaryEntries');
+          const result = await push(diaryRef, entry);
+          
+          // 重置表单
+          document.getElementById('diary-form').reset();
+          document.getElementById('char-count').textContent = '0 个字';
+          
+          // 显示成功消息
+          showSuccessModal();
+          
+          // 重新加载数据
+          setTimeout(() => {
+            loadDiaries();
+          }, 1000);
+          
+          return true;
+        } catch (error) {
+          console.error('发布失败:', error);
+          alert('发布失败，请重试');
+          return false;
+        } finally {
+          // 恢复按钮状态
+          publishBtn.disabled = false;
+          publishText.textContent = '发布到区块链';
+          publishSpinner.classList.add('hidden');
+        }
+      }
+
+      // 显示钱包警告
+      function showWalletWarning() {
+        const walletWarning = document.getElementById('wallet-warning');
+        if (walletWarning) {
+          walletWarning.classList.remove('hidden');
+          setTimeout(() => {
+            walletWarning.classList.add('hidden');
+          }, 5000);
+        }
+      }
+
+      // 显示成功弹窗
+      function showSuccessModal() {
+        const successModal = document.getElementById('success-modal');
+        if (successModal) {
+          successModal.classList.remove('hidden');
+          setTimeout(() => {
+            successModal.classList.add('opacity-100');
+            successModal.querySelector('div').classList.remove('scale-95');
+            successModal.querySelector('div').classList.add('scale-100');
+          }, 10);
+        }
+      }
+
+      // 更新统计数据
+      function updateStats() {
+        const totalDiaries = allDiaries.length;
+        const publicDiaries = allDiaries.filter(d => d.public !== false).length;
+        const privateDiaries = allDiaries.filter(d => d.public === false && d.wallet === currentWallet).length;
+        const activeUsers = new Set(allDiaries.map(d => d.wallet)).size;
+        
+        // 更新统计显示
+        const totalElement = document.getElementById('total-diaries');
+        const publicElement = document.getElementById('public-diaries');
+        const activeElement = document.getElementById('active-users');
+        const commentsElement = document.getElementById('total-comments');
+        
+        if (totalElement) totalElement.textContent = totalDiaries;
+        if (publicElement) publicElement.textContent = publicDiaries;
+        if (activeElement) activeElement.textContent = activeUsers;
+        if (commentsElement) commentsElement.textContent = '0'; // 暂时设为0
+      }
+
+      // 日记发布表单提交
+      const diaryForm = document.getElementById('diary-form');
+      const successModal = document.getElementById('success-modal');
+      const closeModalBtn = document.getElementById('close-modal');
+      const viewDiaryBtn = document.getElementById('view-diary');
+      
+      if (diaryForm) {
+        diaryForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          // 获取表单数据
+          const formData = new FormData(this);
+          const title = document.getElementById('diary-title').value;
+          const content = document.getElementById('diary-content').value;
+          const privacy = formData.get('privacy');
+          const tags = Array.from(formData.getAll('tags'));
+          
+          if (!title.trim() || !content.trim()) {
+            alert('请填写标题和内容');
+            return;
+          }
+          
+          const diaryData = {
+            title: title.trim(),
+            content: content.trim(),
+            privacy,
+            tags
+          };
+          
+          await publishDiary(diaryData);
+        });
+      }
+        
+      // 关闭弹窗按钮
+      if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function() {
+          successModal.classList.remove('opacity-100');
+          successModal.querySelector('div').classList.remove('scale-100');
+          successModal.querySelector('div').classList.add('scale-95');
+          
+          setTimeout(() => {
+            successModal.classList.add('hidden');
+            switchPage('home');
+          }, 300);
+        });
+      }
+      
+      // 查看日记按钮
+      if (viewDiaryBtn) {
+        viewDiaryBtn.addEventListener('click', function() {
+          successModal.classList.remove('opacity-100');
+          successModal.querySelector('div').classList.remove('scale-100');
+          successModal.querySelector('div').classList.add('scale-95');
+          
+          setTimeout(() => {
+            successModal.classList.add('hidden');
+            switchPage('public');
+          }, 300);
+        });
+      }
+
+      // 初始化应用
+      function initApp() {
+        loadDiaries();
+        updateStats();
+      }
+
+      // 页面加载完成后初始化
+      initApp();
+    });
+
+    // 工具函数
+    function formatDate(timestamp) {
+      if (!timestamp) return '';
+      const date = new Date(timestamp);
+      return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // 将函数暴露到全局作用域以便调试
+    window.blockchainDiary = {
+      connectWallet,
+      loadDiaries,
+      publishDiary,
+      currentWallet: () => currentWallet,
+      allDiaries: () => allDiaries
+    };
+  </script>
+</body>
+</html>
+    
