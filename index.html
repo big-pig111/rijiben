@@ -799,6 +799,62 @@
       box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
+    /* 个人资料按钮样式 */
+    .profile-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(79, 70, 229, 0.1);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+    }
+
+    .profile-btn:active::before {
+      width: 40px;
+      height: 40px;
+    }
+
+    .profile-btn:not(:disabled):hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 头像上传样式 */
+    #avatar-preview {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    #avatar-preview.has-image {
+      background-image: none;
+    }
+
+    #avatar-preview.has-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    /* 个人资料弹窗动画 */
+    #profile-modal {
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    #profile-modal .bg-white {
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
     /* 微信风格的输入区域 */
     .chat-input-area {
       background: #f9fafb;
@@ -1036,6 +1092,43 @@
       color: #3b82f6;
     }
 
+    .featured-diary-author {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 0.75rem;
+    }
+
+    .featured-diary-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.875rem;
+      overflow: hidden;
+    }
+
+    .featured-diary-author-info {
+      flex: 1;
+    }
+
+    .featured-diary-author-name {
+      font-weight: 600;
+      color: #374151;
+      font-size: 0.875rem;
+    }
+
+    .featured-diary-time {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 0.125rem;
+    }
+
     /* 自定义单选按钮样式 */
     .custom-radio {
       position: relative;
@@ -1097,6 +1190,14 @@
             <i class="fa fa-wallet wallet-icon"></i>
             <span id="wallet-text">连接钱包</span>
             <div id="wallet-status" class="wallet-status-indicator disconnected"></div>
+          </button>
+          
+          <!-- 个人资料设置按钮 -->
+          <button id="profile-btn" class="profile-btn hidden md:flex items-center px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 font-medium transition-all shadow-lg hover:shadow-xl hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            <div class="profile-icon mr-2">
+              <i class="fa fa-user"></i>
+            </div>
+            <span>个人资料</span>
           </button>
           
           <!-- 移动端菜单按钮 -->
@@ -1702,7 +1803,90 @@
     </section>
   </main>
 
-
+  <!-- 个人资料设置弹窗 -->
+  <div id="profile-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+      <!-- 弹窗头部 -->
+      <div class="bg-gradient-to-r from-primary to-secondary p-6 text-white">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-bold">个人资料设置</h2>
+          <button id="close-profile-modal" class="text-white hover:text-white/80 transition-colors">
+            <i class="fa fa-times text-xl"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 弹窗内容 -->
+      <div class="p-6">
+        <form id="profile-form" class="space-y-6">
+          <!-- 头像上传 -->
+          <div class="text-center">
+            <div class="relative inline-block">
+              <div id="avatar-preview" class="w-24 h-24 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 cursor-pointer hover:opacity-80 transition-opacity">
+                <i class="fa fa-user"></i>
+              </div>
+              <input type="file" id="avatar-upload" accept="image/*" class="hidden">
+              <button type="button" id="upload-avatar-btn" class="absolute bottom-0 right-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary/90 transition-colors">
+                <i class="fa fa-camera text-sm"></i>
+              </button>
+            </div>
+            <p class="text-sm text-neutral-500">点击头像上传新图片</p>
+          </div>
+          
+          <!-- 用户名 -->
+          <div>
+            <label for="profile-username" class="block text-sm font-medium text-neutral-700 mb-2">用户名</label>
+            <input 
+              type="text" 
+              id="profile-username" 
+              class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+              placeholder="输入你的用户名"
+              maxlength="20"
+              required
+            >
+            <p class="text-xs text-neutral-500 mt-1">用户名将显示在日记和评论中</p>
+          </div>
+          
+          <!-- 个人简介 -->
+          <div>
+            <label for="profile-bio" class="block text-sm font-medium text-neutral-700 mb-2">个人简介</label>
+            <textarea 
+              id="profile-bio" 
+              rows="3" 
+              class="w-full px-4 py-3 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none"
+              placeholder="介绍一下自己..."
+              maxlength="200"
+            ></textarea>
+            <div class="flex justify-between items-center mt-1">
+              <p class="text-xs text-neutral-500">个人简介将显示在你的个人页面</p>
+              <span id="bio-char-count" class="text-xs text-neutral-400">0/200</span>
+            </div>
+          </div>
+          
+          <!-- 钱包地址显示 -->
+          <div class="bg-neutral-50 rounded-lg p-4">
+            <label class="block text-sm font-medium text-neutral-700 mb-2">钱包地址</label>
+            <div class="flex items-center justify-between">
+              <span id="profile-wallet-address" class="text-sm text-neutral-600 font-mono">未连接钱包</span>
+              <button type="button" id="copy-wallet-btn" class="text-primary hover:text-primary/80 transition-colors">
+                <i class="fa fa-copy"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- 保存按钮 -->
+          <div class="flex gap-3 pt-4">
+            <button type="button" id="cancel-profile-btn" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
+              取消
+            </button>
+            <button type="submit" id="save-profile-btn" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium">
+              保存资料
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- 发布成功弹窗 -->
   <div id="success-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
@@ -1745,10 +1929,12 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-          // 全局变量
-      let currentWallet = '';
-      let allDiaries = [];
-      let connection;
+              // 全局变量
+    let currentWallet = '';
+    let allDiaries = [];
+    let connection;
+    let userProfiles = {}; // 用户资料缓存
+    let currentUserProfile = null; // 当前用户资料
 
       // Solana 连接配置 - 使用稳定的RPC端点
       const rpcEndpoints = [
@@ -1786,6 +1972,7 @@
         const mobileWalletBtn = document.getElementById('mobile-wallet-btn');
         const mobileWalletText = document.getElementById('mobile-wallet-text');
         const mobileWalletStatus = document.getElementById('mobile-wallet-status');
+        const profileBtn = document.getElementById('profile-btn');
         
         if (connected && currentWallet) {
           const shortAddr = currentWallet.slice(0, 4) + '...' + currentWallet.slice(-4);
@@ -1818,6 +2005,15 @@
           if (walletWarning) {
             walletWarning.classList.add('hidden');
           }
+
+          // 启用个人资料按钮
+          if (profileBtn) {
+            profileBtn.disabled = false;
+            profileBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+
+          // 加载用户资料
+          loadUserProfile(currentWallet);
         } else {
           // 重置为未连接状态
           walletBtn.className = 'wallet-btn disconnected hidden md:flex';
@@ -1830,6 +2026,12 @@
           mobileWalletStatus.className = 'wallet-status-indicator disconnected';
           walletStatus.title = '点击连接Phantom钱包';
           mobileWalletStatus.title = '点击连接Phantom钱包';
+
+          // 禁用个人资料按钮
+          if (profileBtn) {
+            profileBtn.disabled = true;
+            profileBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          }
         }
       }
 
@@ -1856,7 +2058,7 @@
       // 加载所有日记
       function loadDiaries() {
         const diaryRef = query(ref(db, 'diaryEntries'), limitToLast(50));
-        onValue(diaryRef, (snapshot) => {
+        onValue(diaryRef, async (snapshot) => {
           const val = snapshot.val();
           if (!val) {
             allDiaries = [];
@@ -1886,6 +2088,14 @@
             loadPrivateDiaries();
           }
           updateStats();
+          
+          // 加载所有日记作者的用户资料
+          const uniqueWallets = [...new Set(allDiaries.map(diary => diary.wallet).filter(Boolean))];
+          for (const wallet of uniqueWallets) {
+            if (!userProfiles[wallet]) {
+              await loadUserProfile(wallet);
+            }
+          }
         });
       }
 
@@ -1953,7 +2163,7 @@
         const title = diary.title || '无标题';
         const content = diary.content || '';
         const preview = content.length > 120 ? content.slice(0, 120) + '...' : content;
-        const author = diary.wallet ? diary.wallet.slice(0, 4) + '...' + diary.wallet.slice(-4) : '匿名';
+        const author = getUserDisplayName(diary.wallet);
         const date = formatDate(diary.timestamp);
         const tags = diary.tags || [];
         
@@ -1976,8 +2186,13 @@
           <div class="p-6">
             <div class="flex justify-between items-start mb-4">
               <div class="flex items-center flex-1">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-sm font-bold mr-3">
-                  ${author.charAt(0).toUpperCase()}
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white text-sm font-bold mr-3 overflow-hidden">
+                  ${(() => {
+                    const userAvatar = getUserAvatar(diary.wallet);
+                    return userAvatar 
+                      ? `<img src="${userAvatar}" alt="头像" class="w-full h-full object-cover">`
+                      : author.charAt(0).toUpperCase();
+                  })()}
                 </div>
                 <div class="flex-1">
                   <h4 class="font-medium text-neutral-800">${author}</h4>
@@ -2205,6 +2420,9 @@
       
       // 初始化点赞按钮事件监听
       setupDiaryCardLikeButtons();
+
+      // 初始化个人资料功能
+      setupProfileFeatures();
 
       // 页面切换函数
       function switchPage(pageId) {
@@ -2663,11 +2881,17 @@
               <!-- 头部信息 -->
               <div class="flex justify-between items-start mb-6">
                 <div class="flex items-center">
-                  <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white font-bold mr-4 shadow-lg">
-                    ${diary.wallet ? diary.wallet.charAt(0).toUpperCase() : 'A'}
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white font-bold mr-4 shadow-lg overflow-hidden">
+                    ${(() => {
+                      const userAvatar = getUserAvatar(diary.wallet);
+                      const displayName = getUserDisplayName(diary.wallet);
+                      return userAvatar 
+                        ? `<img src="${userAvatar}" alt="头像" class="w-full h-full object-cover">`
+                        : displayName.charAt(0).toUpperCase();
+                    })()}
                   </div>
                   <div>
-                    <h4 class="font-semibold text-neutral-800 text-lg">${diary.wallet ? diary.wallet.slice(0, 4) + '...' + diary.wallet.slice(-4) : '匿名'}</h4>
+                    <h4 class="font-semibold text-neutral-800 text-lg">${getUserDisplayName(diary.wallet)}</h4>
                     <p class="text-sm text-neutral-500 flex items-center">
                       <i class="fa fa-clock-o mr-1"></i>
                       ${formatDate(diary.timestamp)}
@@ -2871,6 +3095,276 @@
       console.log('页面滚动已恢复:', document.body.style.overflow);
     }
 
+    // 用户资料管理
+    async function loadUserProfile(walletAddress) {
+      try {
+        const profileRef = ref(db, `userProfiles/${walletAddress}`);
+        const snapshot = await get(profileRef);
+        const profile = snapshot.val();
+        
+        if (profile) {
+          userProfiles[walletAddress] = profile;
+          if (walletAddress === currentWallet) {
+            currentUserProfile = profile;
+          }
+          return profile;
+        }
+        return null;
+      } catch (error) {
+        console.error('加载用户资料失败:', error);
+        return null;
+      }
+    }
+
+    async function saveUserProfile(profileData) {
+      if (!currentWallet) {
+        alert('请先连接钱包');
+        return false;
+      }
+
+      try {
+        const profileRef = ref(db, `userProfiles/${currentWallet}`);
+        await update(profileRef, {
+          ...profileData,
+          wallet: currentWallet,
+          updatedAt: Date.now()
+        });
+
+        // 更新缓存
+        userProfiles[currentWallet] = profileData;
+        currentUserProfile = profileData;
+
+        console.log('用户资料保存成功');
+        return true;
+      } catch (error) {
+        console.error('保存用户资料失败:', error);
+        alert('保存失败，请稍后重试');
+        return false;
+      }
+    }
+
+    function getUserDisplayName(walletAddress) {
+      const profile = userProfiles[walletAddress];
+      if (profile && profile.username) {
+        return profile.username;
+      }
+      return walletAddress ? walletAddress.slice(0, 4) + '...' + walletAddress.slice(-4) : '匿名';
+    }
+
+    function getUserAvatar(walletAddress) {
+      const profile = userProfiles[walletAddress];
+      if (profile && profile.avatar) {
+        return profile.avatar;
+      }
+      return null;
+    }
+
+    function getUserBio(walletAddress) {
+      const profile = userProfiles[walletAddress];
+      return profile ? profile.bio || '' : '';
+    }
+
+    // 个人资料弹窗管理
+    function showProfileModal() {
+      if (!currentWallet) {
+        alert('请先连接钱包');
+        return;
+      }
+
+      const modal = document.getElementById('profile-modal');
+      const usernameInput = document.getElementById('profile-username');
+      const bioInput = document.getElementById('profile-bio');
+      const walletAddressSpan = document.getElementById('profile-wallet-address');
+      const avatarPreview = document.getElementById('avatar-preview');
+
+      // 显示钱包地址
+      walletAddressSpan.textContent = currentWallet;
+
+      // 加载当前用户资料
+      if (currentUserProfile) {
+        usernameInput.value = currentUserProfile.username || '';
+        bioInput.value = currentUserProfile.bio || '';
+        
+        // 显示头像
+        if (currentUserProfile.avatar) {
+          avatarPreview.innerHTML = `<img src="${currentUserProfile.avatar}" alt="头像">`;
+          avatarPreview.classList.add('has-image');
+        } else {
+          avatarPreview.innerHTML = '<i class="fa fa-user"></i>';
+          avatarPreview.classList.remove('has-image');
+        }
+      } else {
+        usernameInput.value = '';
+        bioInput.value = '';
+        avatarPreview.innerHTML = '<i class="fa fa-user"></i>';
+        avatarPreview.classList.remove('has-image');
+      }
+
+      // 更新字数统计
+      updateBioCharCount();
+
+      // 显示弹窗
+      modal.classList.remove('hidden');
+      disablePageScroll();
+    }
+
+    function hideProfileModal() {
+      const modal = document.getElementById('profile-modal');
+      modal.classList.add('hidden');
+      restorePageScroll();
+    }
+
+    function updateBioCharCount() {
+      const bioInput = document.getElementById('profile-bio');
+      const charCount = document.getElementById('bio-char-count');
+      if (bioInput && charCount) {
+        const count = bioInput.value.length;
+        charCount.textContent = `${count}/200`;
+      }
+    }
+
+    // 头像上传处理
+    function setupAvatarUpload() {
+      const avatarPreview = document.getElementById('avatar-preview');
+      const avatarUpload = document.getElementById('avatar-upload');
+      const uploadBtn = document.getElementById('upload-avatar-btn');
+
+      // 点击头像或上传按钮触发文件选择
+      [avatarPreview, uploadBtn].forEach(element => {
+        if (element) {
+          element.addEventListener('click', () => {
+            avatarUpload.click();
+          });
+        }
+      });
+
+      // 文件选择处理
+      if (avatarUpload) {
+        avatarUpload.addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            if (file.size > 5 * 1024 * 1024) { // 5MB限制
+              alert('图片大小不能超过5MB');
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              avatarPreview.innerHTML = `<img src="${e.target.result}" alt="头像">`;
+              avatarPreview.classList.add('has-image');
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+    }
+
+    // 复制钱包地址
+    function setupCopyWallet() {
+      const copyBtn = document.getElementById('copy-wallet-btn');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+          if (currentWallet) {
+            navigator.clipboard.writeText(currentWallet).then(() => {
+              // 显示复制成功提示
+              const originalText = copyBtn.innerHTML;
+              copyBtn.innerHTML = '<i class="fa fa-check"></i>';
+              copyBtn.classList.add('text-green-500');
+              
+              setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.classList.remove('text-green-500');
+              }, 2000);
+            });
+          }
+        });
+      }
+    }
+
+    // 初始化个人资料功能
+    function setupProfileFeatures() {
+      // 个人资料按钮点击事件
+      const profileBtn = document.getElementById('profile-btn');
+      if (profileBtn) {
+        profileBtn.addEventListener('click', showProfileModal);
+      }
+
+      // 关闭个人资料弹窗
+      const closeProfileModal = document.getElementById('close-profile-modal');
+      const cancelProfileBtn = document.getElementById('cancel-profile-btn');
+      if (closeProfileModal) {
+        closeProfileModal.addEventListener('click', hideProfileModal);
+      }
+      if (cancelProfileBtn) {
+        cancelProfileBtn.addEventListener('click', hideProfileModal);
+      }
+
+      // 点击弹窗外部关闭
+      const profileModal = document.getElementById('profile-modal');
+      if (profileModal) {
+        profileModal.addEventListener('click', (e) => {
+          if (e.target === profileModal) {
+            hideProfileModal();
+          }
+        });
+      }
+
+      // 个人简介字数统计
+      const bioInput = document.getElementById('profile-bio');
+      if (bioInput) {
+        bioInput.addEventListener('input', updateBioCharCount);
+      }
+
+      // 头像上传
+      setupAvatarUpload();
+
+      // 复制钱包地址
+      setupCopyWallet();
+
+      // 个人资料表单提交
+      const profileForm = document.getElementById('profile-form');
+      if (profileForm) {
+        profileForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const username = document.getElementById('profile-username').value.trim();
+          const bio = document.getElementById('profile-bio').value.trim();
+          const avatarPreview = document.getElementById('avatar-preview');
+          
+          if (!username) {
+            alert('请输入用户名');
+            return;
+          }
+
+          // 获取头像数据
+          let avatar = null;
+          const avatarImg = avatarPreview.querySelector('img');
+          if (avatarImg) {
+            avatar = avatarImg.src;
+          }
+
+          const profileData = {
+            username,
+            bio,
+            avatar
+          };
+
+          const success = await saveUserProfile(profileData);
+          if (success) {
+            hideProfileModal();
+            alert('个人资料保存成功！');
+            
+            // 重新渲染日记和评论以显示新的用户名和头像
+            renderPublicDiaries();
+            renderFeaturedDiaries();
+            if (currentWallet) {
+              loadPrivateDiaries();
+            }
+          }
+        });
+      }
+    }
+
     // 初始化评论功能
     function initializeComments(diaryId) {
       // 加载现有评论
@@ -2960,22 +3454,29 @@
         .map(([id, comment]) => ({ id, ...comment }))
         .sort((a, b) => a.timestamp - b.timestamp);
       
-      const commentsHtml = sortedComments.map(comment => `
-        <div class="comment-item">
-          <div class="comment-header">
-            <div class="comment-author">
-              <div class="comment-avatar">
-                ${comment.author.charAt(0).toUpperCase()}
-              </div>
-              <div class="comment-meta">
-                <div class="comment-author-name">${comment.author}</div>
-                <div class="comment-time">${formatDate(comment.timestamp)}</div>
+      const commentsHtml = sortedComments.map(comment => {
+        const userAvatar = getUserAvatar(comment.authorWallet);
+        const avatarHtml = userAvatar 
+          ? `<img src="${userAvatar}" alt="头像" class="w-full h-full object-cover rounded-full">`
+          : comment.author.charAt(0).toUpperCase();
+        
+        return `
+          <div class="comment-item">
+            <div class="comment-header">
+              <div class="comment-author">
+                <div class="comment-avatar">
+                  ${avatarHtml}
+                </div>
+                <div class="comment-meta">
+                  <div class="comment-author-name">${comment.author}</div>
+                  <div class="comment-time">${formatDate(comment.timestamp)}</div>
+                </div>
               </div>
             </div>
+            <div class="comment-content">${escapeHtml(comment.content)}</div>
           </div>
-          <div class="comment-content">${escapeHtml(comment.content)}</div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
       
       commentsList.innerHTML = commentsHtml;
       
@@ -3038,7 +3539,7 @@
         // 创建评论数据
         const comment = {
           content: content,
-          author: currentWallet.slice(0, 4) + '...' + currentWallet.slice(-4),
+          author: getUserDisplayName(currentWallet),
           authorWallet: currentWallet,
           timestamp: Date.now()
         };
@@ -3294,11 +3795,27 @@
         const rank = index + 1;
         const likeCount = diary.likedBy ? Object.keys(diary.likedBy).length : 0;
         const preview = diary.content.length > 100 ? diary.content.substring(0, 100) + '...' : diary.content;
+        const author = getUserDisplayName(diary.wallet);
         
         return `
           <div class="featured-diary-card rank-${rank}" data-diary-id="${diary.id}">
             <div class="featured-rank-badge rank-${rank}">
               ${rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}
+            </div>
+            
+            <div class="featured-diary-author">
+              <div class="featured-diary-avatar">
+                ${(() => {
+                  const userAvatar = getUserAvatar(diary.wallet);
+                  return userAvatar 
+                    ? `<img src="${userAvatar}" alt="头像" class="w-full h-full object-cover rounded-full">`
+                    : author.charAt(0).toUpperCase();
+                })()}
+              </div>
+              <div class="featured-diary-author-info">
+                <div class="featured-diary-author-name">${author}</div>
+                <div class="featured-diary-time">${formatDate(diary.timestamp)}</div>
+              </div>
             </div>
             
             <h3 class="featured-diary-title">${escapeHtml(diary.title || '无标题')}</h3>
@@ -3314,9 +3831,6 @@
                   <i class="fa fa-comment"></i>
                   <span class="comment-count-${diary.id}">0</span>
                 </div>
-              </div>
-              <div class="text-xs">
-                ${formatDate(diary.timestamp)}
               </div>
             </div>
           </div>
@@ -3384,6 +3898,7 @@
     window.connectWallet = connectWallet;
     window.showDiaryModal = showDiaryModal;
     window.toggleLike = toggleLike;
+    window.showProfileModal = showProfileModal;
   </script>
 </body>
 </html>
