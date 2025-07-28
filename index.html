@@ -1694,15 +1694,20 @@
       <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
           <div class="mb-10">
-            <div class="flex items-center justify-between mb-2">
-              <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800">
-              <i class="fa fa-book text-primary mr-2"></i>Public Diaries
-            </h1>
+                      <div class="flex items-center justify-between mb-2">
+            <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-neutral-800">
+            <i class="fa fa-book text-primary mr-2"></i>Public Diaries
+          </h1>
+            <div class="flex items-center gap-2">
               <div class="flex items-center text-sm text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full">
                 <i class="fa fa-heart text-red-500 mr-1"></i>
                 Order by Likes
               </div>
+              <div id="public-diary-count" class="text-sm text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full">
+                <span id="filtered-count">0</span> diaries
+              </div>
             </div>
+          </div>
             <p class="text-neutral-600">Browse community members' exciting diary entries, experiencing different perspectives and ways of thinking</p>
           </div>
           
@@ -1710,30 +1715,40 @@
           <div class="bg-white rounded-xl shadow-sm p-4 mb-8 border border-neutral-200">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div class="flex flex-wrap gap-2">
-                <button class="filter-btn active px-4 py-2 rounded-full bg-primary text-white text-sm">
+                <button class="filter-btn active px-4 py-2 rounded-full bg-primary text-white text-sm" data-filter="all">
                   All
                 </button>
-                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors" data-filter="Life">
                   Life
                 </button>
-                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors" data-filter="Travel">
                   Travel
                 </button>
-                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors" data-filter="Reflection">
                   Reflection
                 </button>
-                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors">
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors" data-filter="Reading">
                   Reading
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors" data-filter="Work">
+                  Work
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-colors" data-filter="Food">
+                  Food
                 </button>
               </div>
               
               <div class="relative w-full md:w-auto">
                 <input 
                   type="text" 
+                  id="public-search-input"
                   placeholder="Search diary content..." 
                   class="w-full md:w-64 pl-10 pr-4 py-2 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
                 >
                 <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <button id="clear-search-btn" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors hidden">
+                  <i class="fa fa-times"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -2371,9 +2386,30 @@
       });
     }
 
-    // Render public diaries
+    // Global variables for filtering and searching
+    let currentFilter = 'all';
+    let currentSearchTerm = '';
+
+    // Render public diaries with filtering and search
     function renderPublicDiaries() {
-      const publicDiaries = allDiaries.filter(d => d.public !== false);
+      let publicDiaries = allDiaries.filter(d => d.public !== false);
+      
+      // Apply tag filter
+      if (currentFilter !== 'all') {
+        publicDiaries = publicDiaries.filter(diary => 
+          diary.tags && diary.tags.includes(currentFilter)
+        );
+      }
+      
+      // Apply search filter
+      if (currentSearchTerm.trim() !== '') {
+        const searchLower = currentSearchTerm.toLowerCase();
+        publicDiaries = publicDiaries.filter(diary => 
+          diary.title && diary.title.toLowerCase().includes(searchLower) ||
+          diary.content && diary.content.toLowerCase().includes(searchLower)
+        );
+      }
+      
       const container = document.querySelector('#public .grid');
       const emptyTip = document.querySelector('#public .col-span-full');
       
@@ -2384,6 +2420,18 @@
       if (publicDiaries.length === 0) {
         if (emptyTip) {
           emptyTip.style.display = 'flex';
+          // Update empty state message based on filter/search
+          const emptyTitle = emptyTip.querySelector('h3');
+          const emptyDesc = emptyTip.querySelector('p');
+          if (currentFilter !== 'all' || currentSearchTerm.trim() !== '') {
+            emptyTitle.textContent = 'No diaries found';
+            emptyDesc.textContent = currentFilter !== 'all' 
+              ? `No diaries found with "${currentFilter}" tag`
+              : `No diaries found matching "${currentSearchTerm}"`;
+          } else {
+            emptyTitle.textContent = 'No public diaries yet';
+            emptyDesc.textContent = 'Be the first to share your diary!';
+          }
         }
         return;
       }
@@ -2399,6 +2447,12 @@
       
       // Load comment counts for all diaries
       loadAllCommentCounts(publicDiaries);
+      
+      // Update filtered count
+      const filteredCountElement = document.getElementById('filtered-count');
+      if (filteredCountElement) {
+        filteredCountElement.textContent = publicDiaries.length;
+      }
     }
 
     // Load private diaries
@@ -2770,6 +2824,82 @@
       // Initialize custom radio buttons
       setupCustomRadioButtons();
 
+      // Initialize public diary filtering and search
+      function setupPublicDiaryFilters() {
+        // Filter button click events
+        const filterButtons = document.querySelectorAll('#public .filter-btn');
+        filterButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => {
+              btn.classList.remove('active', 'bg-primary', 'text-white');
+              btn.classList.add('bg-neutral-100', 'text-neutral-700');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active', 'bg-primary', 'text-white');
+            this.classList.remove('bg-neutral-100', 'text-neutral-700');
+            
+            // Update current filter
+            currentFilter = this.getAttribute('data-filter');
+            
+            // Re-render diaries
+            renderPublicDiaries();
+          });
+        });
+        
+        // Search input event
+        const searchInput = document.getElementById('public-search-input');
+        const clearSearchBtn = document.getElementById('clear-search-btn');
+        
+        if (searchInput) {
+          let searchTimeout;
+          
+          function updateClearButton() {
+            if (searchInput.value.trim() !== '') {
+              clearSearchBtn.classList.remove('hidden');
+            } else {
+              clearSearchBtn.classList.add('hidden');
+            }
+          }
+          
+          searchInput.addEventListener('input', function() {
+            // Clear previous timeout
+            clearTimeout(searchTimeout);
+            
+            // Update clear button visibility
+            updateClearButton();
+            
+            // Set new timeout for debounced search
+            searchTimeout = setTimeout(() => {
+              currentSearchTerm = this.value;
+              renderPublicDiaries();
+            }, 300); // 300ms delay for better performance
+          });
+          
+          // Clear search on escape
+          searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+              this.value = '';
+              currentSearchTerm = '';
+              updateClearButton();
+              renderPublicDiaries();
+            }
+          });
+          
+          // Clear search button click
+          if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', function() {
+              searchInput.value = '';
+              currentSearchTerm = '';
+              updateClearButton();
+              renderPublicDiaries();
+              searchInput.focus();
+            });
+          }
+        }
+      }
+
       // Initialize tag selector
       function setupTagSelector() {
         const tagItems = document.querySelectorAll('.tag-item');
@@ -2800,6 +2930,9 @@
 
       // Initialize tag selector
       setupTagSelector();
+      
+      // Initialize public diary filters
+      setupPublicDiaryFilters();
       
       // Initialize like button event listeners
       setupDiaryCardLikeButtons();
