@@ -3,44 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多人联机 Meme 贪吃蛇</title>
+    <title>多人联机贪吃蛇</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
+    <!-- Firebase SDK - 使用更兼容的版本 -->
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+</head>
+<body class="bg-gray-900 text-white p-4">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-4">多人联机贪吃蛇</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="bg-gray-800 p-3 rounded">
+                <span>玩家: <span id="playerName">匿名玩家</span></span>
+            </div>
+            <div class="bg-gray-800 p-3 rounded">
+                <span>分数: <span id="score">0</span></span>
+            </div>
+            <div class="bg-gray-800 p-3 rounded">
+                <span>在线: <span id="playerCount">0</span></span>
+            </div>
+        </div>
+        
+        <div class="relative border-4 border-pink-500 rounded-lg bg-gray-800">
+            <canvas id="gameCanvas" class="w-full h-auto bg-gray-900"></canvas>
+            
+            <!-- 开始屏幕 -->
+            <div id="startScreen" class="absolute inset-0 bg-gray-900/90 flex flex-col items-center justify-center">
+                <h2 class="text-2xl font-bold mb-4">准备开始游戏</h2>
+                <input type="text" id="playerNameInput" placeholder="输入你的名字" 
+                       class="bg-gray-700 border border-blue-500 rounded p-2 mb-4 w-64">
+                <button id="startBtn" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded">
+                    开始游戏
+                </button>
+            </div>
+            
+            <!-- 游戏结束屏幕 -->
+            <div id="gameOverScreen" class="absolute inset-0 bg-gray-900/95 flex flex-col items-center justify-center hidden">
+                <h2 class="text-2xl font-bold mb-4">游戏结束</h2>
+                <p>最终分数: <span id="finalScore">0</span></p>
+                <button id="restartBtn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded mt-4">
+                    重新开始
+                </button>
+            </div>
+        </div>
+        
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-gray-800 p-4 rounded">
+                <h3 class="font-bold mb-2">游戏说明</h3>
+                <ul class="text-sm">
+                    <li>• 使用方向键或WASD控制蛇的移动</li>
+                    <li>• 吃掉食物增加分数</li>
+                    <li>• 避免撞到墙壁或其他玩家</li>
+                </ul>
+            </div>
+            <div class="bg-gray-800 p-4 rounded">
+                <h3 class="font-bold mb-2">在线玩家</h3>
+                <ul id="playersList" class="text-sm"></ul>
+            </div>
+        </div>
+    </div>
+
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        memeYellow: '#FFE100',
-                        memeBlue: '#0066FF',
-                        memeRed: '#FF3333',
-                        memeGreen: '#33CC33',
-                        memePink: '#FF66CC',
-                    },
-                    fontFamily: {
-                        meme: ['\"Comic Sans MS\"', '\"Comic Neue\"', 'cursive'],
-                    },
+        // Firebase 配置
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5Z5ieEbAcfQX0kxGSn9ldGXhzvAwx_8M",
+            authDomain: "chat-294cc.firebaseapp.com",
+            databaseURL: "https://chat-294cc-default-rtdb.firebaseio.com",
+            projectId: "chat-294cc",
+            storageBucket: "chat-294cc.appspot.com",
+            messagingSenderId: "913615304269",
+            appId: "1:913615304269:web:0274ffaccb8e6b678e4e04"
+        };
+
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // 游戏变量
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let playerId = null;
+        let snake = [];
+        let otherPlayers = {};
+        let food = {};
+        let direction = 'right';
+        let score = 0;
+        let gameLoop;
+        let isGameRunning = false;
+        
+        // 设置画布
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientWidth * 0.6;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // 生成玩家ID
+        function generatePlayerId() {
+            return 'player_' + Math.random().toString(36).substring(2, 10);
+        }
+        
+        // 初始化游戏
+        function initGame() {
+            playerId = generatePlayerId();
+            const playerName = document.getElementById('playerNameInput').value || '匿名玩家';
+            document.getElementById('playerName').textContent = playerName;
+            
+            const gridSize = Math.floor(canvas.width / 20);
+            snake = [
+                {x: 100, y: 100},
+                {x: 100 - gridSize, y: 100},
+                {x: 100 - gridSize * 2, y: 100}
+            ];
+            
+            direction = 'right';
+            score = 0;
+            updateScore();
+            
+            // 保存玩家信息
+            savePlayerInfo(playerName);
+            listenForGameUpdates();
+            
+            // 生成食物
+            database.ref('food').once('value', (snapshot) => {
+                if (!snapshot.exists()) {
+                    generateFood();
                 }
+            });
+            
+            draw();
+        }
+        
+        // 保存玩家信息
+        function savePlayerInfo(playerName) {
+            const playerRef = database.ref(`players/${playerId}`);
+            playerRef.set({
+                name: playerName,
+                snake: snake,
+                direction: direction,
+                score: score,
+                alive: true,
+                lastActive: Date.now()
+            });
+            
+            window.addEventListener('beforeunload', () => {
+                playerRef.remove();
+            });
+        }
+        
+        // 监听游戏更新
+        function listenForGameUpdates() {
+            database.ref('players').on('value', (snapshot) => {
+                const players = snapshot.val() || {};
+                otherPlayers = {};
+                
+                document.getElementById('playerCount').textContent = Object.keys(players).length;
+                document.getElementById('playersList').innerHTML = '';
+                
+                Object.keys(players).forEach(id => {
+                    if (id !== playerId && players[id].alive) {
+                        otherPlayers[id] = players[id];
+                    }
+                    
+                    const li = document.createElement('li');
+                    li.textContent = `${players[id].name} (${players[id].score})`;
+                    document.getElementById('playersList').appendChild(li);
+                });
+            });
+            
+            database.ref('food').on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    food = snapshot.val();
+                }
+            });
+        }
+        
+        // 生成食物
+        function generateFood() {
+            const gridSize = Math.floor(canvas.width / 20);
+            const newFood = {
+                x: Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize,
+                y: Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize
+            };
+            database.ref('food').set(newFood);
+        }
+        
+        // 更新分数
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('finalScore').textContent = score;
+            
+            if (playerId) {
+                database.ref(`players/${playerId}`).update({score: score});
             }
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .text-shadow { text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3); }
-            .glow { filter: drop-shadow(0 0 8px currentColor); }
-            .rotate-random { transform: rotate(var(--rotation, -5deg)); }
-            .bounce-meme { animation: bounceMeme 0.5s ease-in-out infinite alternate; }
-            @keyframes bounceMeme { from { transform: translateY(0); } to { transform: translateY(-10px); } }
-            .wiggle { animation: wiggle 1s ease-in-out infinite; }
-            @keyframes wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+        
+        // 检查碰撞
+        function checkCollision() {
+            const head = snake[0];
+            
+            if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+                return true;
+            }
+            
+            for (let i = 1; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    return true;
+                }
+            }
+            
+            Object.values(otherPlayers).forEach(player => {
+                if (player.snake) {
+                    for (let segment of player.snake) {
+                        if (head.x === segment.x && head.y === segment.y) {
+                            return true;
+                        }
+                    }
+                }
+            });
+            
+            return false;
         }
-    </style>
-</head>
-<body class="bg-gray-900 font-meme min-h-screen flex flex-col items-center justify-center p-4 text-white overflow-x-hidden">
-<!-- 你的贪吃蛇游戏body内容原样粘贴 -->
-<!-- ...（此处省略，实际已完整粘贴）... -->
+        
+        // 游戏更新
+        function gameUpdate() {
+            const gridSize = Math.floor(canvas.width / 20);
+            const head = {x: snake[0].x, y: snake[0].y};
+            
+            switch (direction) {
+                case 'up': head.y -= gridSize; break;
+                case 'down': head.y += gridSize; break;
+                case 'left': head.x -= gridSize; break;
+                case 'right': head.x += gridSize; break;
+            }
+            
+            snake.unshift(head);
+            
+            // 检查食物
+            if (food && head.x === food.x && head.y === food.y) {
+                score += 10;
+                updateScore();
+                generateFood();
+            } else {
+                snake.pop();
+            }
+            
+            if (checkCollision()) {
+                gameOver();
+                return;
+            }
+            
+            if (playerId) {
+                database.ref(`players/${playerId}`).update({
+                    snake: snake,
+                    direction: direction
+                });
+            }
+            
+            draw();
+        }
+        
+        // 绘制游戏
+        function draw() {
+            const gridSize = Math.floor(canvas.width / 20);
+            
+            // 清空画布
+            ctx.fillStyle = '#121212';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制网格
+            ctx.strokeStyle = '#333333';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // 绘制其他玩家
+            Object.values(otherPlayers).forEach(player => {
+                if (player.snake) {
+                    ctx.fillStyle = '#0066FF';
+                    player.snake.forEach(segment => {
+                        ctx.fillRect(segment.x, segment.y, gridSize - 1, gridSize - 1);
+                    });
+                }
+            });
+            
+            // 绘制自己的蛇
+            ctx.fillStyle = '#FF3333';
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x, segment.y, gridSize - 1, gridSize - 1);
+            });
+            
+            // 绘制食物
+            if (food) {
+                ctx.fillStyle = '#33CC33';
+                ctx.fillRect(food.x, food.y, gridSize - 1, gridSize - 1);
+            }
+        }
+        
+        // 开始游戏
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hidden');
+            isGameRunning = true;
+            initGame();
+            gameLoop = setInterval(gameUpdate, 150);
+        }
+        
+        // 游戏结束
+        function gameOver() {
+            clearInterval(gameLoop);
+            isGameRunning = false;
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            
+            if (playerId) {
+                database.ref(`players/${playerId}`).update({alive: false});
+            }
+        }
+        
+        // 重新开始
+        function restartGame() {
+            if (playerId) {
+                database.ref(`players/${playerId}`).remove();
+            }
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            startGame();
+        }
+        
+        // 键盘控制
+        function handleKeyPress(e) {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(e.key)) {
+                e.preventDefault();
+            }
+            
+            if (!isGameRunning) return;
+            
+            switch (e.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    if (direction !== 'down') direction = 'up';
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    if (direction !== 'up') direction = 'down';
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    if (direction !== 'right') direction = 'left';
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    if (direction !== 'left') direction = 'right';
+                    break;
+            }
+        }
+        
+        // 事件监听
+        document.addEventListener('keydown', handleKeyPress);
+        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('restartBtn').addEventListener('click', restartGame);
+        
+        // 预填充玩家名
+        document.getElementById('playerNameInput').value = ['贪吃蛇王', '专业吃货', '蛇蛇果实能力者'][Math.floor(Math.random() * 3)];
+    </script>
 </body>
-</html>
+</html> 
