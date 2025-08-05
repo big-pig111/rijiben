@@ -100,7 +100,7 @@
     </header>
 
          <!-- 游戏容器 -->
-     <main class="relative w-full max-w-6xl">
+             <main class="relative w-full max-w-7xl">
         <!-- 玩家信息和分数面板 -->
         <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
             <div class="bg-gray-800 p-3 rounded-lg border-2 border-memeYellow flex-1 min-w-[200px]">
@@ -291,7 +291,7 @@
         let nextDirection = '';
         let score = 0;
         let level = 1;
-                 let gameSpeed = 120; // 毫秒，稍微加快速度适应更大的游戏区域
+                 let gameSpeed = 100; // 毫秒，稍微加快速度适应更大的游戏区域
         let gameLoop;
         let isGameRunning = false;
         let isPaused = false;
@@ -311,9 +311,9 @@
                  // 设置画布尺寸
          function resizeCanvas() {
              const container = canvas.parentElement;
-             // 增加画布尺寸，让游戏区域更大
-             canvas.width = Math.min(container.clientWidth, 1200); // 最大宽度1200px
-             canvas.height = Math.min(container.clientWidth * 0.8, 960); // 最大高度960px，保持4:5比例
+             // 增加画布尺寸，让游戏区域更大（再增加一倍）
+             canvas.width = Math.min(container.clientWidth, 2400); // 最大宽度2400px
+             canvas.height = Math.min(container.clientWidth * 0.8, 1920); // 最大高度1920px，保持4:5比例
              
              // 计算边距（包边）
              const margin = Math.floor(canvas.width * 0.05); // 5%的边距
@@ -351,7 +351,7 @@
             roomNameElement.textContent = roomNames[gameRoom] || '默认房间';
             
                                      // 设置初始蛇位置
-            const gridSize = Math.floor(canvas.width / 40); // 减小网格大小，增加移动范围
+            const gridSize = Math.floor(canvas.width / 80); // 减小网格大小，增加移动范围（适应更大的画布）
             
             // 计算有效游戏区域的网格数量（考虑边距）
             const effectiveWidth = canvas.width - 2 * gameMargin;
@@ -386,7 +386,7 @@
                          // 重置分数和等级
              score = 0;
              level = 1;
-             gameSpeed = 120; // 稍微加快速度适应更大的游戏区域
+             gameSpeed = 100; // 稍微加快速度适应更大的游戏区域
             
             // 更新UI
             updateScore();
@@ -537,7 +537,7 @@
         
         // 生成初始食物（生成多个食物）
         function generateInitialFoods() {
-            const gridSize = Math.floor(canvas.width / 40);
+            const gridSize = Math.floor(canvas.width / 80);
             const foodsToGenerate = Math.min(MAX_FOODS, 3); // 初始生成3个食物
             
             database.ref(`rooms/${gameRoom}/players`).once('value', (snapshot) => {
@@ -558,7 +558,7 @@
         
         // 生成单个食物
         function generateSingleFood(players, existingFoods = []) {
-            const gridSize = Math.floor(canvas.width / 40);
+            const gridSize = Math.floor(canvas.width / 80);
             let attempts = 0;
             const maxAttempts = 100;
             
@@ -639,7 +639,7 @@
         
         // 生成普通食物（当食物被吃掉时调用）
         function generateFood() {
-            const gridSize = Math.floor(canvas.width / 40);
+            const gridSize = Math.floor(canvas.width / 80);
             
             // 确保食物不会出现在任何蛇身上
             database.ref(`rooms/${gameRoom}/players`).once('value', (snapshot) => {
@@ -663,7 +663,7 @@
         
                          // 生成特殊食物
         function generateSpecialFood() {
-            const gridSize = Math.floor(canvas.width / 40);
+            const gridSize = Math.floor(canvas.width / 80);
             let newFood;
             
             // 确保特殊食物不会出现在任何蛇身上或普通食物位置
@@ -774,7 +774,7 @@
                          // 检查碰撞
         function checkCollision() {
             const head = snake[0];
-            const gridSize = Math.floor(canvas.width / 40); // 减小网格大小，增加移动范围
+            const gridSize = Math.floor(canvas.width / 80); // 减小网格大小，增加移动范围
             
             // 检查墙壁碰撞（考虑边距）
             if (head.x < gameMargin || head.x >= canvas.width - gameMargin || 
@@ -806,7 +806,7 @@
         // 检查食物碰撞
         function checkFoodCollision() {
             const head = snake[0];
-            const gridSize = Math.floor(canvas.width / 40);
+            const gridSize = Math.floor(canvas.width / 80);
             let ateFood = false;
             
             // 检查普通食物碰撞
@@ -905,7 +905,7 @@
                          // 更新方向
              direction = nextDirection;
              
-             const gridSize = Math.floor(canvas.width / 40); // 减小网格大小，增加移动范围
+             const gridSize = Math.floor(canvas.width / 80); // 减小网格大小，增加移动范围
             const head = { x: snake[0].x, y: snake[0].y };
             
             // 根据方向移动蛇头
@@ -955,7 +955,7 @@
         
                  // 绘制游戏
          function draw() {
-             const gridSize = Math.floor(canvas.width / 40); // 减小网格大小，增加移动范围
+             const gridSize = Math.floor(canvas.width / 80); // 减小网格大小，增加移动范围
             
             // 清空画布
             ctx.fillStyle = '#121212';
@@ -1282,7 +1282,7 @@
         // 创建尸体食物
         function createCorpseFoods() {
             if (snake && snake.length > 0) {
-                const gridSize = Math.floor(canvas.width / 40);
+                const gridSize = Math.floor(canvas.width / 80);
                 const newCorpseFoods = [];
                 
                 // 随机选择meme表情
