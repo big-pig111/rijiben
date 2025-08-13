@@ -2142,14 +2142,14 @@
           <i class="fa fa-check text-2xl text-green-500"></i>
         </div>
         <h3 class="text-xl font-bold text-neutral-800 mb-2">Published!</h3>
-        <p class="text-neutral-600 mb-6">Your diary has been published to the community.</p>
+               <p class="text-neutral-600 mb-6">Your diary has been published to the community.</p>
         <div class="flex flex-col sm:flex-row gap-3">
-          <button id="view-diary" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-            View my diary
-          </button>
-          <button id="close-modal" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
-            Back to Home
-          </button>
+                 <button id="view-diary" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+             View my diary
+           </button>
+           <button id="close-modal" class="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors">
+             Back to Home
+           </button>
         </div>
       </div>
     </div>
@@ -2194,19 +2194,19 @@
       async function initializeConnection() {
         for (const endpoint of rpcEndpoints) {
           try {
-            console.log(`尝试连接到: ${endpoint}`);
+            console.log(`Trying RPC: ${endpoint}`);
             const testConnection = new solanaWeb3.Connection(endpoint, 'confirmed');
             // 测试连接
             await testConnection.getSlot();
             connection = testConnection;
-            console.log(`成功连接到: ${endpoint}`);
+            console.log(`Connected RPC: ${endpoint}`);
             return true;
           } catch (error) {
-            console.log(`连接失败: ${endpoint}`, error.message);
+            console.log(`RPC failed: ${endpoint}`, error.message);
             continue;
           }
         }
-        console.error('所有RPC端点连接失败');
+        console.error('All RPC endpoints failed');
         return false;
       }
 
@@ -2237,13 +2237,13 @@
           
           // 根据网络连接状态设置不同的状态
           if (connection) {
-            walletStatus.title = '✅ 钱包已连接，Solana网络正常';
-            mobileWalletStatus.title = '✅ 钱包已连接，Solana网络正常';
+            walletStatus.title = 'Wallet connected, Solana network OK';
+            mobileWalletStatus.title = 'Wallet connected, Solana network OK';
           } else {
             walletStatus.className = 'wallet-status-indicator error';
             mobileWalletStatus.className = 'wallet-status-indicator error';
-            walletStatus.title = '⚠️ 钱包已连接，但Solana网络异常';
-            mobileWalletStatus.title = '⚠️ 钱包已连接，但Solana网络异常';
+            walletStatus.title = 'Wallet connected, Solana network issue';
+            mobileWalletStatus.title = 'Wallet connected, Solana network issue';
           }
           
           // 隐藏钱包警告
@@ -2292,13 +2292,13 @@
           walletBtn.className = 'wallet-btn disconnected hidden md:flex';
           mobileWalletBtn.className = 'wallet-btn disconnected flex items-center justify-center mt-2';
           
-          walletText.textContent = '连接钱包';
-          mobileWalletText.textContent = '连接钱包';
+          walletText.textContent = 'Connect Wallet';
+          mobileWalletText.textContent = 'Connect Wallet';
           
           walletStatus.className = 'wallet-status-indicator disconnected';
           mobileWalletStatus.className = 'wallet-status-indicator disconnected';
-          walletStatus.title = '点击连接Phantom钱包';
-          mobileWalletStatus.title = '点击连接Phantom钱包';
+          walletStatus.title = 'Click to connect Phantom wallet';
+          mobileWalletStatus.title = 'Click to connect Phantom wallet';
 
           // 禁用个人资料按钮
           if (profileBtn) {
@@ -2459,7 +2459,7 @@
       // 查看用户资料
       async function viewUserProfile(walletAddress) {
         if (!walletAddress) {
-          alert('无效的用户地址');
+          alert('Invalid address');
           return;
         }
 
@@ -2469,10 +2469,10 @@
         const viewBio = document.getElementById('view-bio');
         const viewWalletAddress = document.getElementById('view-wallet-address');
 
-        // 显示加载状态
-        viewUsername.textContent = '加载中...';
-        viewBio.textContent = '加载中...';
-        viewWalletAddress.textContent = '加载中...';
+        // Loading state
+        viewUsername.textContent = 'Loading...';
+        viewBio.textContent = 'Loading...';
+        viewWalletAddress.textContent = 'Loading...';
         viewAvatar.innerHTML = '<i class="fa fa-user"></i>';
 
         // 显示弹窗
@@ -2490,24 +2490,24 @@
           viewWalletAddress.textContent = walletAddress;
 
           if (profile) {
-            // 显示用户名
-            viewUsername.textContent = profile.username || '未设置用户名';
+            // Username
+            viewUsername.textContent = profile.username || 'No username set';
             
-            // 显示个人简介
-            viewBio.textContent = profile.bio || '该用户还没有设置个人简介';
+            // Bio
+            viewBio.textContent = profile.bio || 'No bio yet';
             
             // 显示头像
             if (profile.avatar) {
-              viewAvatar.innerHTML = `<img src="${profile.avatar}" alt="头像" class="w-full h-full object-cover rounded-full">`;
+              viewAvatar.innerHTML = `<img src="${profile.avatar}" alt="avatar" class="w-full h-full object-cover rounded-full">`;
             } else {
               const displayName = getUserDisplayName(walletAddress);
               viewAvatar.innerHTML = displayName.charAt(0).toUpperCase();
             }
           } else {
-            // 用户没有设置资料
+            // No profile
             const displayName = getUserDisplayName(walletAddress);
             viewUsername.textContent = displayName;
-            viewBio.textContent = '该用户还没有设置个人资料';
+            viewBio.textContent = 'No profile yet';
             viewAvatar.innerHTML = displayName.charAt(0).toUpperCase();
           }
 
@@ -2515,9 +2515,9 @@
           setupViewCopyWallet(walletAddress);
 
         } catch (error) {
-          console.error('加载用户资料失败:', error);
-          viewUsername.textContent = '加载失败';
-          viewBio.textContent = '无法加载用户资料';
+          console.error('Failed to load user profile:', error);
+          viewUsername.textContent = 'Load failed';
+          viewBio.textContent = 'Cannot load user profile';
           viewWalletAddress.textContent = walletAddress;
         }
       }
@@ -2528,7 +2528,7 @@
         if (copyBtn) {
           copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(walletAddress).then(() => {
-              // 显示复制成功提示
+        // Success hint
               const originalText = copyBtn.innerHTML;
               copyBtn.innerHTML = '<i class="fa fa-check"></i>';
               copyBtn.classList.add('text-green-500');
@@ -2554,7 +2554,7 @@
         const card = document.createElement('article');
         card.className = 'diary-card bg-white rounded-xl shadow-sm overflow-hidden border border-neutral-200 cursor-pointer';
         
-        const title = diary.title || '无标题';
+        const title = diary.title || 'Untitled';
         const content = diary.content || '';
         const preview = content.length > 120 ? content.slice(0, 120) + '...' : content;
         const author = getUserDisplayName(diary.wallet);
@@ -2594,8 +2594,8 @@
               <div class="flex items-center gap-2">
                 ${tagHtml}
                 ${isPrivate ? '<i class="fa fa-lock text-neutral-400 text-sm"></i>' : ''}
-                ${diary.txid ? '<i class="fa fa-link text-primary text-sm" title="已上链"></i>' : ''}
-                ${diary.wallet === currentWallet ? `<button class="delete-diary-btn text-red-500 hover:text-red-700 ml-2" data-diary-id="${diary.id}" title="删除日记"><i class="fa fa-trash"></i></button>` : ''}
+                ${diary.txid ? '<i class="fa fa-link text-primary text-sm" title="On-chain"></i>' : ''}
+                ${diary.wallet === currentWallet ? `<button class="delete-diary-btn text-red-500 hover:text-red-700 ml-2" data-diary-id="${diary.id}" title="Delete diary"><i class="fa fa-trash"></i></button>` : ''}
               </div>
             </div>
             
@@ -2615,7 +2615,7 @@
                 </div>
               </div>
               <button class="read-more-btn text-primary hover:text-primary/80 text-sm font-medium transition-colors px-3 py-1 rounded-lg hover:bg-primary/5">
-                阅读全文 <i class="fa fa-angle-right ml-1"></i>
+                Read more <i class="fa fa-angle-right ml-1"></i>
               </button>
             </div>
           </div>
@@ -2648,7 +2648,7 @@
 
       // 钱包连接功能
       async function connectWallet() {
-        if (window.solana && window.solana.isPhantom) {
+         if (window.solana && window.solana.isPhantom) {
           try {
             // 显示加载状态
             setWalletLoadingState(true);
@@ -2677,7 +2677,7 @@
             setWalletLoadingState(false);
           }
         } else {
-          alert('Please install Phantom wallet');
+           alert('Please install Phantom wallet');
           return false;
         }
       }
@@ -2692,12 +2692,12 @@
         if (loading) {
           walletBtn.classList.add('loading');
           mobileWalletBtn.classList.add('loading');
-          walletText.textContent = 'Connecting...';
-          mobileWalletText.textContent = 'Connecting...';
+           walletText.textContent = 'Connecting...';
+           mobileWalletText.textContent = 'Connecting...';
         } else {
           walletBtn.classList.remove('loading');
           mobileWalletBtn.classList.remove('loading');
-          if (!currentWallet) {
+           if (!currentWallet) {
             walletText.textContent = 'Connect Wallet';
             mobileWalletText.textContent = 'Connect Wallet';
           }
@@ -2890,8 +2890,8 @@
       
       if (diaryContent && charCount) {
         diaryContent.addEventListener('input', function() {
-          const count = this.value.length;
-          charCount.textContent = `${count} 个字`;
+           const count = this.value.length;
+           charCount.textContent = `${count} chars`;
         });
       }
       
@@ -2900,7 +2900,7 @@
       if (clearContentBtn && diaryContent) {
         clearContentBtn.addEventListener('click', function() {
           diaryContent.value = '';
-          charCount.textContent = '0 个字';
+          charCount.textContent = '0 chars';
         });
       }
       
@@ -2911,9 +2911,9 @@
       if (enableBlockchainToggle && publishText) {
         function updatePublishButtonText() {
           if (enableBlockchainToggle.checked) {
-            publishText.textContent = '发布并上链';
+             publishText.textContent = 'Publish & On-chain';
           } else {
-            publishText.textContent = '发布日记';
+            publishText.textContent = 'Publish';
           }
         }
         
@@ -2928,7 +2928,7 @@
           if (!connection) {
             const connected = await initializeConnection();
             if (!connected) {
-              throw new Error('无法连接到Solana网络');
+              throw new Error('Failed to connect to Solana network');
             }
           }
           
@@ -2937,10 +2937,10 @@
           // 返回SOL余额（lamports转SOL）
           return balance / solanaWeb3.LAMPORTS_PER_SOL;
         } catch (error) {
-          console.error('获取钱包余额失败:', error);
+          console.error('Failed to get wallet balance:', error);
           // 如果是网络错误，尝试重新连接
           if (error.message.includes('403') || error.message.includes('fetch')) {
-            console.log('尝试重新连接...');
+            console.log('Trying to reconnect...');
             const reconnected = await initializeConnection();
             if (reconnected) {
               try {
@@ -2948,7 +2948,7 @@
                 const balance = await connection.getBalance(publicKey);
                 return balance / solanaWeb3.LAMPORTS_PER_SOL;
               } catch (retryError) {
-                console.error('重试获取余额失败:', retryError);
+                console.error('Retry get balance failed:', retryError);
               }
             }
           }
@@ -2963,21 +2963,21 @@
           if (!connection) {
             const connected = await initializeConnection();
             if (!connected) {
-              throw new Error('无法连接到Solana网络');
+              throw new Error('Failed to connect to Solana network');
             }
           }
 
           // 创建日记内容
-          const title = diaryData.title || '';
-          const content = diaryData.content || '';
+        const title = diaryData.title || '';
+        const content = diaryData.content || '';
           const message = title ? `[${title}] ${content}` : content;
           
           // 编码消息
           const encodedMessage = new TextEncoder().encode(message);
           
           // 检查长度限制
-          if (encodedMessage.length > 566) {
-            throw new Error(`日记内容过长，无法上链（最大566字节，当前${encodedMessage.length}字节）`);
+            if (encodedMessage.length > 566) {
+            throw new Error(`Content too long for on-chain (max 566 bytes, current ${encodedMessage.length} bytes)`);
           }
           
           // 创建memo指令
@@ -3001,7 +3001,7 @@
           
           return transaction;
         } catch (error) {
-          console.error('创建Solana交易失败:', error);
+          console.error('Failed to create Solana transaction:', error);
           throw error;
         }
       }
@@ -3019,7 +3019,7 @@
         
         // 禁用按钮并显示加载状态
         publishBtn.disabled = true;
-        publishText.textContent = '创建交易中...';
+        publishText.textContent = 'Creating transaction...';
         publishSpinner.classList.remove('hidden');
         
         let txid = null;
@@ -3058,7 +3058,7 @@
               
                console.log('Solana transaction success:', signature);
               const shortSig = signature.slice(0, 4) + '...' + signature.slice(-6);
-               console.log(`✅ Diary on-chain, txid: ${shortSig}`);
+               console.log(`Diary on-chain, txid: ${shortSig}`);
                publishText.textContent = 'Saving to database...';
               
             } catch (solanaError) {
@@ -3067,10 +3067,10 @@
                publishText.textContent = 'On-chain failed, saving to database only...';
               
               // 显示具体错误信息
-              if (solanaError.message.includes('日记内容过长')) {
-                 console.warn('Content too long, consider shortening');
-              } else if (solanaError.message.includes('余额不足')) {
-                 console.warn('Insufficient balance, please top up and retry');
+               if (solanaError.message.includes('Content too long')) {
+                  console.warn('Content too long, consider shortening');
+               } else if (solanaError.message.includes('Insufficient balance')) {
+                  console.warn('Insufficient balance, please top up and retry');
               }
             }
           } else {
@@ -3132,7 +3132,7 @@
           // 显示成功弹窗
       function showSuccessModal(txid = null) {
         const successModal = document.getElementById('success-modal');
-        if (successModal) {
+           if (successModal) {
           // 更新弹窗内容
           const modalContent = successModal.querySelector('.text-center');
           if (txid) {
@@ -3146,10 +3146,10 @@
                  <p class="text-sm text-neutral-600 mb-2">Transaction ID:</p>
                 <p class="text-xs text-neutral-800 font-mono break-all">${txid}</p>
                 <div class="flex gap-2 mt-2">
-                  <a href="https://solscan.io/tx/${txid}" target="_blank" class="inline-block text-primary hover:text-primary/80 text-sm">
+                   <a href="https://solscan.io/tx/${txid}" target="_blank" class="inline-block text-primary hover:text-primary/80 text-sm">
                     <i class="fa fa-external-link mr-1"></i>Solscan
                   </a>
-                  <a href="https://explorer.solana.com/tx/${txid}?cluster=mainnet-beta" target="_blank" class="inline-block text-primary hover:text-primary/80 text-sm">
+                   <a href="https://explorer.solana.com/tx/${txid}?cluster=mainnet-beta" target="_blank" class="inline-block text-primary hover:text-primary/80 text-sm">
                     <i class="fa fa-external-link mr-1"></i>Solana Explorer
                   </a>
                 </div>
@@ -3165,11 +3165,11 @@
             `;
           } else {
             modalContent.innerHTML = `
-              <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fa fa-exclamation-triangle text-2xl text-amber-500"></i>
-              </div>
-               <h3 class="text-xl font-bold text-neutral-800 mb-2">Partial success</h3>
-               <p class="text-neutral-600 mb-6">Saved to database, but on-chain failed. You can retry later.</p>
+               <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                 <i class="fa fa-exclamation-triangle text-2xl text-amber-500"></i>
+               </div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-2">Partial success</h3>
+                <p class="text-neutral-600 mb-6">Saved to database, but on-chain failed. You can retry later.</p>
               <div class="flex flex-col sm:flex-row gap-3">
                 <button id="view-diary" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
                    View my diary
@@ -3223,7 +3223,7 @@
             await publishDiary(diaryData);
           } else {
             console.error('publishDiary function is not defined');
-            alert('系统错误，请刷新页面重试');
+             alert('System error, please refresh and retry');
           }
         });
       }
@@ -3364,22 +3364,31 @@
               ${diary.tags && diary.tags.length > 0 ? `
                 <div class="flex flex-wrap gap-3 mb-8">
                   ${diary.tags.map(tag => {
-                    const tagColors = {
-                      '生活': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                      '旅行': 'bg-blue-100 text-blue-800 border-blue-200',
-                      '感悟': 'bg-purple-100 text-purple-800 border-purple-200',
-                      '读书': 'bg-green-100 text-green-800 border-green-200',
-                      '工作': 'bg-indigo-100 text-indigo-800 border-indigo-200',
-                      '美食': 'bg-red-100 text-red-800 border-red-200',
-                      'Life': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                      'Travel': 'bg-blue-100 text-blue-800 border-blue-200',
-                      'Insights': 'bg-purple-100 text-purple-800 border-purple-200',
-                      'Reading': 'bg-green-100 text-green-800 border-green-200',
-                      'Work': 'bg-indigo-100 text-indigo-800 border-indigo-200',
-                      'Food': 'bg-red-100 text-red-800 border-red-200'
-                    };
-                    const colorClass = tagColors[tag] || 'bg-gray-100 text-gray-800 border-gray-200';
-                    return `<span class="px-4 py-2 ${colorClass} rounded-full text-sm font-medium border">${tag}</span>`;
+         const tagColors = {
+            '生活': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+            '旅行': 'bg-blue-100 text-blue-800 border-blue-200',
+            '感悟': 'bg-purple-100 text-purple-800 border-purple-200',
+            '读书': 'bg-green-100 text-green-800 border-green-200',
+            '工作': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+            '美食': 'bg-red-100 text-red-800 border-red-200',
+            'Life': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+            'Travel': 'bg-blue-100 text-blue-800 border-blue-200',
+            'Insights': 'bg-purple-100 text-purple-800 border-purple-200',
+            'Reading': 'bg-green-100 text-green-800 border-green-200',
+            'Work': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+            'Food': 'bg-red-100 text-red-800 border-red-200'
+          };
+          const colorClass = tagColors[tag] || 'bg-gray-100 text-gray-800 border-gray-200';
+          const tagLabelMap = {
+            '生活': 'Life',
+            '旅行': 'Travel',
+            '感悟': 'Insights',
+            '读书': 'Reading',
+            '工作': 'Work',
+            '美食': 'Food'
+          };
+          const displayTag = tagLabelMap[tag] || tag;
+          return `<span class="px-4 py-2 ${colorClass} rounded-full text-sm font-medium border">${displayTag}</span>`;
                   }).join('')}
                 </div>
               ` : ''}
@@ -3435,9 +3444,9 @@
                 <!-- 聊天消息区域 -->
                 <div class="chat-messages">
                   <div class="comments-container bg-neutral-50 rounded-lg p-4 h-full overflow-y-auto" id="comments-list-${diary.id}">
-                    <div class="text-center text-neutral-500 py-8">
+                     <div class="text-center text-neutral-500 py-8">
                       <i class="fa fa-comment-o text-2xl mb-2"></i>
-                      <p>暂无留言，成为第一个留言的人吧！</p>
+                      <p>No comments yet. Be the first!</p>
                     </div>
                   </div>
                 </div>
@@ -3464,7 +3473,7 @@
                       </button>
                     </div>
                   ` : `
-                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
+                     <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
                       <i class="fa fa-exclamation-triangle text-amber-500 mr-2"></i>
                        <span class="text-amber-700">Connect your wallet to comment</span>
                     </div>
@@ -3581,7 +3590,7 @@
 
     async function saveUserProfile(profileData) {
       if (!currentWallet) {
-        alert('Please connect your wallet first');
+         alert('Please connect your wallet first');
         return false;
       }
 
@@ -3611,7 +3620,7 @@
         return true;
       } catch (error) {
         console.error('Failed to save profile:', error);
-        alert('Failed to save. Please try again later.');
+         alert('Failed to save. Please try again later.');
         return false;
       }
     }
@@ -3774,8 +3783,8 @@
         avatarUpload.addEventListener('change', function(e) {
           const file = e.target.files[0];
           if (file) {
-            if (file.size > 5 * 1024 * 1024) { // 5MB限制
-              alert('图片大小不能超过5MB');
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+              alert('Image size must not exceed 5MB');
               return;
             }
 
@@ -4071,7 +4080,7 @@
           const avatarPreview = document.getElementById('avatar-preview');
           
           if (!username) {
-               alert('Please enter a username');
+         alert('Please enter a username');
             return;
           }
 
@@ -4220,8 +4229,8 @@
       commentsList.innerHTML = commentsHtml;
       
       // 更新评论数量
-      if (commentCount) {
-        commentCount.textContent = `${commentEntries.length} 条留言`;
+        if (commentCount) {
+        commentCount.textContent = `${commentEntries.length} comments`;
       }
       
       // 滚动到底部
@@ -4355,17 +4364,17 @@
     // 点赞功能
     async function toggleLike(diaryId) {
       if (!currentWallet) {
-        alert('请先连接钱包');
+         alert('Please connect wallet first');
         return;
       }
 
       try {
         const diaryRef = ref(db, `diaryEntries/${diaryId}`);
         const snapshot = await get(diaryRef);
-        const diary = snapshot.val();
+         const diary = snapshot.val();
         
         if (!diary) {
-          console.error('日记不存在');
+           console.error('Diary not found');
           return;
         }
 
@@ -4397,7 +4406,7 @@
 
       } catch (error) {
         console.error('点赞操作失败:', error);
-        alert('点赞失败，请稍后重试');
+         alert('Failed to like, please retry later');
       }
     }
 
@@ -4520,7 +4529,7 @@
         .slice(0, 3);
 
       if (topDiaries.length === 0) {
-        container.innerHTML = `
+         container.innerHTML = `
           <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
             <i class="fa fa-book-o text-neutral-300 text-6xl mb-4"></i>
             <h3 class="text-xl font-medium text-neutral-600 mb-2">No featured diaries yet</h3>
@@ -4603,7 +4612,7 @@
 
     // 工具函数
     function formatDate(timestamp) {
-      if (!timestamp) return '';
+           if (!timestamp) return '';
       const date = new Date(timestamp);
       return date.toLocaleString('en-US', {
         year: 'numeric',
@@ -4625,34 +4634,34 @@
     
     // 调试函数
     window.debugUserProfiles = function() {
-      console.log('=== 用户资料调试信息 ===');
-      console.log('当前钱包地址:', currentWallet);
-      console.log('当前用户资料:', currentUserProfile);
-      console.log('所有用户资料缓存:', userProfiles);
-      console.log('localStorage中的提示状态:', Object.keys(localStorage).filter(key => key.startsWith('profile_prompted_')));
+      console.log('=== User profile debug info ===');
+      console.log('Current wallet:', currentWallet);
+      console.log('Current user profile:', currentUserProfile);
+      console.log('All profiles cache:', userProfiles);
+      console.log('Prompt flags in localStorage:', Object.keys(localStorage).filter(key => key.startsWith('profile_prompted_')));
       
       if (currentWallet) {
-        console.log('检查Firebase中的用户资料...');
+        console.log('Check profile in Firebase...');
         loadUserProfile(currentWallet).then(profile => {
-          console.log('Firebase中的用户资料:', profile);
+          console.log('Profile from Firebase:', profile);
         });
       }
     };
 
     // 删除日记函数
     async function deleteDiary(diaryId) {
-      if (!currentWallet) {
-        alert('请先连接钱包');
+         if (!currentWallet) {
+           alert('Please connect wallet first');
         return;
       }
-      if (!diaryId) return;
-      if (!confirm('确定要删除这篇日记吗？删除后无法恢复！')) return;
+         if (!diaryId) return;
+         if (!confirm('Are you sure to delete this diary? This action cannot be undone!')) return;
       try {
         await remove(ref(db, `diaryEntries/${diaryId}`));
-        alert('删除成功');
+           alert('Deleted successfully');
         loadDiaries();
       } catch (e) {
-        alert('删除失败，请重试');
+           alert('Failed to delete, please retry');
         console.error(e);
       }
     }
